@@ -11,6 +11,12 @@ namespace Priorities
         /// <summary>
         ///   Creates the menu items.
         /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
         /// <returns>
         ///   An <see cref="MSGLib.Console.Menu.Items"/> items object.
         /// </returns>
@@ -40,33 +46,93 @@ namespace Priorities
                 key = ConsoleKey.M,
                 title = "Move Task/Change Priority",
                 menuProc = () => TaskMove(tasks, con)
-            }); return items;
+            });
+            items.ItemAdd(new MSGLib.Console.Menu.Item
+            {
+                key = ConsoleKey.R,
+                title = "Rename Task",
+                menuProc = () => TaskRename(tasks, con)
+            });
+            return items;
         }
         /// <summary>
-        ///   Adds a to-do task.
+        ///   Run menu print/read/execute loop.
         /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
+        public void PreLoop(Tasks tasks, MSGLib.Console con)
+        {
+            var items = ItemsMenuCreate(tasks, con);
+            var menu = new MSGLib.Console.Menu();
+            do
+            {
+                if (menu.Selection != ConsoleKey.L) TasksList(tasks, con);
+                con = menu.PreLoop(items, con);
+            } while (menu.Selection != ConsoleKey.Q);
+        }
+        /// <summary>
+        ///   Prompts the user for priority.
+        /// </summary>
+        /// <param name="prompt">
+        ///   Prompt message.
+        /// </param>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        /// The console on which to print prompts and error messages.
+        /// </param>
+        /// <param name="adding">
+        ///   If true, then an item is being added, so accept one more than the
+        ///   number of items so it can be added one past the last item.
+        /// </param>
+        /// <returns></returns>
+        public int PromptForPriority(string prompt, Tasks tasks, MSGLib.Console con, bool adding)
+        {
+            prompt = String.Format("{0} [1..{1}, 0 to cancel] > ", prompt, tasks.Count + (adding ? 1 : 0));
+            int priority = 1;
+            if (tasks.Count > 0)
+            {
+                priority = con.PromptForInteger(prompt, ConsoleColor.Green, (int i) => ValidatePriority(tasks, i, adding));
+            }
+            return priority;
+        }
+        /// <summary>
+        ///   Adds a task.
+        /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
         void TaskAdd(Tasks tasks, MSGLib.Console con)
         {
-            // Prompt for task to do
-            string task = con.PromptForString("Enter task to do > ", ConsoleColor.Green, ValidateTask);
+            // Prompt for task name
+            string task = con.PromptForString("Enter task name > ", ConsoleColor.Green, ValidateTaskName);
             // Abort if the user enters a blank task
             if (task == String.Empty)
             {
                 return;
             }
             // Prompt for priority (if applicable)
-            int priority = 1;
-            if (tasks.Count > 0)
-            {
-                priority = con.PromptForInteger("Enter task priority [1.." + (tasks.Count + 1) + "] > ", ConsoleColor.Green, (int i) => ValidatePriorityNew(tasks, i));
-            }
+            int priority = PromptForPriority("Enter task priority", tasks, con, true);
             tasks.Add(task, priority);
             con.PrintColored(String.Format("Task \"{0}\" added.", task), ConsoleColor.White, true);
         }
         /// <summary>
-        ///   Deletes a to-do task.
+        ///   Deletes a task.
         /// </summary>
-        /// <param name="con"></param>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
         void TaskDelete(Tasks tasks, MSGLib.Console con)
         {
             // Prompt for priority (if any tasks exist)
@@ -76,7 +142,8 @@ namespace Priorities
                 con.PrintColored("There are no tasks to delete.", ConsoleColor.White, true);
                 return;
             }
-            priority = con.PromptForInteger("Enter task priority [1.." + (tasks.Count + 1) + "] > ", ConsoleColor.Green, (int i) => ValidatePriorityNew(tasks, i));
+            priority = PromptForPriority("Enter priority of task to delete", tasks, con, false);
+            if (priority == 0) return;
             string task = tasks.Get(priority);
             tasks.Delete(priority);
             con.PrintColored(String.Format("Task \"{0}\" deleted.", task), ConsoleColor.White, true);
@@ -84,23 +151,53 @@ namespace Priorities
         /// <summary>
         ///   Changes the priority of a task.
         /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
         /// <param name="con">
         ///   The console on which to print prompts and error messages.
         /// </param>
         void TaskMove(Tasks tasks, MSGLib.Console con)
         {
             TasksList(tasks, con);
-            int priorityTaskSrc = con.PromptForInteger("Enter priority of item to move > ", ConsoleColor.Green, (int i) => ValidatePriorityExisting(tasks, i));
+            int priorityTaskSrc = PromptForPriority("Enter priority of item to move", tasks, con, false);
             if (priorityTaskSrc == 0) return;
-            int priorityNew = con.PromptForInteger("Enter new priority of item > ", ConsoleColor.Green, (int i) => ValidatePriorityExisting(tasks, i));
+            int priorityNew = PromptForPriority("Enter new priority of item", tasks, con, false);
             if (priorityNew == 0) return;
             tasks.PriorityTaskChange(priorityTaskSrc, priorityNew);
             con.PrintColored(String.Format("Task \"{0}\" priority changed.", tasks.Get(priorityTaskSrc)), ConsoleColor.White, true);
         }
         /// <summary>
-        ///   Prints the to-do tasks.
+        ///   Renames a task.
         /// </summary>
-        /// <param name="con"></param>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
+        void TaskRename(Tasks tasks, MSGLib.Console con)
+        {
+            TasksList(tasks, con);
+            int priorityTaskSrc = PromptForPriority("Enter priority of item to rename", tasks, con, false);
+            // Cancel if the user enters a blank or zero for the priority
+            if (priorityTaskSrc == 0) return;
+            // Prompt for task name
+            string nameTask = con.PromptForString("Enter task name > ", ConsoleColor.Green, ValidateTaskName);
+            // Cancel if the user enters a blank task
+            if (nameTask == String.Empty) return;
+            // Perform the renamation
+            tasks.Rename(priorityTaskSrc, nameTask);
+        }
+        /// <summary>
+        ///   Prints the tasks in priority order.
+        /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
+        /// <param name="con">
+        ///   The console on which to print prompts and error messages.
+        /// </param>
         void TasksList(Tasks tasks, MSGLib.Console con)
         {
             List<MSGLib.Console.Colors> colColorses = new List<MSGLib.Console.Colors>();
@@ -115,7 +212,7 @@ namespace Priorities
             MSGLib.Console.Table.Cols cols = new MSGLib.Console.Table.Cols(colColorses);
             MSGLib.Console.Table.Rows rows = new MSGLib.Console.Table.Rows();
             tasks.ForEach((string task, int priority) => {
-                rows.Add(new MSGLib.Console.Table.Rows.Row(cols, priority--, task));
+                rows.Add(new MSGLib.Console.Table.Rows.Row(cols, "  " + (priority--).ToString(), task));
                 return true;
             });
             cols.PaddingAdd(2);
@@ -125,11 +222,8 @@ namespace Priorities
         /// <summary>
         ///   Creates the menu items.
         /// </summary>
-        public TasksMenu(Tasks tasks, MSGLib.Console con)
+        public TasksMenu()
         {
-            var items = ItemsMenuCreate(tasks, con);
-            var menu = new MSGLib.Console.Menu();
-            while ((con = menu.MenuDo(items, con)) != null) ;
         }
         /// <summary>
         ///   Validates the range of an integer value.
@@ -156,44 +250,38 @@ namespace Priorities
         }
         /// <summary>
         ///   Validates the priority entered by the user.  Must be between 1 and 
-        ///   the number of to-do tasks.
+        ///   the number of tasks, unless adding is true, then it can be as
+        ///   much as one more than the number of tasks.
         /// </summary>
+        /// <param name="tasks">
+        ///   The task list.
+        /// </param>
         /// <param name="priority">
         ///   Priority number to validate.
+        /// </param>
+        /// <param name="adding">
+        ///   If true, then an item is being added, so accept one more than the
+        ///   number of items so it can be added one past the last item.
         /// </param>
         /// <returns>
         ///   An error prompt if the validation fails, otherwise an empty string.
         /// </returns>
-        string ValidatePriorityExisting(Tasks tasks, int priority)
+        string ValidatePriority(Tasks tasks, int priority, bool adding)
         {
-            return ValidateIntegerRange(priority, 1, tasks.Count);
+            return ValidateIntegerRange(priority, 0, tasks.Count + (adding ? 1 : 0));
         }
         /// <summary>
-        ///   Validates the priority entered by the user.  Must be between 1 and 
-        ///   1 more than the number of to-do tasks.
+        ///   Validates the task entered by the user.
         /// </summary>
-        /// <param name="priority">
-        ///   Priority number to validate.
-        /// </param>
-        /// <returns>
-        ///   An error prompt if the validation fails, otherwise an empty string.
-        /// </returns>
-        string ValidatePriorityNew(Tasks tasks, int priority)
-        {
-            return ValidateIntegerRange(priority, 1, tasks.Count + 1);
-        }
-        /// <summary>
-        ///   Validates the to-do task entered by the user.
-        /// </summary>
-        /// <param name="taskToDo">
+        /// <param name="task">
         ///   User input to validate.
         /// </param>
         /// <returns>
-        ///   Empty string.
+        ///   Empty string (all strings are valid)
         /// </returns>
-        string ValidateTask(string taskToDo)
+        string ValidateTaskName(string task)
         {
-            return "";
+            return String.Empty;
         }
     }
 }

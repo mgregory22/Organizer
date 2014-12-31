@@ -56,7 +56,10 @@ namespace Priorities
         void Run(MSGLib.Console con)
         {
             var tasks = new Tasks();
-            var tasksMenu = new TasksMenu(tasks, con);
+            tasks.FileLoad(_filename, con);
+            var tasksMenu = new TasksMenu();
+            tasksMenu.PreLoop(tasks, con);
+            tasks.FileSave(_filename, con);
         }
         /// <summary>
         ///   Prints command line usage information.
