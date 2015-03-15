@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Priorities", "Priorities\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSGLib", "..\MSGLib\MSGLib.csproj", "{D821112C-8039-4E91-AED6-9BACB429CBB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "..\ConsoleTest\ConsoleTest\ConsoleTest.csproj", "{C4BBE739-25AB-4A95-8C6E-72438344C973}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D821112C-8039-4E91-AED6-9BACB429CBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D821112C-8039-4E91-AED6-9BACB429CBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D821112C-8039-4E91-AED6-9BACB429CBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4BBE739-25AB-4A95-8C6E-72438344C973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4BBE739-25AB-4A95-8C6E-72438344C973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4BBE739-25AB-4A95-8C6E-72438344C973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4BBE739-25AB-4A95-8C6E-72438344C973}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

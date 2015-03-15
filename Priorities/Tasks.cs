@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ColoredConsole = MSGLib.Colored.Console;
 
 namespace Priorities
 {
@@ -64,7 +65,7 @@ namespace Priorities
         ///   Task description.
         /// </param>
         /// <param name="priority">
-        ///   Higher priority items come first.
+        ///   Higher priority _items come first.
         /// </param>
         /// <returns>
         ///   Returning false will abort the iteration.
@@ -99,7 +100,7 @@ namespace Priorities
         /// <summary>
         ///   Loads the list of to-do tasks from tasks.txt.
         /// </summary>
-        public void FileLoad(string filename, MSGLib.Console con)
+        public void FileLoad(string filename, ColoredConsole con)
         {
             if (File.Exists(filename))
             {
@@ -126,7 +127,7 @@ namespace Priorities
         /// <summary>
         ///   Saves the list of to-do tasks to the file named in _filename.
         /// </summary>
-        public void FileSave(string filename, MSGLib.Console con)
+        public void FileSave(string filename, ColoredConsole con)
         {
             StreamWriter sw;
             try
