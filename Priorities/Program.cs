@@ -1,127 +1,134 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using Colored = MSGLib.Colored;
-using ColoredConsole = MSGLib.Colored.Console;
-using ColoredStringList = MSGLib.Colored.String.List;
-using Menu = MSGLib.Colored.Console.Menu;
-using MenuItem = MSGLib.Colored.Console.Menu.Item;
-using MenuItems = MSGLib.Colored.Console.Menu.Item.List;
-using Table = MSGLib.Colored.Console.Table;
-using TableCols = MSGLib.Colored.Console.Table.Col.List;
-using TableRow = MSGLib.Colored.Console.Table.Col.List.Row;
-using TableRows = MSGLib.Colored.Console.Table.Col.List.Row.List;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Priorities
 {
-    class Program
+    public class Menu
     {
-        /// <summary>
-        ///   The to-do item file name.
-        /// </summary>
-        private string _filename;
-        /// <summary>
-        ///   Program entry point.
-        /// </summary>
-        /// <param name="args"></param>
-        static void Main(string[] args)
-        {
-            var options = new Options();
-            var con = new ColoredConsole();
-            var prog = new Program(args, options, con);
-            prog.Run(options, con);
-            options.Save();
-        }
-        /// <summary>
-        ///   Parses the command-line arguments.  Command-line arguments override settings, but don't
-        ///   replace them in the settings file.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="options"></param>
-        /// <param name="con"></param>
-        Program(string[] args, Options options, ColoredConsole con)
-        {
-            // Init properties
-            this._filename = options.FileName;
-            // Process command line args
-            int anonArgCnt = 0;
-            foreach (string arg in args)
-            {
-                switch (arg)
-                {
-                    case "/?":
-                        UsagePrint(con);
-                        System.Environment.Exit(1);
-                        break;
-                    default:
-                        switch (anonArgCnt++)
-                        {
-                            case 0:
-                                this._filename = arg;
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-        /// <summary>
-        ///   Main processing routine.
-        /// </summary>
-        void Run(Options options, ColoredConsole con)
-        {
-            var tasks = new Tasks();
-            tasks.FileLoad(_filename, con);
-            var tasksMenu = new ProgramMenu(options, con, tasks);
-            tasksMenu.PRELoop(options, con, tasks);
-            tasks.FileSave(_filename, con);
-        }
-        /// <summary>
-        ///   Prints command line usage information.
-        /// </summary>
-        void UsagePrint(ColoredConsole con)
-        {
-            Console.Write(@"Example menu-based console program.
 
-" + AppDomain.CurrentDomain.FriendlyName + @" [filename]
-
-  [filename]
-              To-do tasks file to read from and save to.
-");
-        }
     }
 
     /// <summary>
-    ///   Program options.
+    ///   The responsibility of this class is to hold a (keystroke, description) pair,
+    ///   draw them on the screen in a user-friendly way, accept an input keystroke,
+    ///   and if the input keystroke equals the keystroke, perform the commands as
+    ///   stated in the description.
     /// </summary>
-    public class Options : ApplicationSettingsBase
+    public class MenuItem
     {
-        [UserScopedSetting()]
-        [DefaultSettingValue("false")]
-        public bool AutoList
+        string description;
+        ConsoleKey keystroke;
+        int maxWidth;
+        List<string> lines;
+
+        private void CalcLines()
         {
-            get
+            lines.Clear();
+            string k = String.Format("[{0}] ", keystroke.ToString());
+            // Indent any wrapped description lines
+            string p = new String(' ', k.Length);
+            int maxDescWidth = maxWidth - p.Length;
+            string d = String.Format("{0}", description);
+            if (d.Length <= maxDescWidth)
             {
-                return ((bool)this["AutoList"]);
+                lines.Add(k + d);
             }
-            set
+            else
             {
-                this["AutoList"] = (bool)value;
+                // Wrap the description
+                WrapSplit(d, maxDescWidth, lines);
+                // Insert the key and indent prefixes into the description lines
+                lines[0] = k + lines[0];
+                for (int i = 1; i < lines.Count; i++)
+                {
+                    lines[i] = p + lines[i];
+                }
             }
         }
 
-        [UserScopedSetting()]
-        [DefaultSettingValue("tasks.txt")]
-        public string FileName
+        public string Description
         {
-            get
-            {
-                return ((string)this["FileName"]);
-            }
+            get { return description; }
             set
             {
-                this["FileName"] = (string)value;
+                description = value;
+                CalcLines();
             }
+        }
+
+        public ConsoleKey Keystroke
+        {
+            get { return keystroke; }
+            set
+            {
+                keystroke = value;
+                CalcLines();
+            }
+        }
+
+        public int LineCount
+        {
+            get { return lines.Count;  }
+        }
+
+        public int MaxWidth
+        {
+            get { return maxWidth; }
+            set
+            {
+                maxWidth = value;
+                CalcLines();
+            }
+        }
+
+        public MenuItem(string description, ConsoleKey keystroke, int maxWidth = 80)
+        {
+            this.description = description;
+            this.keystroke = keystroke;
+            this.maxWidth = maxWidth;
+            this.lines = new List<string>();
+            CalcLines();
+        }
+
+        public string ToString(int index = 0)
+        {
+            return lines[index];
+        }
+
+        public void WrapSplit(string s, int maxWidth, List<string> lines)
+        {
+            while (s.Length > maxWidth)
+            {
+                int wrapPos = s.LastIndexOf(' ', maxWidth);
+                lines.Add(s.Substring(0, wrapPos));
+                s = s.Remove(0, wrapPos + 1);
+            }
+            lines.Add(s);
+        }
+    }
+
+    public sealed class Program
+    {
+        public static void Main(string[] args)
+        {
+            int width = 40;
+            MenuItem menuItem = new MenuItem("Test menu item, test of wrapping text " +
+                "within a 40 column area of the screen for a nice display of things and stuff that " +
+                "is nice to think about before work when I get there I will work and play.", ConsoleKey.T, width);
+            DrawRuler(width);
+            for (int i = 0; i < menuItem.LineCount; i++)
+                Console.WriteLine(menuItem.ToString(i));
+            Console.ReadKey(true);
+        }
+
+        public static void DrawRuler(int width)
+        {
+            for (int i = 1; i <= width; i++)
+                Console.Write(i % 10 > 0 ? "-" : (i / 10).ToString());
+            Console.WriteLine();
         }
     }
 }
