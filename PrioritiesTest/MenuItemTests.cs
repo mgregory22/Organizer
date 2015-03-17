@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Priorities;
+using System;
+using System.Collections.Generic;
 
 namespace PrioritiesTest
 {
@@ -16,7 +16,7 @@ namespace PrioritiesTest
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testDesc, testKey);
+            menuItem = new MenuItem(testKey, testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -68,7 +68,7 @@ namespace PrioritiesTest
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testDesc, testKey);
+            menuItem = new MenuItem(testKey, testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -117,7 +117,7 @@ namespace PrioritiesTest
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4, testKey);
+            menuItem = new MenuItem(testKey, testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
             menuItem.MaxWidth = testMaxWidth;
         }
 
