@@ -1,35 +1,56 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MSG.Console;
 using System;
-using Priorities;
+using System.Collections.Generic;
 
 namespace PrioritiesTest
 {
+    class ToStringCountMenuItem : MenuItem
+    {
+        public static int toStringCalled = 0;
+
+        public ToStringCountMenuItem()
+            : base(ConsoleKey.A, "")
+        {
+        }
+
+        public override string ToString(int index = 0)
+        {
+            toStringCalled++;
+            return "";
+        }
+
+    }
+
     [TestClass]
     public class MenuTests
     {
-        [TestMethod]
-        public void TestMenu()
+        Menu menu;
+        MenuItem[] menuItems;
+
+        [TestInitialize]
+        public void Initialize()
         {
-            MenuItem[] menuItems = {
-                new MenuItem(ConsoleKey.A, "Add Chicken"),
-                new MenuItem(ConsoleKey.B, "Broast Chicken"),
-                new MenuItem(ConsoleKey.C, "Chill Chicken"),
-                new MenuItem(ConsoleKey.T, "Test menu item, test of wrapping text " +
-                    "within a 40 column area of the screen for a nice display of things and stuff that " +
-                    "is nice to think about before work when I get there I will work and play.", 40)
+            menuItems = new MenuItem[] {
+                new ToStringCountMenuItem(),
+                new ToStringCountMenuItem(),
+                new ToStringCountMenuItem(),
+                new ToStringCountMenuItem()
             };
-            Menu menu = new Menu(menuItems);
-            Assert.AreEqual(
-                "[A] Add Chicken\n" +
-                "[B] Broast Chicken\n" +
-                "[C] Chill Chicken\n" +
-                "[T] Test menu item, test of wrapping\n" +
-                "    text within a 40 column area of the\n" +
-                "    screen for a nice display of things\n" +
-                "    and stuff that is nice to think\n" +
-                "    about before work when I get there I\n" +
-                "    will work and play.\n"
-              , menu.ToString());
+            menu = new Menu(menuItems);
+        }
+
+        [TestMethod]
+        public void TestAllMenuItemsAreStored()
+        {
+            Assert.AreEqual(menuItems.Length, menu.ItemCount);
+        }
+
+        [TestMethod]
+        public void TestToStringCallsAllMenuItemToStrings()
+        {
+            menu.ToString();
+            Assert.AreEqual(menuItems.Length, ToStringCountMenuItem.toStringCalled);
         }
     }
 }

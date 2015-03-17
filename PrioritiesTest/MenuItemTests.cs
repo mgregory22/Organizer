@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Priorities;
+using MSG.Console;
 using System;
 using System.Collections.Generic;
 
