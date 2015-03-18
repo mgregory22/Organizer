@@ -37,7 +37,7 @@ namespace PrioritiesTest
                 new ToStringCountMenuItem(3),
                 new ToStringCountMenuItem(4)
             };
-            menu = new Menu(menuItems);
+            menu = new Menu("Test Menu", menuItems);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace PrioritiesTest
                 new ActionCountMenuItem(ConsoleKey.D3, countCommands[2], "Item 3"),
                 new ActionCountMenuItem(ConsoleKey.D4, countCommands[3], "Item 4")
             };
-            menu = new Menu(menuItems);
+            menu = new Menu("Test Menu", menuItems);
         }
 
         [TestMethod]
@@ -111,6 +111,12 @@ namespace PrioritiesTest
         public void TestExecuteReturnsTrueWhenKeystrokeMatchesMenuItem()
         {
             Assert.IsTrue(menu.ExecuteItemThatKeystrokeMatches(ConsoleKey.D2));
+        }
+
+        [TestMethod]
+        public void TestMenuTitleDisplays()
+        {
+            Assert.IsTrue(menu.ToString().StartsWith("Test Menu\n---------\n"));
         }
     }
 }

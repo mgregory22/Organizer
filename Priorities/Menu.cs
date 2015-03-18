@@ -14,7 +14,8 @@ namespace MSG.Console
     /// </summary>
     public class Menu
     {
-        MenuItem[] menuItems;
+        private MenuItem[] menuItems;
+        private string title;
         /// <summary>
         ///   Find and execute the menu item that matches the keystroke.
         /// </summary>
@@ -34,20 +35,29 @@ namespace MSG.Console
             return false;
         }
         /// <summary>
-        ///   Initializes a new menu with the given array of menu items.  The items
-        ///   are displayed in the order given in the array.
-        /// </summary>
-        /// <param name="menuItems"></param>
-        public Menu(MenuItem[] menuItems)
-        {
-            this.menuItems = menuItems;
-        }
-        /// <summary>
         ///   Returns the number of items in the menu.
         /// </summary>
         public int ItemCount
         {
-            get { return menuItems.Count();  }
+            get { return menuItems.Count(); }
+        }
+        /// <summary>
+        ///   Initializes a new menu with the given array of menu items.  The items
+        ///   are displayed in the order given in the array.
+        /// </summary>
+        /// <param name="menuItems"></param>
+        public Menu(string title, MenuItem[] menuItems)
+        {
+            this.title = title;
+            this.menuItems = menuItems;
+        }
+        /// <summary>
+        ///   Title of the menu.
+        /// </summary>
+        public string Title
+        {
+            get { return title; }
+            set { title = value; }
         }
         /// <summary>
         ///   Returns a string of the entire menu.
@@ -55,7 +65,7 @@ namespace MSG.Console
         /// <returns>String representation of the menu</returns>
         public override string ToString()
         {
-            string s = "";
+            string s = title + '\n' + new String('-', title.Length) + '\n';
             foreach (MenuItem menuItem in menuItems)
             {
                 for (int i = 0; i < menuItem.LineCount; i++)
