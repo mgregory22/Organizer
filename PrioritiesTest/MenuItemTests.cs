@@ -1,22 +1,51 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
+using MSG.Patterns;
 using System;
 using System.Collections.Generic;
 
 namespace PrioritiesTest
 {
-    [TestClass]
-    public class ShortMenuItemTests
+    /*
+     * Types
+     */
+    class TestCommand : Command
     {
+        public int meaninglessValue;
+        public int executeCount;
+        public int unexecuteCount;
+        public TestCommand(int meaninglessValue)
+        {
+            this.meaninglessValue = meaninglessValue;
+        }
+        public void Execute()
+        {
+            executeCount++;
+        }
+        public void Unexecute()
+        {
+            unexecuteCount++;
+        }
+    }
+
+    [TestClass]
+    public class MenuItemTests
+    {
+        /*
+         * Member variables
+         */
         MenuItem menuItem;
         string testDesc = "Test";
         ConsoleKey testKey = ConsoleKey.T;
         int testMaxWidth = 40;
+        int meaninglessValue = 1;
+        TestCommand testCommand;
 
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, testDesc);
+            testCommand = new TestCommand(meaninglessValue);
+            menuItem = new MenuItem(testKey, testCommand, testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -50,6 +79,49 @@ namespace PrioritiesTest
         {
             Assert.AreEqual(testMaxWidth, menuItem.MaxWidth);
         }
+
+        [TestMethod]
+        public void TestActionIsExecutedWhenCorrectKeystrokeIsSent()
+        {
+            menuItem.ExecuteActionIfKeystrokeMatches(testKey);
+            Assert.AreEqual(1, testCommand.executeCount);
+        }
+
+        [TestMethod]
+        public void TestTrueIsReturnedWhenCorrectKeystrokeIsSent()
+        {
+            Assert.IsTrue(menuItem.ExecuteActionIfKeystrokeMatches(testKey));
+        }
+
+        [TestMethod]
+        public void TestActionIsNotExecutedWhenWrongKeystrokesAreSent()
+        {
+            // Try every key but the real one
+            foreach (ConsoleKey k in ConsoleKey.GetValues(typeof(ConsoleKey)))
+            {
+                if (k != testKey)
+                {
+                    menuItem.ExecuteActionIfKeystrokeMatches(k);
+                }
+            }
+            // Assert Execute() was never executed
+            Assert.AreEqual(0, testCommand.executeCount);
+        }
+
+        [TestMethod]
+        public void TestFalseIsReturnedWhenWrongKeystrokeIsSent()
+        {
+            bool result = false;
+            // Try every key but the real one
+            foreach (ConsoleKey k in ConsoleKey.GetValues(typeof(ConsoleKey)))
+            {
+                if (k != testKey)
+                {
+                    result |= menuItem.ExecuteActionIfKeystrokeMatches(k);
+                }
+            }
+            Assert.IsFalse(result);
+        }
     }
 
     [TestClass]
@@ -68,7 +140,7 @@ namespace PrioritiesTest
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, testDesc);
+            menuItem = new MenuItem(testKey, new TestCommand(2), testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -117,7 +189,7 @@ namespace PrioritiesTest
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
+            menuItem = new MenuItem(testKey, new TestCommand(3), testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
             menuItem.MaxWidth = testMaxWidth;
         }
 

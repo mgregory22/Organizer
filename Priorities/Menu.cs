@@ -15,17 +15,44 @@ namespace MSG.Console
     public class Menu
     {
         MenuItem[] menuItems;
-
+        /// <summary>
+        ///   Find and execute the menu item that matches the keystroke.
+        /// </summary>
+        /// <param name="keystroke"></param>
+        /// <returns>
+        ///   True if the keystroke matched one of the menu items.
+        /// </returns>
+        public bool ExecuteItemThatKeystrokeMatches(ConsoleKey keystroke)
+        {
+            foreach (MenuItem menuItem in menuItems)
+            {
+                if (menuItem.ExecuteActionIfKeystrokeMatches(keystroke))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        ///   Initializes a new menu with the given array of menu items.  The items
+        ///   are displayed in the order given in the array.
+        /// </summary>
+        /// <param name="menuItems"></param>
         public Menu(MenuItem[] menuItems)
         {
             this.menuItems = menuItems;
         }
-
+        /// <summary>
+        ///   Returns the number of items in the menu.
+        /// </summary>
         public int ItemCount
         {
             get { return menuItems.Count();  }
         }
-
+        /// <summary>
+        ///   Returns a string of the entire menu.
+        /// </summary>
+        /// <returns>String representation of the menu</returns>
         public override string ToString()
         {
             string s = "";
