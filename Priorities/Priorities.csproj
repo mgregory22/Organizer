@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command.cs" />
-    <Compile Include="Menu.cs" />
-    <Compile Include="MenuItem.cs" />
+    <Compile Include="Commands.cs" />
+    <Compile Include="MSG\Console\Draw.cs" />
+    <Compile Include="MSG\Console\Prompt.cs" />
+    <Compile Include="MSG\Patterns\Command.cs" />
+    <Compile Include="MSG\Console\Menu.cs" />
+    <Compile Include="MSG\Console\MenuItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

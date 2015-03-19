@@ -65,7 +65,7 @@ namespace MSG.Console
         /// <returns>String representation of the menu</returns>
         public override string ToString()
         {
-            string s = title + '\n' + new String('-', title.Length) + '\n';
+            string s = Draw.UnderlinedText(title);
             foreach (MenuItem menuItem in menuItems)
             {
                 for (int i = 0; i < menuItem.LineCount; i++)

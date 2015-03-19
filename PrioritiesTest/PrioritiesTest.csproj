@@ -50,9 +50,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MenuItemTests.cs" />
+    <Compile Include="MSG\Console\MenuItemTests.cs" />
+    <Compile Include="MSG\Console\PromptTests.cs" />
+    <Compile Include="MSG\Console\DrawTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MenuTests.cs" />
+    <Compile Include="MSG\Console\MenuTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Priorities\Priorities.csproj">
