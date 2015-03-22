@@ -6,8 +6,8 @@
     <ProjectGuid>{974C560C-3DB5-4950-95D9-FCCD744DD659}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PrioritiesTest</RootNamespace>
-    <AssemblyName>PrioritiesTest</AssemblyName>
+    <RootNamespace>MSGTest</RootNamespace>
+    <AssemblyName>MSGTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,18 +50,24 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MSG\Console\MenuItemTests.cs" />
-    <Compile Include="MSG\Console\KeyPromptTests.cs" />
-    <Compile Include="MSG\Console\DrawTests.cs" />
+    <Compile Include="Console\MenuItemTests.cs" />
+    <Compile Include="Console\KeyPromptTests.cs" />
+    <Compile Include="Console\DrawTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MSG\Console\MenuTests.cs" />
+    <Compile Include="Console\MenuTests.cs" />
+    <Compile Include="Console\PromptTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MSG\MSG.csproj">
+      <Project>{3acd9886-1905-4f80-9495-c6970c2b93f2}</Project>
+      <Name>MSG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Priorities\Priorities.csproj">
       <Project>{70a0a878-b0aa-4f50-a166-db53e620ad98}</Project>
       <Name>Priorities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
 
-namespace PrioritiesTest.MSG.Console
+namespace MSGTest.Console
 {
     [TestClass]
     public class DrawTests
@@ -12,13 +12,11 @@ namespace PrioritiesTest.MSG.Console
         {
             Assert.AreEqual("---------1", Draw.Ruler(10));
         }
-
         [TestMethod]
         public void TestRulerReturns20CharRulerWith2AtTheEnd()
         {
             Assert.AreEqual("---------1---------2", Draw.Ruler(20));
         }
-
         [TestMethod]
         public void TestUnderlinedTextReturnsMainMenuTitle()
         {

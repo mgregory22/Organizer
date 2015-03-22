@@ -23,11 +23,11 @@ namespace MSG.Console
         /// <returns>
         ///   True if the keystroke matched one of the menu items.
         /// </returns>
-        public bool ExecuteItemThatKeystrokeMatches(char keystroke)
+        public bool DoMatchingItem(char keystroke)
         {
             foreach (MenuItem menuItem in menuItems)
             {
-                if (menuItem.ExecuteActionIfKeystrokeMatches(keystroke))
+                if (menuItem.DoIfMatching(keystroke))
                 {
                     return true;
                 }

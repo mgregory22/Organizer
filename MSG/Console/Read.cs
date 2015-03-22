@@ -11,6 +11,10 @@ namespace MSG.Console
     ///   to be easy to derive from and override its methods for testing
     ///   and for reading from other devices and situations.
     /// </summary>
+    /// <remarks>
+    ///   Do not print anything from this class.  All printing must occur
+    ///   through a Print object.
+    /// </remarks>
     public class Read
     {
         /// <summary>
@@ -21,7 +25,7 @@ namespace MSG.Console
         virtual public char Key()
         {
             ConsoleKeyInfo key;
-            key = System.Console.ReadKey(false);
+            key = System.Console.ReadKey(true); // suppress printing
             return key.KeyChar;
         }
     }

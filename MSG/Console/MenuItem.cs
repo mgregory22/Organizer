@@ -54,11 +54,11 @@ namespace MSG.Console
         ///   True if there was a match and the action was executed, whether
         ///   the action was successful or not.
         /// </returns>
-        public bool ExecuteActionIfKeystrokeMatches(char keystroke)
+        public bool DoIfMatching(char keystroke)
         {
             if (keystroke == this.keystroke)
             {
-                this.action.Execute();
+                this.action.Do();
                 return true;
             }
             return false;

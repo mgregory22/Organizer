@@ -13,11 +13,8 @@ namespace MSG.Console
     /// <remarks>
     ///   I really hate this class because all the methods are called "Prompt"
     /// </remarks>
-    public class KeyPrompt
+    public class KeyPrompt : Prompt
     {
-        private Print print;
-        private string promptMsg;
-        private Read read;
         private char[] validList;
         /// <summary>
         ///   Displays the prompt and reads a keystroke.
@@ -28,46 +25,41 @@ namespace MSG.Console
             char c;
             do {
                 PrintPrompt();
-                c = read.Key();
-                print.Char(c, true);
+                c = Read.Key();
+                Print.Char(c, true);
             } while (KeyIsInvalid(c));
             return c;
         }
+        /// <summary>
+        ///   Does all validation on the key.
+        /// </summary>
+        /// <param name="c">Key to validate</param>
+        /// <returns>True if key is invalid</returns>
         private bool KeyIsInvalid(char c)
         {
             if (validList != null && !validList.Contains(c))
             {
-                print.String("Invalid selection. Try again.", true);
+                Print.String("Invalid selection. Try again.", true);
                 return true;
             }
             return false;
         }
         /// <summary>
-        ///   Initialize a prompt with message.
+        ///   Initialize a prompt with message, print and read objects.
         /// </summary>
         /// <param name="print">Used to print the prompt</param>
         /// <param name="promptMsg">The prompt string to use when requesting user input</param>
         /// <param name="read">Used to read the user input</param>
         public KeyPrompt(Print print, string promptMsg, Read read)
+            : base(print, promptMsg, read)
         {
-            this.print = print;
-            this.promptMsg = promptMsg;
-            this.read = read;
         }
         /// <summary>
         ///   Prints the prompt message (without newline).
         /// </summary>
         public void PrintPrompt()
         {
-            print.String(promptMsg);
-        }
-        /// <summary>
-        ///   The text that prompts the user for input.
-        /// </summary>
-        public string PromptMsg
-        {
-            get { return promptMsg; }
-            set { promptMsg = value; }
+            Print.String(promptMsg);
         }
         /// <summary>
         ///   If this property is set, the key the user enters must be

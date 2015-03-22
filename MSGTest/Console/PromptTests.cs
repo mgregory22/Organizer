@@ -2,15 +2,19 @@
 using MSG.Console;
 using System;
 
-namespace PrioritiesTest
+namespace MSGTest.Console
 {
     class TestPrint : Print
     {
-        string output = "";
+        string output;
         public override void Char(char c, bool nl = false)
         {
-            Output += c;
-            if (nl) Output += '\n';
+            output += c;
+            if (nl) output += '\n';
+        }
+        public override void Newline(int n = 1)
+        {
+            for (int i = 0; i < n; i++) output += '\n';
         }
         public string Output
         {
@@ -19,64 +23,45 @@ namespace PrioritiesTest
         }
         public override void String(string s, bool nl = false)
         {
-            Output += s;
-            if (nl) Output += '\n';
+            output += s;
+            if (nl) output += '\n';
         }
     }
-
     class TestRead : Read
     {
-        char nextKey;
         public override char Key()
         {
-            return NextKey;
-        }
-        public char NextKey
-        {
-            get { return nextKey; }
-            set { nextKey = value; }
-        }
-        public TestRead()
-        {
-            nextKey = 'a';
+            return ' ';
         }
     }
-
     [TestClass]
-    public class KeyPromptTests
+    public class PromptTests
     {
-        KeyPrompt testPrompt;
-        string testPromptMsg = "> ";
+        Prompt testPrompt;
+        string testPromptMsg = Priorities.Program.promptMsg;
         TestPrint testPrint;
         TestRead testRead;
-
         [TestInitialize]
         public void Initialize()
         {
             testPrint = new TestPrint();
             testRead = new TestRead();
             testPrompt = new KeyPrompt(testPrint, testPromptMsg, testRead);
-            testPrompt.ValidList = new char[] { 'a', 'b' };
         }
-
+        [TestMethod]
+        public void TestKeyPromptStoresPrint()
+        {
+            Assert.AreEqual(testPrint, testPrompt.Print);
+        }
         [TestMethod]
         public void TestKeyPromptStoresPrompt()
         {
             Assert.AreEqual(testPromptMsg, testPrompt.PromptMsg);
         }
-
         [TestMethod]
-        public void TestKeyPromptValidatesKey()
+        public void TestKeyPromptStoresRead()
         {
-            testRead.NextKey = 'a';
-            testPrompt.DoPrompt();
-            Assert.AreEqual("> a\n", testPrint.Output);
-            testRead.NextKey = 'b';
-            testPrompt.DoPrompt();
-            Assert.AreEqual("> b\n", testPrint.Output);
-            testRead.NextKey = 'c';
-            testPrompt.DoPrompt();
-            Assert.AreNotEqual("> c\n", testPrint.Output);
+            Assert.AreEqual(testRead, testPrompt.Read);
         }
     }
 }

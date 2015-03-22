@@ -5,7 +5,9 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Priorities", "Priorities\Priorities.csproj", "{70A0A878-B0AA-4F50-A166-DB53E620AD98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrioritiesTest", "PrioritiesTest\PrioritiesTest.csproj", "{974C560C-3DB5-4950-95D9-FCCD744DD659}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSG", "MSG\MSG.csproj", "{3ACD9886-1905-4F80-9495-C6970C2B93F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSGTest", "MSGTest\MSGTest.csproj", "{974C560C-3DB5-4950-95D9-FCCD744DD659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{70A0A878-B0AA-4F50-A166-DB53E620AD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70A0A878-B0AA-4F50-A166-DB53E620AD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70A0A878-B0AA-4F50-A166-DB53E620AD98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ACD9886-1905-4F80-9495-C6970C2B93F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ACD9886-1905-4F80-9495-C6970C2B93F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ACD9886-1905-4F80-9495-C6970C2B93F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ACD9886-1905-4F80-9495-C6970C2B93F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{974C560C-3DB5-4950-95D9-FCCD744DD659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{974C560C-3DB5-4950-95D9-FCCD744DD659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{974C560C-3DB5-4950-95D9-FCCD744DD659}.Release|Any CPU.ActiveCfg = Release|Any CPU

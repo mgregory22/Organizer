@@ -26,6 +26,13 @@ namespace MSG.Console
                 System.Console.Write(c);
         }
         /// <summary>
+        ///   Prints one or more newlines to the console.
+        /// </summary>
+        virtual public void Newline(int n = 1)
+        {
+            for (int i = 0; i < n; i++) System.Console.WriteLine();
+        }
+        /// <summary>
         ///   Prints a string to the console.
         /// </summary>
         /// <param name="s">String to print</param>

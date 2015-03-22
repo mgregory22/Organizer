@@ -4,7 +4,7 @@ using MSG.Patterns;
 using System;
 using System.Collections.Generic;
 
-namespace PrioritiesTest
+namespace MSGTest.Console
 {
     /*
      * Types
@@ -12,19 +12,19 @@ namespace PrioritiesTest
     class TestCommand : Command
     {
         public int meaninglessValue;
-        public int executeCount;
-        public int unexecuteCount;
+        public int doCount;
+        public int undoCount;
         public TestCommand(int meaninglessValue)
         {
             this.meaninglessValue = meaninglessValue;
         }
-        public void Execute()
+        public override void Do()
         {
-            executeCount++;
+            doCount++;
         }
-        public void Unexecute()
+        public override void Undo()
         {
-            unexecuteCount++;
+            undoCount++;
         }
     }
 
@@ -76,14 +76,14 @@ namespace PrioritiesTest
         [TestMethod]
         public void TestActionIsExecutedWhenCorrectKeystrokeIsSent()
         {
-            menuItem.ExecuteActionIfKeystrokeMatches(testKey);
-            Assert.AreEqual(1, testCommand.executeCount);
+            menuItem.DoIfMatching(testKey);
+            Assert.AreEqual(1, testCommand.doCount);
         }
 
         [TestMethod]
         public void TestTrueIsReturnedWhenCorrectKeystrokeIsSent()
         {
-            Assert.IsTrue(menuItem.ExecuteActionIfKeystrokeMatches(testKey));
+            Assert.IsTrue(menuItem.DoIfMatching(testKey));
         }
 
         [TestMethod]
@@ -94,11 +94,11 @@ namespace PrioritiesTest
             {
                 if (k != testKey)
                 {
-                    menuItem.ExecuteActionIfKeystrokeMatches(k);
+                    menuItem.DoIfMatching(k);
                 }
             }
             // Assert Execute() was never executed
-            Assert.AreEqual(0, testCommand.executeCount);
+            Assert.AreEqual(0, testCommand.doCount);
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace PrioritiesTest
             {
                 if (k != testKey)
                 {
-                    result |= menuItem.ExecuteActionIfKeystrokeMatches(k);
+                    result |= menuItem.DoIfMatching(k);
                 }
             }
             Assert.IsFalse(result);

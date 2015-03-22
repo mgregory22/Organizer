@@ -4,7 +4,7 @@ using MSG.Patterns;
 using System;
 using System.Collections.Generic;
 
-namespace PrioritiesTest
+namespace MSGTest.Console
 {
     [TestClass]
     public class MenuDisplayTests
@@ -60,8 +60,8 @@ namespace PrioritiesTest
         class CountCommand : Command
         {
             public int executeCount = 0;
-            public void Execute() { executeCount++; }
-            public void Unexecute() { }
+            public override void Do() { executeCount++; }
+            public override void Undo() { }
         }
 
         class ActionCountMenuItem : MenuItem
@@ -97,7 +97,7 @@ namespace PrioritiesTest
         [TestMethod]
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()
         {
-            menu.ExecuteItemThatKeystrokeMatches('2');
+            menu.DoMatchingItem('2');
             Assert.AreEqual(1, countCommands[1].executeCount);
             // Might as well check that ONLY the correct command was executed
             Assert.AreEqual(0, countCommands[0].executeCount);
@@ -108,7 +108,7 @@ namespace PrioritiesTest
         [TestMethod]
         public void TestExecuteReturnsTrueWhenKeystrokeMatchesMenuItem()
         {
-            Assert.IsTrue(menu.ExecuteItemThatKeystrokeMatches('2'));
+            Assert.IsTrue(menu.DoMatchingItem('2'));
         }
 
         [TestMethod]

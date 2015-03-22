@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{70A0A878-B0AA-4F50-A166-DB53E620AD98}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3ACD9886-1905-4F80-9495-C6970C2B93F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Priorities</RootNamespace>
-    <AssemblyName>Priorities</AssemblyName>
+    <RootNamespace>MSG</RootNamespace>
+    <AssemblyName>MSG</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,24 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddTask.cs" />
-    <Compile Include="Commands\DeleteTask.cs" />
-    <Compile Include="Commands\ListTasks.cs" />
-    <Compile Include="Commands\MoveTask.cs" />
-    <Compile Include="Commands\Options.cs" />
-    <Compile Include="Commands\Quit.cs" />
-    <Compile Include="Commands\RenameTask.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Console\Draw.cs" />
+    <Compile Include="Console\KeyPrompt.cs" />
+    <Compile Include="Console\Menu.cs" />
+    <Compile Include="Console\MenuItem.cs" />
+    <Compile Include="Console\Print.cs" />
+    <Compile Include="Console\Prompt.cs" />
+    <Compile Include="Console\Read.cs" />
+    <Compile Include="Console\StringPrompt.cs" />
+    <Compile Include="Patterns\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MSG\MSG.csproj">
-      <Project>{3acd9886-1905-4f80-9495-c6970c2b93f2}</Project>
-      <Name>MSG</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
