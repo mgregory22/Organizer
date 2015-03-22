@@ -44,7 +44,9 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="MSG\Console\Draw.cs" />
-    <Compile Include="MSG\Console\Prompt.cs" />
+    <Compile Include="MSG\Console\KeyPrompt.cs" />
+    <Compile Include="MSG\Console\Print.cs" />
+    <Compile Include="MSG\Console\Read.cs" />
     <Compile Include="MSG\Patterns\Command.cs" />
     <Compile Include="MSG\Console\Menu.cs" />
     <Compile Include="MSG\Console\MenuItem.cs" />

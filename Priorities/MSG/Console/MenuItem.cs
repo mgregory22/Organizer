@@ -19,7 +19,7 @@ namespace MSG.Console
     {
         Command action;
         string description;
-        ConsoleKey keystroke;
+        char keystroke;
         int maxWidth;
         List<string> lines;
 
@@ -54,7 +54,7 @@ namespace MSG.Console
         ///   True if there was a match and the action was executed, whether
         ///   the action was successful or not.
         /// </returns>
-        public bool ExecuteActionIfKeystrokeMatches(ConsoleKey keystroke)
+        public bool ExecuteActionIfKeystrokeMatches(char keystroke)
         {
             if (keystroke == this.keystroke)
             {
@@ -66,7 +66,7 @@ namespace MSG.Console
         /// <summary>
         ///   The keystroke to activate the menu item.
         /// </summary>
-        virtual public ConsoleKey Keystroke
+        virtual public char Keystroke
         {
             get { return keystroke; }
             set
@@ -103,7 +103,7 @@ namespace MSG.Console
         /// <param name="action"></param>
         /// <param name="description"></param>
         /// <param name="maxWidth"></param>
-        public MenuItem(ConsoleKey keystroke, Command action, string description, int maxWidth = 80)
+        public MenuItem(char keystroke, Command action, string description, int maxWidth = 80)
         {
             this.action = action;
             this.description = description;

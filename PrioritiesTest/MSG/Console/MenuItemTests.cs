@@ -36,7 +36,7 @@ namespace PrioritiesTest
          */
         MenuItem menuItem;
         string testDesc = "Test";
-        ConsoleKey testKey = ConsoleKey.T;
+        char testKey = 't';
         int testMaxWidth = 40;
         int meaninglessValue = 1;
         TestCommand testCommand;
@@ -64,14 +64,7 @@ namespace PrioritiesTest
         [TestMethod]
         public void TestBasicKeyToStringIsCorrect()
         {
-            Assert.AreEqual("[T] Test", menuItem.ToString());
-        }
-
-        [TestMethod]
-        public void TestFunctionKeyToStringIsCorrect()
-        {
-            menuItem.Keystroke = ConsoleKey.F1;
-            Assert.AreEqual("[F1] Test", menuItem.ToString());
+            Assert.AreEqual("[t] Test", menuItem.ToString());
         }
 
         [TestMethod]
@@ -97,7 +90,7 @@ namespace PrioritiesTest
         public void TestActionIsNotExecutedWhenWrongKeystrokesAreSent()
         {
             // Try every key but the real one
-            foreach (ConsoleKey k in ConsoleKey.GetValues(typeof(ConsoleKey)))
+            for (char k = ' '; k < '~'; k++)
             {
                 if (k != testKey)
                 {
@@ -113,7 +106,7 @@ namespace PrioritiesTest
         {
             bool result = false;
             // Try every key but the real one
-            foreach (ConsoleKey k in ConsoleKey.GetValues(typeof(ConsoleKey)))
+            for (char k = ' '; k < '~'; k++)
             {
                 if (k != testKey)
                 {
@@ -129,7 +122,7 @@ namespace PrioritiesTest
     {
         MenuItem menuItem;
         string testDesc = "Test of a very long description to test wrapping";
-        ConsoleKey testKey = ConsoleKey.T;
+        char testKey = 't';
         int testMaxWidth = 40;
 
         public static void AssertStringLengthIsLessThanOrEqualToMaxWidth(string s, int maxWidth)
@@ -173,7 +166,7 @@ namespace PrioritiesTest
         string testDescLine2 = "will be wrapped into three lines that";
         string testDescLine3 = "hopefully will make sense because I plan";
         string testDescLine4 = "on doing this right!";
-        ConsoleKey testKey = ConsoleKey.T;
+        char testKey = 't';
         int testMaxWidth = 40;
 
         private int GetKeystrokePrefixLen()
