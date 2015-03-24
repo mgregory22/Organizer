@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Console\StringPromptTests.cs" />
     <Compile Include="Console\MenuItemTests.cs" />
     <Compile Include="Console\KeyPromptTests.cs" />
     <Compile Include="Console\DrawTests.cs" />

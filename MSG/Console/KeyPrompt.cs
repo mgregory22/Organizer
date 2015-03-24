@@ -55,13 +55,6 @@ namespace MSG.Console
         {
         }
         /// <summary>
-        ///   Prints the prompt message (without newline).
-        /// </summary>
-        public void PrintPrompt()
-        {
-            Print.String(promptMsg);
-        }
-        /// <summary>
         ///   If this property is set, the key the user enters must be
         ///   in this list, otherwise an error message will be displayed
         ///   and the user reprompted.

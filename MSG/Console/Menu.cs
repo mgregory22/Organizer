@@ -75,6 +75,22 @@ namespace MSG.Console
             }
             return s;
         }
+        /// <summary>
+        ///   Returns the list of keystrokes that have corresponding
+        ///   menu items.
+        /// </summary>
+        public char[] ValidKeys
+        {
+            get
+            {
+                char[] validKeys = new char[menuItems.Length];
+                for (int i = 0; i < menuItems.Length; i++)
+                {
+                    validKeys[i] = menuItems[i].Keystroke;
+                }
+                return validKeys;
+            }
+            private set { }
+        }
     }
-
 }

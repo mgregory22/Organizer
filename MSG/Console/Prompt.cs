@@ -20,6 +20,13 @@ namespace MSG.Console
             set { print = value; }
         }
         /// <summary>
+        ///   Uses the print object to print the prompt message (without newline).
+        /// </summary>
+        public void PrintPrompt()
+        {
+            Print.String(promptMsg);
+        }
+        /// <summary>
         ///   Initialize a prompt with message, print and read objects.
         /// </summary>
         /// <param name="print">Used to print the prompt</param>
