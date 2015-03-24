@@ -55,26 +55,20 @@ namespace MSGTest.Console
         [TestMethod]
         public void TestKeyPromptValidatesKey()
         {
-            testRead.NextKey = 'a';
-            testPrompt.DoPrompt();
-            Assert.AreEqual(
-                testPromptMsg + "a\n"
-                , testPrint.Output
-            );
-            testRead.NextKey = 'b';
-            testPrompt.DoPrompt();
-            Assert.AreEqual(
-                testPromptMsg + "b\n"
-                , testPrint.Output
-            );
+            char testKey = 'a';
+            testRead.NextKey = testKey;
+            char gotKey = testPrompt.DoPrompt();
+            Assert.AreEqual(testPromptMsg + "\n", testPrint.Output);
+            Assert.AreEqual(testKey, gotKey);
+
             testRead.NextKeys = new char[] { 'A', 'a' };
-            testPrompt.DoPrompt();
-            Assert.AreEqual(
-                testPromptMsg + "A\n"
+            gotKey = testPrompt.DoPrompt();
+            Assert.AreEqual(testPromptMsg + "\n"
                     + "Invalid selection. Try again.\n"
-                    + testPromptMsg + "a\n"
+                    + testPromptMsg + "\n"
                 , testPrint.Output
             );
+            Assert.AreEqual(testKey, gotKey);
         }
     }
 }

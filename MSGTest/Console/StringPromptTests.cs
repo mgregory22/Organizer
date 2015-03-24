@@ -56,7 +56,8 @@ namespace MSGTest.Console
         public void TestGetsString()
         {
             testRead.NextString = testString;
-            testPrompt.DoPrompt();
+            string gotString = testPrompt.DoPrompt();
+            Assert.AreEqual(testString, gotString);
         }
     }
 }

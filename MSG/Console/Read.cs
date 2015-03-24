@@ -11,13 +11,6 @@ namespace MSG.Console
     ///   to be easy to derive from and override its methods for testing
     ///   and for reading from other devices and situations.
     /// </summary>
-    /// <remarks>
-    ///   Do not print anything from this class.  All printing must occur
-    ///   through a Print object.
-    ///   
-    ///   Actually, that doesn't make sense for anything other than keyhits,
-    ///   since the user needs to be able to see what he's entering. BTTDB
-    /// </remarks>
     public class Read
     {
         /// <summary>
@@ -28,7 +21,7 @@ namespace MSG.Console
         virtual public char Key()
         {
             ConsoleKeyInfo key;
-            key = System.Console.ReadKey(true); // suppress printing
+            key = System.Console.ReadKey(false);
             return key.KeyChar;
         }
         virtual public string String()

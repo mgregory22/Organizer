@@ -26,7 +26,7 @@ namespace MSG.Console
             do {
                 PrintPrompt();
                 c = Read.Key();
-                Print.Char(c, true);
+                Print.Newline();
             } while (KeyIsInvalid(c));
             return c;
         }
