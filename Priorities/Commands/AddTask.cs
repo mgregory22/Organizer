@@ -1,4 +1,5 @@
-﻿using MSG.Patterns;
+﻿using MSG.Console;
+using MSG.Patterns;
 using System;
 
 namespace Priorities.Commands
@@ -7,7 +8,11 @@ namespace Priorities.Commands
     {
         public override void Do()
         {
-            Console.WriteLine("Add Task");
+            Print print = new Print();
+            Read read = new Read();
+            StringPrompt prompt = new StringPrompt(print, "Enter task name\n> ", read);
+            string taskName = prompt.DoPrompt();
+            print.String("You entered: " + taskName, true);
         }
         public override void Undo()
         {

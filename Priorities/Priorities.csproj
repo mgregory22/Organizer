@@ -51,6 +51,8 @@
     <Compile Include="Commands\RenameTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskList\Task.cs" />
+    <Compile Include="TaskList\TaskList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
