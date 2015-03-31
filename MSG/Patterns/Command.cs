@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace MSG.Patterns
 {
     /// <summary>
-    ///   Thrown when an attempt is made to undo a command that cannot be undone.
+    ///   Thrown when an attempt is made to undo a command that
+    ///   inherently cannot be undone.
     /// </summary>
     [Serializable]
     public class CannotUndoException : NotSupportedException
@@ -21,18 +22,25 @@ namespace MSG.Patterns
             : base(info, context) { }
     }
     /// <summary>
-    ///   A basic Command design pattern.
+    ///   Command design pattern.
     /// </summary>
     abstract public class Command
     {
         /// <summary>
-        ///   Performs the command and somehow notes what was done so it can be possibly undone.
+        ///   Performs the command and somehow notes what was 
+        ///   done so it can be possibly undone.
         /// </summary>
-        abstract public void Do();
+        /// <returns>
+        ///   Zero on success, nonzero on failure.
+        /// </returns>
+        abstract public int Do();
         /// <summary>
         ///   Undoes a previously performed command.
         /// </summary>
-        virtual public void Undo()
+        /// <returns>
+        ///   Zero on success, nonzero on failure.
+        /// </returns>
+        virtual public int Undo()
         {
             throw new CannotUndoException();
         }

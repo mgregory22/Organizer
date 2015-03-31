@@ -4,15 +4,9 @@ namespace Priorities.Commands
 {
     class Quit : Command
     {
-        bool done = false;
-        public bool Done
+        public override int Do()
         {
-            get { return done; }
-            set { done = value; }
-        }
-        public override void Do()
-        {
-            done = true;
+            return 1;
         }
     }
 }

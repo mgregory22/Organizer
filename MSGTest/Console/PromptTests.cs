@@ -38,7 +38,7 @@ namespace MSGTest.Console
     public class PromptTests
     {
         Prompt testPrompt;
-        string testPromptMsg = Priorities.Program.promptMsg;
+        string testPromptMsg = "> ";
         TestPrint testPrint;
         TestRead testRead;
         [TestInitialize]

@@ -20,8 +20,8 @@ namespace MSG.Console
         Command action;
         string description;
         char keystroke;
-        int maxWidth;
         List<string> lines;
+        int maxWidth;
 
         /// <summary>
         ///   An object that encapsulates the action to perform when the menu item is selected.
@@ -44,24 +44,23 @@ namespace MSG.Console
             }
         }
         /// <summary>
-        ///   Performs the menu item action if the given keystroke matches
-        ///   the menu item keystroke.  The intention is to loop through
-        ///   a list of menu items and pass the user input to each item,
-        ///   terminating the loop when true is returned.
+        ///   Performs the action associated with the menu item.
+        /// </summary>
+        public int Do()
+        {
+            return this.action.Do();
+        }
+        /// <summary>
+        ///   True if the given keystroke matches the menu item keystroke.
         /// </summary>
         /// <param name="keystroke"></param>
         /// <returns>
         ///   True if there was a match and the action was executed, whether
         ///   the action was successful or not.
         /// </returns>
-        public bool DoIfMatching(char keystroke)
+        public bool DoesMatch(char keystroke)
         {
-            if (keystroke == this.keystroke)
-            {
-                this.action.Do();
-                return true;
-            }
-            return false;
+            return keystroke == this.keystroke;
         }
         /// <summary>
         ///   The keystroke to activate the menu item.
@@ -102,6 +101,7 @@ namespace MSG.Console
         /// <param name="keystroke"></param>
         /// <param name="action"></param>
         /// <param name="description"></param>
+        /// <param name="flags"></param>
         /// <param name="maxWidth"></param>
         public MenuItem(char keystroke, Command action, string description, int maxWidth = 80)
         {

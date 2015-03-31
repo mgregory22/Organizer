@@ -6,17 +6,19 @@ namespace Priorities.Commands
 {
     class AddTask : Command
     {
-        public override void Do()
+        public override int Do()
         {
             Print print = new Print();
             Read read = new Read();
             StringPrompt prompt = new StringPrompt(print, "Enter task name\n> ", read);
             string taskName = prompt.DoPrompt();
             print.String("You entered: " + taskName, true);
+            return 0;
         }
-        public override void Undo()
+        public override int Undo()
         {
             Console.WriteLine("Undo add task");
+            return 0;
         }
     }
 }

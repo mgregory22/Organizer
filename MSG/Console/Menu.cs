@@ -15,24 +15,37 @@ namespace MSG.Console
     public class Menu
     {
         private MenuItem[] menuItems;
+        private KeyPrompt prompt;
+        private Print print;
+        private Read read;
         private string title;
         /// <summary>
-        ///   Find and execute the menu item that matches the keystroke.
+        ///   Find the menu item that matches the keystroke.
         /// </summary>
         /// <param name="keystroke"></param>
         /// <returns>
-        ///   True if the keystroke matched one of the menu items.
+        ///   The menu item of the matching keystroke or null if there was no match.
         /// </returns>
-        public bool DoMatchingItem(char keystroke)
+        public MenuItem FindMatchingItem(char keystroke)
         {
             foreach (MenuItem menuItem in menuItems)
             {
-                if (menuItem.DoIfMatching(keystroke))
+                if (menuItem.DoesMatch(keystroke))
                 {
-                    return true;
+                    return menuItem;
                 }
             }
-            return false;
+            return null;
+        }
+        /// <summary>
+        ///    Returns the list of menu item keystrokes.
+        /// </summary>
+        private char[] GetKeystrokeList()
+        {
+            List<char> keystrokeList = new List<char>();
+            foreach (MenuItem menuItem in this.menuItems)
+                keystrokeList.Add(menuItem.Keystroke);
+            return keystrokeList.ToArray();
         }
         /// <summary>
         ///   Returns the number of items in the menu.
@@ -42,14 +55,43 @@ namespace MSG.Console
             get { return menuItems.Count(); }
         }
         /// <summary>
+        ///   Performs the menu input/action loop.
+        /// </summary>
+        /// <returns></returns>
+        public int Loop()
+        {
+            int rv = 0;
+            // Input/action loop
+            while (rv == 0)
+            {
+                print.String(this.ToString());
+                char k = prompt.DoPrompt();
+                MenuItem m = this.FindMatchingItem(k);
+                rv = m.Do();
+            }
+            return rv;
+        }
+        /// <summary>
         ///   Initializes a new menu with the given array of menu items.  The items
         ///   are displayed in the order given in the array.
         /// </summary>
         /// <param name="menuItems"></param>
-        public Menu(string title, MenuItem[] menuItems)
+        public Menu(string title, MenuItem[] menuItems, string promptMsg, Print print, Read read)
         {
             this.title = title;
             this.menuItems = menuItems;
+            this.print = print;
+            this.read = read;
+            this.prompt = new KeyPrompt(print, promptMsg, read);
+            this.prompt.ValidList = GetKeystrokeList();
+        }
+        /// <summary>
+        ///   String to use as the prompt.
+        /// </summary>
+        public string PromptMsg
+        {
+            get { return prompt.PromptMsg; }
+            set { prompt.PromptMsg = value; }
         }
         /// <summary>
         ///   Title of the menu.

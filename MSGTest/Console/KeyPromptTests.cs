@@ -41,7 +41,7 @@ namespace MSGTest.Console
     public class KeyPromptTests
     {
         KeyPrompt testPrompt;
-        string testPromptMsg = Priorities.Program.promptMsg;
+        string testPromptMsg = "> ";
         TestPrint testPrint;
         KeyPromptTestRead testRead;
         [TestInitialize]

@@ -41,7 +41,7 @@ namespace MSGTest.Console
     public class StringPromptTests
     {
         StringPrompt testPrompt;
-        string testPromptMsg = Priorities.Program.promptMsg;
+        string testPromptMsg = "> ";
         TestPrint testPrint;
         StringPromptTestRead testRead;
         string testString = "This is wonderful";

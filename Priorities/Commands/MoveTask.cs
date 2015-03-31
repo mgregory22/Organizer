@@ -5,13 +5,15 @@ namespace Priorities.Commands
 {
     class MoveTask : Command
     {
-        public override void Do()
+        public override int Do()
         {
             Console.WriteLine("Move task");
+            return 0;
         }
-        public override void Undo()
+        public override int Undo()
         {
             Console.WriteLine("Undo move task");
+            return 0;
         }
     }
 }

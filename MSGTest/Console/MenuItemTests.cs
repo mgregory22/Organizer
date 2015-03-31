@@ -18,13 +18,15 @@ namespace MSGTest.Console
         {
             this.meaninglessValue = meaninglessValue;
         }
-        public override void Do()
+        public override int Do()
         {
             doCount++;
+            return 0;
         }
-        public override void Undo()
+        public override int Undo()
         {
             undoCount++;
+            return 0;
         }
     }
 
@@ -76,14 +78,15 @@ namespace MSGTest.Console
         [TestMethod]
         public void TestActionIsExecutedWhenCorrectKeystrokeIsSent()
         {
-            menuItem.DoIfMatching(testKey);
+            if (menuItem.DoesMatch(testKey))
+                menuItem.Do();
             Assert.AreEqual(1, testCommand.doCount);
         }
 
         [TestMethod]
         public void TestTrueIsReturnedWhenCorrectKeystrokeIsSent()
         {
-            Assert.IsTrue(menuItem.DoIfMatching(testKey));
+            Assert.IsTrue(menuItem.DoesMatch(testKey));
         }
 
         [TestMethod]
@@ -94,7 +97,7 @@ namespace MSGTest.Console
             {
                 if (k != testKey)
                 {
-                    menuItem.DoIfMatching(k);
+                    menuItem.DoesMatch(k);
                 }
             }
             // Assert Execute() was never executed
@@ -110,7 +113,7 @@ namespace MSGTest.Console
             {
                 if (k != testKey)
                 {
-                    result |= menuItem.DoIfMatching(k);
+                    result |= menuItem.DoesMatch(k);
                 }
             }
             Assert.IsFalse(result);

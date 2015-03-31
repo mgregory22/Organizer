@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Priorities.TaskList
+namespace Priorities.Tasks
 {
     class Task
     {
-        int priority;
         string name;
+        int parent;
+        int priority;
     }
 
-    class TaskList
+    class List
     {
-        int listNumber;
-        int parentTask;
         List<Task> tasks;
     }
 }
