@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
+using MSG.IO;
 using MSG.Patterns;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,12 @@ namespace MSGTest.Console
         {
             this.meaninglessValue = meaninglessValue;
         }
-        public override int Do()
+        public override int Do(Print print, Read read)
         {
             doCount++;
             return 0;
         }
-        public override int Undo()
+        public override int Undo(Print print, Read read)
         {
             undoCount++;
             return 0;
@@ -79,7 +80,7 @@ namespace MSGTest.Console
         public void TestActionIsExecutedWhenCorrectKeystrokeIsSent()
         {
             if (menuItem.DoesMatch(testKey))
-                menuItem.Do();
+                menuItem.Do(null, null);
             Assert.AreEqual(1, testCommand.doCount);
         }
 

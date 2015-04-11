@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSG.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,7 +68,7 @@ namespace MSG.Console
                 print.String(this.ToString());
                 char k = prompt.DoPrompt();
                 MenuItem m = this.FindMatchingItem(k);
-                rv = m.Do();
+                rv = m.Do(print, read);
             }
             return rv;
         }

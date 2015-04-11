@@ -54,6 +54,8 @@
     <Compile Include="Console\MenuItemTests.cs" />
     <Compile Include="Console\KeyPromptTests.cs" />
     <Compile Include="Console\DrawTests.cs" />
+    <Compile Include="IO\TestPrint.cs" />
+    <Compile Include="IO\TestRead.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\MenuTests.cs" />
     <Compile Include="Console\PromptTests.cs" />

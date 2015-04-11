@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
+using MSG.IO;
 using MSG.Patterns;
 using System;
 using System.Collections.Generic;
@@ -96,8 +97,8 @@ namespace MSGTest.Console
         class CountCommand : Command
         {
             public int executeCount = 0;
-            public override int Do() { executeCount++; return 0; }
-            public override int Undo() { return 0; }
+            public override int Do(Print print, Read read) { executeCount++; return 0; }
+            public override int Undo(Print print, Read read) { return 0; }
         }
         class ActionCountMenuItem : MenuItem
         {
@@ -130,7 +131,7 @@ namespace MSGTest.Console
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()
         {
             MenuItem m = menu.FindMatchingItem('1');
-            m.Do();
+            m.Do(null, null);
             Assert.AreEqual(1, menuItems[1].Action.executeCount);
             // Might as well check that ONLY the correct command was executed
             Assert.AreEqual(0, menuItems[0].Action.executeCount);

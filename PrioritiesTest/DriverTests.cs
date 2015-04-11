@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSG.Console;
+using MSG.IO;
 using Priorities;
 using System;
 

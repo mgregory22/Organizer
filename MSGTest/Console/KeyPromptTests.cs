@@ -1,41 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
+using MSGTest.IO;
 using System;
 using System.Collections.Generic;
 
 namespace MSGTest.Console
 {
-    class KeyPromptTestRead : Read
-    {
-        char? nextKey;
-        List<char> nextKeys;
-        public override char Key()
-        {
-            if (nextKey != null)
-            {
-                char c = nextKey.GetValueOrDefault();
-                nextKey = null;
-                return c;
-            }
-            else if (nextKeys != null && nextKeys.Count > 0)
-            {
-                char c = nextKeys[0];
-                nextKeys.RemoveAt(0);
-                return c;
-            }
-            return ' ';
-        }
-        public char NextKey
-        {
-            get { return nextKey.GetValueOrDefault(); }
-            set { nextKey = value; }
-        }
-        public char[] NextKeys
-        {
-            get { return nextKeys.ToArray(); }
-            set { nextKeys = new List<char>(value); }
-        }
-    }
 
     [TestClass]
     public class KeyPromptTests
@@ -43,12 +13,12 @@ namespace MSGTest.Console
         KeyPrompt testPrompt;
         string testPromptMsg = "> ";
         TestPrint testPrint;
-        KeyPromptTestRead testRead;
+        TestRead testRead;
         [TestInitialize]
         public void Initialize()
         {
             testPrint = new TestPrint();
-            testRead = new KeyPromptTestRead();
+            testRead = new TestRead();
             testPrompt = new KeyPrompt(testPrint, testPromptMsg, testRead);
             testPrompt.ValidList = new char[] { 'a', 'b' };
         }

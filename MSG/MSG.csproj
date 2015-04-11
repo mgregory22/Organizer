@@ -43,9 +43,9 @@
     <Compile Include="Console\KeyPrompt.cs" />
     <Compile Include="Console\Menu.cs" />
     <Compile Include="Console\MenuItem.cs" />
-    <Compile Include="Console\Print.cs" />
+    <Compile Include="IO\Print.cs" />
     <Compile Include="Console\Prompt.cs" />
-    <Compile Include="Console\Read.cs" />
+    <Compile Include="IO\Read.cs" />
     <Compile Include="Console\StringPrompt.cs" />
     <Compile Include="Patterns\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

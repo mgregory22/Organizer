@@ -1,55 +1,24 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
+using MSGTest.IO;
 using System;
 using System.Collections.Generic;
 
 namespace MSGTest.Console
 {
-    class StringPromptTestRead : Read
-    {
-        string nextString;
-        List<string> nextStrings;
-        public override string String()
-        {
-            if (nextString != null)
-            {
-                string s = nextString;
-                nextString = null;
-                return s;
-            }
-            else if (nextStrings != null && nextStrings.Count > 0)
-            {
-                string s = nextStrings[0];
-                nextStrings.RemoveAt(0);
-                return s;
-            }
-            return "";
-        }
-        public string NextString
-        {
-            get { return nextString; }
-            set { nextString = value; }
-        }
-        public string[] NextStrings
-        {
-            get { return nextStrings.ToArray(); }
-            set { nextStrings = new List<string>(value); }
-        }
-    }
-
     [TestClass]
     public class StringPromptTests
     {
         StringPrompt testPrompt;
         string testPromptMsg = "> ";
         TestPrint testPrint;
-        StringPromptTestRead testRead;
+        TestRead testRead;
         string testString = "This is wonderful";
         [TestInitialize]
         public void Initialize()
         {
             testPrint = new TestPrint();
-            testRead = new StringPromptTestRead();
+            testRead = new TestRead();
             testPrompt = new StringPrompt(testPrint, testPromptMsg, testRead);
         }
         [TestMethod]

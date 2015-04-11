@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSG.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,14 +34,14 @@ namespace MSG.Patterns
         /// <returns>
         ///   Zero on success, nonzero on failure.
         /// </returns>
-        abstract public int Do();
+        abstract public int Do(Print print, Read read);
         /// <summary>
         ///   Undoes a previously performed command.
         /// </summary>
         /// <returns>
         ///   Zero on success, nonzero on failure.
         /// </returns>
-        virtual public int Undo()
+        virtual public int Undo(Print print, Read read)
         {
             throw new CannotUndoException();
         }

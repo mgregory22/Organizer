@@ -1,4 +1,5 @@
-﻿using MSG.Patterns;
+﻿using MSG.IO;
+using MSG.Patterns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +47,9 @@ namespace MSG.Console
         /// <summary>
         ///   Performs the action associated with the menu item.
         /// </summary>
-        public int Do()
+        public int Do(Print print, Read read)
         {
-            return this.action.Do();
+            return this.action.Do(print, read);
         }
         /// <summary>
         ///   True if the given keystroke matches the menu item keystroke.

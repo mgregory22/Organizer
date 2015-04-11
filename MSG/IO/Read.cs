@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSG.Console
+namespace MSG.IO
 {
     /// <summary>
     ///   Encapsulates the raw reading from the console.  This was intended
