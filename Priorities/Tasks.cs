@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Priorities
 {
-    class Task
+    public class Task
     {
         string name;
         int parent;
@@ -19,7 +19,7 @@ namespace Priorities
         }
     }
 
-    class Tasks
+    public class Tasks
     {
         List<Task> tasks;
         public Tasks()

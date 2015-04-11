@@ -5,7 +5,7 @@ using System;
 
 namespace Priorities.Commands
 {
-    class AddTask : Command
+    public class AddTask : Command
     {
         private Tasks tasks;
         public AddTask(Tasks tasks)
@@ -16,7 +16,6 @@ namespace Priorities.Commands
         {
             StringPrompt prompt = new StringPrompt(print, "Enter task name\n> ", read);
             string taskName = prompt.DoPrompt();
-            print.String("You entered: " + taskName, true);
             this.tasks.Add(taskName);
             return 0;
         }
