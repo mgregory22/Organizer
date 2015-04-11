@@ -44,11 +44,13 @@
   <ItemGroup>
     <Compile Include="Commands\AddTask.cs" />
     <Compile Include="Commands\DeleteTask.cs" />
+    <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\ListTasks.cs" />
     <Compile Include="Commands\MoveTask.cs" />
     <Compile Include="Commands\Options.cs" />
     <Compile Include="Commands\Quit.cs" />
     <Compile Include="Commands\RenameTask.cs" />
+    <Compile Include="Commands\TaskCommand.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

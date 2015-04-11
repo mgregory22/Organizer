@@ -49,7 +49,7 @@ namespace MSG.Console
         /// </summary>
         public int Do(Print print, Read read)
         {
-            return this.action.Do(print, read);
+            return this.action.Do();
         }
         /// <summary>
         ///   True if the given keystroke matches the menu item keystroke.

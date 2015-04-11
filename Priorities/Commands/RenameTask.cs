@@ -4,17 +4,11 @@ using System;
 
 namespace Priorities.Commands
 {
-    class RenameTask : Command
+    class RenameTask : TaskCommand
     {
-        public override int Do(Print print, Read read)
+        public RenameTask(Print print, Read read, Tasks tasks)
+            : base(print, read, tasks)
         {
-            Console.WriteLine("Rename task");
-            return 0;
-        }
-        public override int Undo(Print print, Read read)
-        {
-            Console.WriteLine("Undo rename task");
-            return 0;
         }
     }
 }

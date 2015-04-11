@@ -3,26 +3,13 @@ using MSGTest.IO;
 using Priorities;
 using System;
 
-namespace PrioritiesTest
+namespace PrioritiesTest.Commands
 {
     [TestClass]
     public class AddTaskTests
     {
         TestPrint print;
         TestRead read;
-
-        class TestTasks : Tasks
-        {
-            public string name;
-            public int parent;
-            public int priority;
-            public override void Add(string name, int parent = 0, int priority = 1)
-            {
-                this.name = name;
-                this.parent = parent;
-                this.priority = priority;
-            }
-        }
         TestTasks tasks;
 
         [TestInitialize]
@@ -37,8 +24,8 @@ namespace PrioritiesTest
         {
             string testString = "This is a test";
             read.NextString = testString;
-            Priorities.Commands.AddTask addTask = new Priorities.Commands.AddTask(tasks);
-            addTask.Do(print, read);
+            Priorities.Commands.AddTask addTask = new Priorities.Commands.AddTask(print, read, tasks);
+            addTask.Do();
             Assert.AreEqual(print.Output, "Enter task name\n> " + testString + "\n");
             Assert.AreEqual(testString, tasks.name);
         }

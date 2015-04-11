@@ -25,8 +25,7 @@ namespace PrioritiesTest
         [TestMethod]
         public void TestProgramMenuDisplays()
         {
-            
-            
+            Assert.Fail();            
         }
     }
 }

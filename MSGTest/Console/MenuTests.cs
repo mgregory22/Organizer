@@ -97,8 +97,8 @@ namespace MSGTest.Console
         class CountCommand : Command
         {
             public int executeCount = 0;
-            public override int Do(Print print, Read read) { executeCount++; return 0; }
-            public override int Undo(Print print, Read read) { return 0; }
+            public override int Do() { executeCount++; return 0; }
+            public override int Undo() { return 0; }
         }
         class ActionCountMenuItem : MenuItem
         {

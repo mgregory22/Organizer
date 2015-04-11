@@ -5,23 +5,24 @@ using System;
 
 namespace Priorities.Commands
 {
-    public class AddTask : Command
+    public class AddTask : TaskCommand
     {
-        private Tasks tasks;
-        public AddTask(Tasks tasks)
+        protected string taskName;
+        public AddTask(Print print, Read read, Tasks tasks)
+            : base(print, read, tasks)
         {
-            this.tasks = tasks;
+
         }
-        public override int Do(Print print, Read read)
+        public override int Do()
         {
             StringPrompt prompt = new StringPrompt(print, "Enter task name\n> ", read);
-            string taskName = prompt.DoPrompt();
-            this.tasks.Add(taskName);
+            taskName = prompt.DoPrompt();
+            Redo();
             return 0;
         }
-        public override int Undo(Print print, Read read)
+        public override int Redo()
         {
-            Console.WriteLine("Undo add task");
+            this.tasks.Add(taskName);
             return 0;
         }
     }

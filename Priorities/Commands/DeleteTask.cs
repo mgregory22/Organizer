@@ -4,17 +4,12 @@ using System;
 
 namespace Priorities.Commands
 {
-    class DeleteTask : Command
+    class DeleteTask : TaskCommand
     {
-        public override int Do(Print print, Read read)
+        public DeleteTask(Print print, Read read, Tasks tasks)
+            : base(print, read, tasks)
         {
-            Console.WriteLine("Delete task");
-            return 0;
-        }
-        public override int Undo(Print print, Read read)
-        {
-            Console.WriteLine("Undo delete task");
-            return 0;
+
         }
     }
 }

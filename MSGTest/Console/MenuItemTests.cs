@@ -19,12 +19,12 @@ namespace MSGTest.Console
         {
             this.meaninglessValue = meaninglessValue;
         }
-        public override int Do(Print print, Read read)
+        public override int Do()
         {
             doCount++;
             return 0;
         }
-        public override int Undo(Print print, Read read)
+        public override int Undo()
         {
             undoCount++;
             return 0;

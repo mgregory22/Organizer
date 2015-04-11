@@ -4,17 +4,11 @@ using System;
 
 namespace Priorities.Commands
 {
-    class ListTasks : Command
+    class ListTasks : TaskCommand
     {
-        public override int Do(Print print, Read read)
+        public ListTasks(Print print, Read read, Tasks tasks)
+            : base(print, read, tasks)
         {
-            Console.WriteLine("List tasks");
-            return 0;
-        }
-        public override int Undo(Print print, Read read)
-        {
-            Console.WriteLine("Can't undo list tasks!");
-            return 0;
         }
     }
 }

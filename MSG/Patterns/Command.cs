@@ -1,5 +1,4 @@
-﻿using MSG.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,20 +27,40 @@ namespace MSG.Patterns
     abstract public class Command
     {
         /// <summary>
-        ///   Performs the command and somehow notes what was 
-        ///   done so it can be possibly undone.
+        ///   Should prompt the user for any necessary parameters,
+        ///   store them and perform the command.
         /// </summary>
         /// <returns>
         ///   Zero on success, nonzero on failure.
         /// </returns>
-        abstract public int Do(Print print, Read read);
+        abstract public int Do();
+        /// <summary>
+        ///   Should be set by Do(), Redo(), and Undo() to relay
+        ///   to the user information about what was last done.
+        /// </summary>
+        string message = "";
+        public string Message
+        {
+            get { return message; }
+            set { message = value; }
+        }
+        /// <summary>
+        ///   Performs a previously undone command.
+        /// </summary>
+        /// <returns>
+        ///   Zero on success, nonzero on failure.
+        /// </returns>
+        virtual public int Redo()
+        {
+            return 0;
+        }
         /// <summary>
         ///   Undoes a previously performed command.
         /// </summary>
         /// <returns>
         ///   Zero on success, nonzero on failure.
         /// </returns>
-        virtual public int Undo(Print print, Read read)
+        virtual public int Undo()
         {
             throw new CannotUndoException();
         }

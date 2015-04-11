@@ -4,9 +4,9 @@ using System;
 
 namespace Priorities.Commands
 {
-    class MoveTask : TaskCommand
+    class Help : TaskCommand
     {
-        public MoveTask(Print print, Read read, Tasks tasks)
+        public Help(Print print, Read read, Tasks tasks)
             : base(print, read, tasks)
         {
         }
