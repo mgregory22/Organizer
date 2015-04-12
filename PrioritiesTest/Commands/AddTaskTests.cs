@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSGTest.IO;
-using Priorities;
+using Priorities.Commands;
 using System;
 
 namespace PrioritiesTest.Commands
@@ -8,9 +8,11 @@ namespace PrioritiesTest.Commands
     [TestClass]
     public class AddTaskTests
     {
+        AddTask addTask;
         TestPrint print;
         TestRead read;
         TestTasks tasks;
+        string testString = "This is a test";
 
         [TestInitialize]
         public void Initialize()
@@ -22,21 +24,61 @@ namespace PrioritiesTest.Commands
         [TestMethod]
         public void TestDoAddsTask()
         {
-            string testString = "This is a test";
             read.NextString = testString;
-            Priorities.Commands.AddTask addTask = new Priorities.Commands.AddTask(print, read, tasks);
-            addTask.Do();
+            addTask = new AddTask(print, read, tasks);
+            int r = addTask.Do();
+            Assert.AreEqual(0, r);
             Assert.AreEqual(print.Output, "Enter task name\n> " + testString + "\n");
             Assert.AreEqual(testString, tasks.name);
         }
         [TestMethod]
+        public void TestAddingDuplicateTaskReturnsError()
+        {
+            // add a task
+            read.NextString = testString;
+            addTask = new AddTask(print, read, tasks);
+            addTask.Do();
+            // try to add same task
+            read.NextString = testString;
+            addTask = new AddTask(print, read, tasks);
+            int r = addTask.Do();
+            Assert.AreEqual(TestTasks.ErrorCannotAddDuplicate, r);
+        }
+        [TestMethod]
         public void TestUndoRemovesTask()
         {
-            // Just realized that my Command class needs to separate the act of doing a
-            // menu command from the act of performing the pure computational command,
-            // otherwise if I want to undo the last task added and then redo it, the
-            // AddTask command will re-prompt the user for the task information.
-            Assert.Fail();
+            // add a task
+            read.NextString = testString;
+            addTask = new AddTask(print, read, tasks);
+            addTask.Do();
+            // undo
+            int r = addTask.Undo();
+            // assert the task was removed
+            Assert.AreEqual(0, r);
+            Assert.AreEqual(1, tasks.removeCnt);
+        }
+        [TestMethod]
+        public void TestUndoSomethingNotDoneReturnsError()
+        {
+            int r = addTask.Undo();
+            Assert.AreEqual(AddTask.ErrorCannotUndoSomethingNotDone, r);
+        }
+        [TestMethod]
+        public void TestRedoSomethingNotDoneReturnsError()
+        {
+            int r = addTask.Redo();
+            Assert.AreEqual(AddTask.ErrorCannotRedoSomethingNotDone, r);
+        }
+        [TestMethod]
+        public void TestRedoSomethingNotUndoneReturnsError()
+        {
+            // add a task
+            read.NextString = testString;
+            addTask = new AddTask(print, read, tasks);
+            addTask.Do();
+            // try to redo without undoing first
+            int r = addTask.Redo();
+            Assert.AreEqual(AddTask.ErrorCannotRedoSomethingNotUndone, r);
         }
     }
 }

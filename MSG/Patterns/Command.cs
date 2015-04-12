@@ -10,16 +10,11 @@ namespace MSG.Patterns
     ///   Thrown when an attempt is made to undo a command that
     ///   inherently cannot be undone.
     /// </summary>
-    [Serializable]
     public class CannotUndoException : NotSupportedException
     {
         public CannotUndoException() { }
         public CannotUndoException(string message) : base(message) { }
         public CannotUndoException(string message, Exception inner) : base(message, inner) { }
-        protected CannotUndoException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
     }
     /// <summary>
     ///   Command design pattern.

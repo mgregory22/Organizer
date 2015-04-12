@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSG.IO;
+using MSGTest.IO;
 using Priorities;
+using Priorities.Commands;
 using System;
 
 namespace PrioritiesTest
@@ -8,24 +9,40 @@ namespace PrioritiesTest
     [TestClass]
     public class DriverTests
     {
-        Print print;
-        Read read;
+        Driver driver;
+        int runValue;
+        TestPrint print;
+        TestRead read;
 
         [TestInitialize]
         public void Initialize()
         {
-            print = new Print();
-            read = new Read();
+            print = new TestPrint();
+            read = new TestRead();
+            driver = new Driver(print, read);
+            read.NextKey = 'q';
+            runValue = driver.Run();
         }
         [TestMethod]
-        public void TestProgramRunsSuccessfullyWithNoArguments()
+        public void TestDriverRunsSuccessfully()
         {
-            Driver driver = new Driver(print, read);
+            Assert.AreEqual(Quit.quitValue, runValue);
         }
         [TestMethod]
         public void TestProgramMenuDisplays()
         {
-            Assert.Fail();            
+            Assert.AreEqual("Main Menu\n---------\n"
+                    + "[a] Add Task\n"
+                    + "[d] Delete Task\n"
+                    + "[l] List Tasks\n"
+                    + "[m] Move Task/Change Priority\n"
+                    + "[o] Options Menu\n"
+                    + "[q] Quit Program\n"
+                    + "[r] Rename Task\n"
+                    + "[?] Help\n"
+                    + "> \n"
+                , print.Output
+            );
         }
     }
 }

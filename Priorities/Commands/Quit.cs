@@ -3,15 +3,16 @@ using MSG.Patterns;
 
 namespace Priorities.Commands
 {
-    class Quit : TaskCommand
+    public class Quit : TaskCommand
     {
+        public static int quitValue = 65535;
         public Quit(Print print, Read read, Tasks tasks)
             : base(print, read, tasks)
         {
         }
         public override int Do()
         {
-            return 1;
+            return quitValue;
         }
     }
 }

@@ -4,7 +4,7 @@ using System;
 
 namespace Priorities.Commands
 {
-    class Help : TaskCommand
+    public class Help : TaskCommand
     {
         public Help(Print print, Read read, Tasks tasks)
             : base(print, read, tasks)

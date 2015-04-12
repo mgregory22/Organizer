@@ -22,7 +22,13 @@ namespace Priorities.Commands
         }
         public override int Redo()
         {
-            this.tasks.Add(taskName);
+            tasks.Add(taskName);
+            return 0;
+        }
+        public override int Undo()
+        {
+            if (!tasks.TaskExists(taskName))
+                return 2;
             return 0;
         }
     }

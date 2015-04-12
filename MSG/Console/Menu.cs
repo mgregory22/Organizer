@@ -62,7 +62,7 @@ namespace MSG.Console
         public int Loop()
         {
             int rv = 0;
-            // Input/action loop
+            // Loop while the menu item actions return 0
             while (rv == 0)
             {
                 print.String(this.ToString());
