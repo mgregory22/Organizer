@@ -21,7 +21,7 @@ namespace Priorities
             this.read = read;
 	    }
 
-        public string Run()
+        public void Run()
         {
             Tasks tasks = new Tasks();
             MenuItem[] menuItems = {
@@ -35,7 +35,7 @@ namespace Priorities
                     new MenuItem('?', new Help(print, read), "Help")
                 };
             Menu mainMenu = new Menu("Main Menu", menuItems, promptMsg, print, read);
-            return mainMenu.Loop();
+            mainMenu.Loop();
         }
     }
 }

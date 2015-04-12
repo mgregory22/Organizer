@@ -58,12 +58,10 @@ namespace MSG.Console
         /// <summary>
         ///   Performs the menu input/action loop.
         /// </summary>
-        /// <returns></returns>
-        public string Loop()
+        public void Loop()
         {
-            string message = "";
-            // Loop while the menu item actions return 0
-            while (message == "")
+            bool done = false;
+            while (!done)
             {
                 print.String(this.ToString());
                 char k = prompt.DoPrompt();
@@ -75,7 +73,7 @@ namespace MSG.Console
                 catch (OperationCanceledException)
                 {
                     // user has quit
-                    break;
+                    done = true;
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -91,11 +89,10 @@ namespace MSG.Console
                 {
                     // Presumably fatal error
                     print.String(ex.Message, true);
-                    message = ex.Message;
+                    done = true;
                 }
                 print.Newline();
             }
-            return message;
         }
         /// <summary>
         ///   Initializes a new menu with the given array of menu items.  The items
