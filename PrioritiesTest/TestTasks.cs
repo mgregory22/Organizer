@@ -8,6 +8,7 @@ namespace PrioritiesTest
     /// </summary>
     class TestTasks : Tasks
     {
+        public int addCnt;
         public string name;
         public int parent;
         public int priority;
@@ -24,12 +25,14 @@ namespace PrioritiesTest
             this.name = name;
             this.parent = parent;
             this.priority = priority;
+            addCnt++;
         }
         public override void Remove(string name)
         {
             removeCnt++;
             if (name != this.name)
                 throw new InvalidOperationException();
+            this.name = null;
         }
         public override bool TaskExists(string name)
         {

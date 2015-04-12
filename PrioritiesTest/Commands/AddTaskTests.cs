@@ -74,5 +74,18 @@ namespace PrioritiesTest.Commands
             // try to redo without undoing first
             addTask.Redo();
         }
+        [TestMethod]
+        public void TestRedoCallsTasksAdd()
+        {
+            // add a task
+            read.NextString = testString;
+            addTask.Do();
+            // undo
+            addTask.Undo();
+            // undo
+            addTask.Redo();
+            // assert the task was removed
+            Assert.AreEqual(2, tasks.addCnt);
+        }
     }
 }
