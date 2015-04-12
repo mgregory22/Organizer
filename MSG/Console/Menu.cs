@@ -59,18 +59,43 @@ namespace MSG.Console
         ///   Performs the menu input/action loop.
         /// </summary>
         /// <returns></returns>
-        public int Loop()
+        public string Loop()
         {
-            int rv = 0;
+            string message = "";
             // Loop while the menu item actions return 0
-            while (rv == 0)
+            while (message == "")
             {
                 print.String(this.ToString());
                 char k = prompt.DoPrompt();
                 MenuItem m = this.FindMatchingItem(k);
-                rv = m.Do(print, read);
+                try
+                {
+                    m.Do(print, read);
+                }
+                catch (OperationCanceledException)
+                {
+                    // user has quit
+                    break;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Non-fatal error
+                    print.String(ex.Message, true);
+                }
+                catch (ArgumentException ex)
+                {
+                    // Non-fatal error
+                    print.String(ex.Message, true);
+                }
+                catch (Exception ex)
+                {
+                    // Presumably fatal error
+                    print.String(ex.Message, true);
+                    message = ex.Message;
+                }
+                print.Newline();
             }
-            return rv;
+            return message;
         }
         /// <summary>
         ///   Initializes a new menu with the given array of menu items.  The items

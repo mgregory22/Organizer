@@ -1,36 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
 using MSG.IO;
-using MSG.Patterns;
+using MSGTest.Patterns;
 using System;
 using System.Collections.Generic;
 
 namespace MSGTest.Console
 {
-    /*
-     * Types
-     */
-    class TestCommand : Command
-    {
-        public int meaninglessValue;
-        public int doCount;
-        public int undoCount;
-        public TestCommand(int meaninglessValue)
-        {
-            this.meaninglessValue = meaninglessValue;
-        }
-        public override int Do()
-        {
-            doCount++;
-            return 0;
-        }
-        public override int Undo()
-        {
-            undoCount++;
-            return 0;
-        }
-    }
-
     [TestClass]
     public class MenuItemTests
     {
@@ -41,13 +17,12 @@ namespace MSGTest.Console
         string testDesc = "Test";
         char testKey = 't';
         int testMaxWidth = 40;
-        int meaninglessValue = 1;
         TestCommand testCommand;
 
         [TestInitialize]
         public void Initialize()
         {
-            testCommand = new TestCommand(meaninglessValue);
+            testCommand = new TestCommand();
             menuItem = new MenuItem(testKey, testCommand, testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
@@ -137,7 +112,7 @@ namespace MSGTest.Console
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, new TestCommand(2), testDesc);
+            menuItem = new MenuItem(testKey, new TestCommand(), testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -186,7 +161,7 @@ namespace MSGTest.Console
         [TestInitialize]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, new TestCommand(3), testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
+            menuItem = new MenuItem(testKey, new TestCommand(), testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
             menuItem.MaxWidth = testMaxWidth;
         }
 

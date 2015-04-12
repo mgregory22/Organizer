@@ -11,7 +11,8 @@ namespace PrioritiesTest
         public string name;
         public int parent;
         public int priority;
-        public override int Add(string name, int parent = 0, int priority = 1)
+        public int removeCnt;
+        public override void Add(string name, int parent = 0, int priority = 1)
         {
             // This object is seeming kind of weird to me, since the task commands
             // are molded around the Tasks class, so I feel like I'm going to have
@@ -19,11 +20,20 @@ namespace PrioritiesTest
 
             // if this name has already been stored, it's a duplicate, thus error
             if (name == this.name)
-                return ErrorCannotAddDuplicate;
+                throw new InvalidOperationException();
             this.name = name;
             this.parent = parent;
             this.priority = priority;
-            return 0;
+        }
+        public override void Remove(string name)
+        {
+            removeCnt++;
+            if (name != this.name)
+                throw new InvalidOperationException();
+        }
+        public override bool TaskExists(string name)
+        {
+            return name == this.name;
         }
     }
 }

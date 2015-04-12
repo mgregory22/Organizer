@@ -23,33 +23,39 @@ namespace Priorities
 
     public class Tasks
     {
-        public const int ErrorCannotAddDuplicate = 1;
-        public const int ErrorCannotRemoveNonexistent = 2;
         List<Task> tasks;
         public Tasks()
         {
             this.tasks = new List<Task>();
         }
-        public virtual int Add(string name, int parent = 0, int priority = 1)
+        public virtual void Add(string name, int parent = 0, int priority = 1)
         {
+            if (name == null)
+                throw new ArgumentNullException("Cannot add task without a name");
+            if (name == "")
+                throw new ArgumentException("Cannot add task without a name");
             if (TaskExists(name))
-                return ErrorCannotAddDuplicate;
+                throw new InvalidOperationException("Cannot add duplicate task");
             tasks.Add(new Task(name, parent, priority));
-            return 0;
         }
         public int Count
         {
             get { return tasks.Count; }
         }
-        public virtual int Remove(string name)
+        public virtual void Remove(string name)
         {
+            if (name == null)
+                throw new ArgumentNullException("Cannot remove task without its name");
+            if (name == "")
+                throw new ArgumentException("Cannot remove task without its name");
             if (!TaskExists(name))
-                return ErrorCannotRemoveNonexistent;
-            return tasks.Remove(tasks.Find(task => task.Name == name)) ? 0 : 1;
+                throw new InvalidOperationException("Cannot remove nonexistent task");
+            if (tasks.Remove(tasks.Find(task => task.Name == name)) == false)
+                throw new ApplicationException("Task \"" + name + "\" could not be removed");
         }
-        public bool TaskExists(string searchString)
+        public virtual bool TaskExists(string name)
         {
-            return tasks.Find(task => task.Name == searchString) != null;
+            return tasks.Find(task => task.Name == name) != null;
         }
     }
 }

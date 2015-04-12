@@ -6,29 +6,22 @@ namespace Priorities.Commands
 {
     public class TaskCommand : Command
     {
-        protected Print print;
-        protected Read read;
         protected Tasks tasks;
-        public TaskCommand(Print print, Read read, Tasks tasks)
+        public TaskCommand(Tasks tasks)
         {
             this.tasks = tasks;
-            this.print = print;
-            this.read = read;
         }
-        public override int Do()
+        public override void Do()
         {
             Console.WriteLine("Do Task Command");
-            return 0;
         }
-        public override int Redo()
+        public override void Redo()
         {
             Console.WriteLine("Redo Task Command");
-            return 0;
         }
-        public override int Undo()
+        public override void Undo()
         {
             Console.WriteLine("Undo Task Command");
-            return 0;
         }
     }
 }

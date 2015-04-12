@@ -1,18 +1,18 @@
 ﻿using MSG.IO;
 using MSG.Patterns;
+using System;
 
 namespace Priorities.Commands
 {
-    public class Quit : TaskCommand
+    public class Quit : Command
     {
         public static int quitValue = 65535;
-        public Quit(Print print, Read read, Tasks tasks)
-            : base(print, read, tasks)
+        public Quit()
         {
         }
-        public override int Do()
+        public override void Do()
         {
-            return quitValue;
+            throw new OperationCanceledException("User has quit");
         }
     }
 }

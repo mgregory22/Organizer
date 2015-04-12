@@ -7,7 +7,7 @@ namespace Priorities.Commands
     public class RenameTask : TaskCommand
     {
         public RenameTask(Print print, Read read, Tasks tasks)
-            : base(print, read, tasks)
+            : base(tasks)
         {
         }
     }

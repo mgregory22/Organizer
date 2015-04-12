@@ -6,9 +6,11 @@ namespace Priorities.Commands
 {
     public class ListTasks : TaskCommand
     {
-        public ListTasks(Print print, Read read, Tasks tasks)
-            : base(print, read, tasks)
+        Print print;
+        public ListTasks(Print print, Tasks tasks)
+            : base(tasks)
         {
+            this.print = print;
         }
     }
 }

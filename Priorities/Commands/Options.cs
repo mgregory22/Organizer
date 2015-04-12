@@ -4,10 +4,12 @@ using System;
 
 namespace Priorities.Commands
 {
-    public class Options : TaskCommand
+    public class Options : Command
     {
-        public Options(Print print, Read read, Tasks tasks)
-            : base(print, read, tasks)
+        public Options(Print print, Read read)
+        {
+        }
+        public override void Do()
         {
         }
     }

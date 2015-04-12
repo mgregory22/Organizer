@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSG.Console;
 using MSG.IO;
-using MSG.Patterns;
+using MSGTest.Patterns;
 using System;
 using System.Collections.Generic;
 
@@ -21,7 +21,7 @@ namespace MSGTest.Console
             set { toStringCount = value; }
         }
         public ToStringCountMenuItem(char k, int n)
-            : base(k, new TestCommand(n), "")
+            : base(k, new TestCommand(), "")
         {
         }
     }
@@ -92,38 +92,32 @@ namespace MSGTest.Console
     }
 
     [TestClass]
-    public class MenuActionTests
+    public class MenuCommandTests
     {
-        class CountCommand : Command
+        class CommandCountMenuItem : MenuItem
         {
-            public int executeCount = 0;
-            public override int Do() { executeCount++; return 0; }
-            public override int Undo() { return 0; }
-        }
-        class ActionCountMenuItem : MenuItem
-        {
-            CountCommand action;
-            public new CountCommand Action
+            TestCommand command;
+            public new TestCommand Command
             {
-                get { return action; }
-                set { action = value; }
+                get { return command; }
+                set { command = value; }
             }
-            public ActionCountMenuItem(char keystroke, CountCommand action, string description)
-                : base(keystroke, action, description)
+            public CommandCountMenuItem(char keystroke, TestCommand command, string description)
+                : base(keystroke, command, description)
             {
-                this.action = action;
+                this.command = command;
             }
         }
         Menu menu;
-        ActionCountMenuItem[] menuItems;
+        CommandCountMenuItem[] menuItems;
         [TestInitialize]
         public void Initialize()
         {
-            menuItems = new ActionCountMenuItem[] {
-                new ActionCountMenuItem('0', new CountCommand(), "Item 0"),
-                new ActionCountMenuItem('1', new CountCommand(), "Item 1"),
-                new ActionCountMenuItem('2', new CountCommand(), "Item 2"),
-                new ActionCountMenuItem('3', new CountCommand(), "Item 3")
+            menuItems = new CommandCountMenuItem[] {
+                new CommandCountMenuItem('0', new TestCommand(), "Item 0"),
+                new CommandCountMenuItem('1', new TestCommand(), "Item 1"),
+                new CommandCountMenuItem('2', new TestCommand(), "Item 2"),
+                new CommandCountMenuItem('3', new TestCommand(), "Item 3")
             };
             menu = new Menu("Test Menu", menuItems, "", new Print(), new Read());
         }
@@ -132,11 +126,11 @@ namespace MSGTest.Console
         {
             MenuItem m = menu.FindMatchingItem('1');
             m.Do(null, null);
-            Assert.AreEqual(1, menuItems[1].Action.executeCount);
+            Assert.AreEqual(1, menuItems[1].Command.doCount);
             // Might as well check that ONLY the correct command was executed
-            Assert.AreEqual(0, menuItems[0].Action.executeCount);
-            Assert.AreEqual(0, menuItems[2].Action.executeCount);
-            Assert.AreEqual(0, menuItems[3].Action.executeCount);
+            Assert.AreEqual(0, menuItems[0].Command.doCount);
+            Assert.AreEqual(0, menuItems[2].Command.doCount);
+            Assert.AreEqual(0, menuItems[3].Command.doCount);
         }
         [TestMethod]
         public void TestFindReturnsMatchingMenuItem()

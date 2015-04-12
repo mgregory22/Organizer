@@ -20,7 +20,6 @@ namespace MSG.Console
             {
                 PrintPrompt();
                 s = Read.String();
-                Print.String(s, true);
             } while (StringIsInvalid(s));
             return s;
         }

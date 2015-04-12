@@ -7,16 +7,6 @@ using System.Threading.Tasks;
 namespace MSG.Patterns
 {
     /// <summary>
-    ///   Thrown when an attempt is made to undo a command that
-    ///   inherently cannot be undone.
-    /// </summary>
-    public class CannotUndoException : NotSupportedException
-    {
-        public CannotUndoException() { }
-        public CannotUndoException(string message) : base(message) { }
-        public CannotUndoException(string message, Exception inner) : base(message, inner) { }
-    }
-    /// <summary>
     ///   Command design pattern.
     /// </summary>
     abstract public class Command
@@ -25,10 +15,7 @@ namespace MSG.Patterns
         ///   Should prompt the user for any necessary parameters,
         ///   store them and perform the command.
         /// </summary>
-        /// <returns>
-        ///   Zero on success, nonzero on failure.
-        /// </returns>
-        abstract public int Do();
+        abstract public void Do();
         /// <summary>
         ///   Should be set by Do(), Redo(), and Undo() to relay
         ///   to the user information about what was last done.
@@ -40,24 +27,18 @@ namespace MSG.Patterns
             set { message = value; }
         }
         /// <summary>
-        ///   Performs a previously undone command.
+        ///   Redoes a previously undone command.
         /// </summary>
-        /// <returns>
-        ///   Zero on success, nonzero on failure.
-        /// </returns>
-        virtual public int Redo()
+        virtual public void Redo()
         {
-            return 0;
+            throw new NotSupportedException("This operation cannot be redone");
         }
         /// <summary>
         ///   Undoes a previously performed command.
         /// </summary>
-        /// <returns>
-        ///   Zero on success, nonzero on failure.
-        /// </returns>
-        virtual public int Undo()
+        virtual public void Undo()
         {
-            throw new CannotUndoException();
+            throw new NotSupportedException("This operation cannot be undone");
         }
     }
 }

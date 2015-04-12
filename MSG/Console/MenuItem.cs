@@ -18,7 +18,7 @@ namespace MSG.Console
     /// </summary>
     public class MenuItem
     {
-        Command action;
+        Command command;
         string description;
         char keystroke;
         List<string> lines;
@@ -27,10 +27,10 @@ namespace MSG.Console
         /// <summary>
         ///   An object that encapsulates the action to perform when the menu item is selected.
         /// </summary>
-        virtual public Command Action
+        virtual public Command Command
         {
-            get { return action; }
-            set { action = value; }
+            get { return command; }
+            set { command = value; }
         }
         /// <summary>
         ///   Name or short description of the menu item.
@@ -47,9 +47,9 @@ namespace MSG.Console
         /// <summary>
         ///   Performs the action associated with the menu item.
         /// </summary>
-        public int Do(Print print, Read read)
+        public void Do(Print print, Read read)
         {
-            return this.action.Do();
+            this.command.Do();
         }
         /// <summary>
         ///   True if the given keystroke matches the menu item keystroke.
@@ -104,9 +104,9 @@ namespace MSG.Console
         /// <param name="description"></param>
         /// <param name="flags"></param>
         /// <param name="maxWidth"></param>
-        public MenuItem(char keystroke, Command action, string description, int maxWidth = 80)
+        public MenuItem(char keystroke, Command command, string description, int maxWidth = 80)
         {
-            this.action = action;
+            this.command = command;
             this.description = description;
             this.keystroke = keystroke;
             this.maxWidth = maxWidth;

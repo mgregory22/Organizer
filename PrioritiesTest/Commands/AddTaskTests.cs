@@ -20,65 +20,59 @@ namespace PrioritiesTest.Commands
             print = new TestPrint();
             read = new TestRead();
             tasks = new TestTasks();
+            addTask = new AddTask(print, read, tasks);
         }
         [TestMethod]
-        public void TestDoAddsTask()
+        public void TestDoCallsTasksAdd()
         {
             read.NextString = testString;
-            addTask = new AddTask(print, read, tasks);
-            int r = addTask.Do();
-            Assert.AreEqual(0, r);
-            Assert.AreEqual(print.Output, "Enter task name\n> " + testString + "\n");
+            addTask.Do();
+            Assert.AreEqual("Enter task name\n> ", print.Output);
             Assert.AreEqual(testString, tasks.name);
         }
         [TestMethod]
-        public void TestAddingDuplicateTaskReturnsError()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestAddingDuplicateTaskThrowsUp()
         {
             // add a task
             read.NextString = testString;
-            addTask = new AddTask(print, read, tasks);
             addTask.Do();
             // try to add same task
             read.NextString = testString;
-            addTask = new AddTask(print, read, tasks);
-            int r = addTask.Do();
-            Assert.AreEqual(TestTasks.ErrorCannotAddDuplicate, r);
+            addTask.Do();
         }
         [TestMethod]
-        public void TestUndoRemovesTask()
+        public void TestUndoCallsTasksRemove()
         {
             // add a task
             read.NextString = testString;
-            addTask = new AddTask(print, read, tasks);
             addTask.Do();
             // undo
-            int r = addTask.Undo();
+            addTask.Undo();
             // assert the task was removed
-            Assert.AreEqual(0, r);
             Assert.AreEqual(1, tasks.removeCnt);
         }
         [TestMethod]
-        public void TestUndoSomethingNotDoneReturnsError()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestUndoSomethingNotDoneThrowsUp()
         {
-            int r = addTask.Undo();
-            Assert.AreEqual(AddTask.ErrorCannotUndoSomethingNotDone, r);
+            addTask.Undo();
         }
         [TestMethod]
-        public void TestRedoSomethingNotDoneReturnsError()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestRedoSomethingNotDoneThrowsUp()
         {
-            int r = addTask.Redo();
-            Assert.AreEqual(AddTask.ErrorCannotRedoSomethingNotDone, r);
+            addTask.Redo();
         }
         [TestMethod]
-        public void TestRedoSomethingNotUndoneReturnsError()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestRedoSomethingNotUndoneThrowsUp()
         {
             // add a task
             read.NextString = testString;
-            addTask = new AddTask(print, read, tasks);
             addTask.Do();
             // try to redo without undoing first
-            int r = addTask.Redo();
-            Assert.AreEqual(AddTask.ErrorCannotRedoSomethingNotUndone, r);
+            addTask.Redo();
         }
     }
 }

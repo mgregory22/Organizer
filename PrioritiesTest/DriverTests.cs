@@ -10,7 +10,7 @@ namespace PrioritiesTest
     public class DriverTests
     {
         Driver driver;
-        int runValue;
+        string runMessage;
         TestPrint print;
         TestRead read;
 
@@ -21,12 +21,12 @@ namespace PrioritiesTest
             read = new TestRead();
             driver = new Driver(print, read);
             read.NextKey = 'q';
-            runValue = driver.Run();
+            runMessage = driver.Run();
         }
         [TestMethod]
         public void TestDriverRunsSuccessfully()
         {
-            Assert.AreEqual(Quit.quitValue, runValue);
+            Assert.AreEqual("", runMessage);
         }
         [TestMethod]
         public void TestProgramMenuDisplays()
