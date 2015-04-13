@@ -12,5 +12,12 @@ namespace Priorities.Commands
         {
             this.print = print;
         }
+        public override void Do()
+        {
+            foreach (Task task in tasks)
+            {
+                print.String(task.Name, true);
+            }
+        }
     }
 }

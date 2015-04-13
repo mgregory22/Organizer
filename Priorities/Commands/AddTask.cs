@@ -23,6 +23,8 @@ namespace Priorities.Commands
         {
             if (taskName == null)
                 throw new InvalidOperationException("Adding a task must be done before it can be redone");
+            if (tasks.TaskExists(taskName))
+                throw new InvalidOperationException("Adding a task cannot be redone before it is undone");
             tasks.Add(taskName);
         }
         public override void Undo()

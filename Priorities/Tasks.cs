@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Priorities
@@ -21,7 +22,7 @@ namespace Priorities
         }
     }
 
-    public class Tasks
+    public class Tasks : IEnumerable
     {
         List<Task> tasks;
         public Tasks()
@@ -38,9 +39,13 @@ namespace Priorities
                 throw new InvalidOperationException("Cannot add duplicate task");
             tasks.Add(new Task(name, parent, priority));
         }
-        public int Count
+        public virtual int Count
         {
             get { return tasks.Count; }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return tasks.GetEnumerator();
         }
         public virtual void Remove(string name)
         {

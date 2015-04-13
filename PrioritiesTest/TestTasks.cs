@@ -1,42 +1,52 @@
 ﻿using Priorities;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace PrioritiesTest
 {
     /// <summary>
     ///   Mock Tasks object for testing the task commands.
     /// </summary>
-    class TestTasks : Tasks
+    class TestTasks : Tasks, IEnumerable
     {
         public int addCnt;
-        public string name;
-        public int parent;
-        public int priority;
-        public int removeCnt;
+        public string add_name;
+        public int add_parent;
+        public int add_priority;
         public override void Add(string name, int parent = 0, int priority = 1)
         {
-            // This object is seeming kind of weird to me, since the task commands
-            // are molded around the Tasks class, so I feel like I'm going to have
-            // to reimplement the whole Tasks class.
-
-            // if this name has already been stored, it's a duplicate, thus error
-            if (name == this.name)
-                throw new InvalidOperationException();
-            this.name = name;
-            this.parent = parent;
-            this.priority = priority;
             addCnt++;
+            // Save the last parameters Add() was called with, so they can be checked
+            add_name = name;
+            add_parent = parent;
+            add_priority = priority;
         }
+        public int count;
+        public override int Count
+        {
+            get { return count; }
+        }
+        public List<Task> enumerator_collection;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return enumerator_collection.GetEnumerator();
+        }
+        public int removeCnt;
+        public string remove_name;
         public override void Remove(string name)
         {
             removeCnt++;
-            if (name != this.name)
-                throw new InvalidOperationException();
-            this.name = null;
+            // Save the last parameters Remove() was called with, so they can be checked
+            remove_name = name;
         }
+        public int taskExistsCnt;
+        public string taskExists_name;
+        public bool taskExists_nextReturn;
         public override bool TaskExists(string name)
         {
-            return name == this.name;
+            taskExists_name = name;
+            return taskExists_nextReturn;
         }
     }
 }
