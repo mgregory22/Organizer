@@ -1,31 +1,33 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSGTest.IO;
+﻿using MSGTest.IO;
+using NUnit.Framework;
 using Priorities;
 using Priorities.Commands;
 using System;
 
 namespace PrioritiesTest
 {
-    [TestClass]
+    [TestFixture]
     public class DriverTests
     {
         Driver driver;
         TestPrint print;
         TestRead read;
 
-        [TestInitialize]
-        public void Initialize()
+        [SetUp]
+        public void SetUp()
         {
             print = new TestPrint();
-            read = new TestRead();
+            read = new TestRead(print);
             driver = new Driver(print, read);
-            read.NextKey = 'q';
-            driver.Run();
         }
-        [TestMethod]
-        public void TestProgramMenuDisplays()
+
+        [Test]
+        public void TestHelpDisplays()
         {
-            Assert.AreEqual("Main Menu\n---------\n"
+            read.NextKeys = new[] { '?', 'q' };
+            driver.Run();
+            Assert.AreEqual("> \n"
+                    + "Main Menu\n---------\n"
                     + "[a] Add Task\n"
                     + "[d] Delete Task\n"
                     + "[l] List Tasks\n"
@@ -33,7 +35,7 @@ namespace PrioritiesTest
                     + "[o] Options Menu\n"
                     + "[q] Quit Program\n"
                     + "[r] Rename Task\n"
-                    + "[?] Help\n"
+                    + "[?] Help\n\n"
                     + "> \n\n"
                 , print.Output
             );

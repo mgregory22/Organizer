@@ -16,16 +16,19 @@ namespace MSG.Patterns
         ///   store them and perform the command.
         /// </summary>
         abstract public void Do();
+
+        string message = "";
+
         /// <summary>
         ///   Should be set by Do(), Redo(), and Undo() to relay
         ///   to the user information about what was last done.
         /// </summary>
-        string message = "";
         public string Message
         {
             get { return message; }
             set { message = value; }
         }
+
         /// <summary>
         ///   Redoes a previously undone command.
         /// </summary>
@@ -33,6 +36,7 @@ namespace MSG.Patterns
         {
             throw new NotSupportedException("This operation cannot be redone");
         }
+
         /// <summary>
         ///   Undoes a previously performed command.
         /// </summary>

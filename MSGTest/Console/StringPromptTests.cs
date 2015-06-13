@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using MSG.Console;
 using MSGTest.IO;
 using System;
@@ -6,25 +6,27 @@ using System.Collections.Generic;
 
 namespace MSGTest.Console
 {
-    [TestClass]
+    [TestFixture]
     public class StringPromptTests
     {
         StringPrompt testPrompt;
         string testPromptMsg = "> ";
-        TestPrint testPrint;
-        TestRead testRead;
+        TestPrint print;
+        TestRead read;
         string testString = "This is wonderful";
-        [TestInitialize]
+
+        [SetUp]
         public void Initialize()
         {
-            testPrint = new TestPrint();
-            testRead = new TestRead();
-            testPrompt = new StringPrompt(testPrint, testPromptMsg, testRead);
+            print = new TestPrint();
+            read = new TestRead(print);
+            testPrompt = new StringPrompt(print, testPromptMsg, read);
         }
-        [TestMethod]
+
+        [Test]
         public void TestGetsString()
         {
-            testRead.NextString = testString;
+            read.NextString = testString;
             string gotString = testPrompt.DoPrompt();
             Assert.AreEqual(testString, gotString);
         }

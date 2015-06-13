@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MSG.Console
+namespace MSG.Types.String
 {
     /// <summary>
     ///   Screen drawing utility procedures.
@@ -27,6 +24,7 @@ namespace MSG.Console
             }
             return s.ToString();
         }
+
         /// <summary>
         ///   Returns a string consisting of the given text, a newline, and
         ///   a line of dashes exactly as long as the text.
@@ -35,7 +33,7 @@ namespace MSG.Console
         /// <returns></returns>
         public static string UnderlinedText(string text)
         {
-            return text + '\n' + new String('-', text.Length) + '\n';
+            return text + '\n' + new string('-', text.Length) + '\n';
         }
     }
 }

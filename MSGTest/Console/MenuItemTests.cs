@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using MSG.Console;
 using MSG.IO;
 using MSGTest.Patterns;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace MSGTest.Console
 {
-    [TestClass]
+    [TestFixture]
     public class MenuItemTests
     {
         /*
@@ -19,7 +19,7 @@ namespace MSGTest.Console
         int testMaxWidth = 40;
         TestCommand testCommand;
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             testCommand = new TestCommand();
@@ -27,31 +27,31 @@ namespace MSGTest.Console
             menuItem.MaxWidth = testMaxWidth;
         }
 
-        [TestMethod]
+        [Test]
         public void TestDescriptionSaves()
         {
             Assert.AreEqual(testDesc, menuItem.Description);
         }
 
-        [TestMethod]
+        [Test]
         public void TestKeystrokeSaves()
         {
             Assert.AreEqual(testKey, menuItem.Keystroke);
         }
 
-        [TestMethod]
+        [Test]
         public void TestBasicKeyToStringIsCorrect()
         {
             Assert.AreEqual("[t] Test", menuItem.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestMaxWidthIsStored()
         {
             Assert.AreEqual(testMaxWidth, menuItem.MaxWidth);
         }
 
-        [TestMethod]
+        [Test]
         public void TestActionIsExecutedWhenCorrectKeystrokeIsSent()
         {
             if (menuItem.DoesMatch(testKey))
@@ -59,13 +59,13 @@ namespace MSGTest.Console
             Assert.AreEqual(1, testCommand.doCount);
         }
 
-        [TestMethod]
+        [Test]
         public void TestTrueIsReturnedWhenCorrectKeystrokeIsSent()
         {
             Assert.IsTrue(menuItem.DoesMatch(testKey));
         }
 
-        [TestMethod]
+        [Test]
         public void TestActionIsNotExecutedWhenWrongKeystrokesAreSent()
         {
             // Try every key but the real one
@@ -80,7 +80,7 @@ namespace MSGTest.Console
             Assert.AreEqual(0, testCommand.doCount);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFalseIsReturnedWhenWrongKeystrokeIsSent()
         {
             bool result = false;
@@ -96,7 +96,7 @@ namespace MSGTest.Console
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class LongMenuItemTests
     {
         MenuItem menuItem;
@@ -109,27 +109,27 @@ namespace MSGTest.Console
             Assert.IsTrue(s.Length <= maxWidth, "Expected: {0} <= {1}, Actual: {0} > {1}", s.Length, maxWidth);
         }
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             menuItem = new MenuItem(testKey, new TestCommand(), testDesc);
             menuItem.MaxWidth = testMaxWidth;
         }
 
-        [TestMethod]
+        [Test]
         public void TestToStringIsNoLongerThanMaxWidth()
         {
             AssertStringLengthIsLessThanOrEqualToMaxWidth(menuItem.ToString(), testMaxWidth);
         }
 
-        [TestMethod]
+        [Test]
         public void TestToStringWrapsAtWordBoundary()
         {
             string testOutput = "[T] Test of a very long description to";
             Assert.AreEqual(testOutput.Length, menuItem.ToString().Length);
         }
 
-        [TestMethod]
+        [Test]
         public void TestToStringReturnsSecondLineOfWrappedText()
         {
             string testOutput = "test wrapping";
@@ -137,7 +137,7 @@ namespace MSGTest.Console
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class VeryLongMenuItemTests
     {
         MenuItem menuItem;
@@ -158,14 +158,14 @@ namespace MSGTest.Console
             return rightBracketPos + 1;
         }
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             menuItem = new MenuItem(testKey, new TestCommand(), testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
             menuItem.MaxWidth = testMaxWidth;
         }
 
-        [TestMethod]
+        [Test]
         public void TestWrapSplit()
         {
             List<string> lines = new List<string>();
@@ -180,7 +180,7 @@ namespace MSGTest.Console
             Assert.AreEqual(testDescLine4, lines[3]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDescriptionLinesAreIndentedPastKeystroke()
         {
             string prefix = new String(' ', GetKeystrokePrefixLen());

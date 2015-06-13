@@ -9,6 +9,12 @@ namespace MSG.Console
 {
     public class StringPrompt : Prompt
     {
+        public StringPrompt(Print print, string promptMsg, Read read)
+            : base(print, promptMsg, read)
+        {
+
+        }
+
         /// <summary>
         ///   Displays the prompt and reads a string.
         /// </summary>
@@ -23,14 +29,10 @@ namespace MSG.Console
             } while (StringIsInvalid(s));
             return s;
         }
+
         private bool StringIsInvalid(string s)
         {
             return false;
-        }
-        public StringPrompt(Print print, string promptMsg, Read read)
-            : base(print, promptMsg, read)
-        {
-
         }
     }
 }

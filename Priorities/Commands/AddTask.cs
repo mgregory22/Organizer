@@ -9,16 +9,26 @@ namespace Priorities.Commands
     {
         StringPrompt prompt;
         protected string taskName;
+        Print print;
+
         public AddTask(Print print, Read read, Tasks tasks)
             : base(tasks)
         {
+            this.print = print;
             prompt = new StringPrompt(print, "Enter task name\n> ", read);
         }
+
         public override void Do()
         {
             taskName = prompt.DoPrompt();
+            if (taskName == "")
+            {
+                print.StringNL("Add cancelled");
+                return;
+            }
             Redo();
         }
+
         public override void Redo()
         {
             if (taskName == null)
@@ -27,6 +37,7 @@ namespace Priorities.Commands
                 throw new InvalidOperationException("Adding a task cannot be redone before it is undone");
             tasks.Add(taskName);
         }
+
         public override void Undo()
         {
             if (taskName == null)

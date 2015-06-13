@@ -9,6 +9,7 @@ namespace Priorities.Commands
         public Options(Print print, Read read)
         {
         }
+
         public override void Do()
         {
         }

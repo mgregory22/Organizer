@@ -1,23 +1,24 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSG.Console;
+﻿using MSG.Console;
+using MSG.Types.String;
+using NUnit.Framework;
+using System;
 
-namespace MSGTest.Console
+namespace MSGTest.Types.String
 {
-    [TestClass]
+    [TestFixture]
     public class DrawTests
     {
-        [TestMethod]
+        [Test]
         public void TestRulerReturns10CharRulerWith1AtTheEnd()
         {
             Assert.AreEqual("---------1", Draw.Ruler(10));
         }
-        [TestMethod]
+        [Test]
         public void TestRulerReturns20CharRulerWith2AtTheEnd()
         {
             Assert.AreEqual("---------1---------2", Draw.Ruler(20));
         }
-        [TestMethod]
+        [Test]
         public void TestUnderlinedTextReturnsMainMenuTitle()
         {
             Assert.AreEqual("Main Menu\n---------\n", Draw.UnderlinedText("Main Menu"));

@@ -5,36 +5,40 @@ namespace MSGTest.IO
 {
     public class TestRead : Read
     {
-        char? nextKey;
-        List<char> nextKeys;
+        char? nextChar;
+        List<char> nextChars;
         string nextString;
         List<string> nextStrings;
-        public override char Key()
+
+        public override char Char()
         {
-            if (nextKey != null)
+            if (nextChar != null)
             {
-                char c = nextKey.GetValueOrDefault();
-                nextKey = null;
+                char c = nextChar.GetValueOrDefault();
+                nextChar = null;
                 return c;
             }
-            else if (nextKeys != null && nextKeys.Count > 0)
+            else if (nextChars != null && nextChars.Count > 0)
             {
-                char c = nextKeys[0];
-                nextKeys.RemoveAt(0);
+                char c = nextChars[0];
+                nextChars.RemoveAt(0);
                 return c;
             }
             return ' ';
         }
+
         public char NextKey
         {
-            get { return nextKey.GetValueOrDefault(); }
-            set { nextKey = value; }
+            get { return nextChar.GetValueOrDefault(); }
+            set { nextChar = value; }
         }
+
         public char[] NextKeys
         {
-            get { return nextKeys.ToArray(); }
-            set { nextKeys = new List<char>(value); }
+            get { return nextChars.ToArray(); }
+            set { nextChars = new List<char>(value); }
         }
+
         public override string String()
         {
             if (nextString != null)
@@ -51,15 +55,22 @@ namespace MSGTest.IO
             }
             return "";
         }
+
         public string NextString
         {
             get { return nextString; }
             set { nextString = value; }
         }
+
         public string[] NextStrings
         {
             get { return nextStrings.ToArray(); }
             set { nextStrings = new List<string>(value); }
+        }
+
+        public TestRead(Print print)
+            : base(print)
+        {
         }
     }
 }

@@ -32,6 +32,7 @@ namespace MSG.Console
             get { return command; }
             set { command = value; }
         }
+
         /// <summary>
         ///   Name or short description of the menu item.
         /// </summary>
@@ -44,6 +45,7 @@ namespace MSG.Console
                 UpdateLines();
             }
         }
+
         /// <summary>
         ///   Performs the action associated with the menu item.
         /// </summary>
@@ -51,6 +53,7 @@ namespace MSG.Console
         {
             this.command.Do();
         }
+
         /// <summary>
         ///   True if the given keystroke matches the menu item keystroke.
         /// </summary>
@@ -63,6 +66,7 @@ namespace MSG.Console
         {
             return keystroke == this.keystroke;
         }
+
         /// <summary>
         ///   The keystroke to activate the menu item.
         /// </summary>
@@ -75,6 +79,7 @@ namespace MSG.Console
                 UpdateLines();
             }
         }
+
         /// <summary>
         ///   The number of lines in the description when it's word
         ///   wrapped according to the MaxWidth property.
@@ -83,6 +88,7 @@ namespace MSG.Console
         {
             get { return lines.Count; }
         }
+
         /// <summary>
         ///   The amount of horizontal space available to print the
         ///   description.
@@ -96,6 +102,7 @@ namespace MSG.Console
                 UpdateLines();
             }
         }
+
         /// <summary>
         ///   Initializes a menu item object.
         /// </summary>
@@ -113,6 +120,7 @@ namespace MSG.Console
             this.lines = new List<string>();
             UpdateLines();
         }
+
         /// <summary>
         ///   Returns the string representation of the menu item.  If the
         ///   description is long enough to be wrapped, an index less than
@@ -124,6 +132,7 @@ namespace MSG.Console
         {
             return lines[index];
         }
+
         /// <summary>
         ///   Calculates the line breaks of the display.
         /// </summary>
@@ -159,6 +168,7 @@ namespace MSG.Console
                 }
             }
         }
+
         /// <summary>
         ///   Splits a string (s) based on line length (maxWidth) and word wrap
         ///   and inserts the lines into the given string list (lines).

@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSGTest.IO;
+﻿using MSGTest.IO;
+using NUnit.Framework;
 using Priorities.Commands;
 using System;
 
 namespace PrioritiesTest.Commands
 {
-    [TestClass]
+    [TestFixture]
     public class AddTaskTests
     {
         AddTask addTask;
@@ -14,11 +14,11 @@ namespace PrioritiesTest.Commands
         TestTasks tasks;
         string newTask = "This is a task to be added";
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             print = new TestPrint();
-            read = new TestRead();
+            read = new TestRead(print);
             tasks = new TestTasks();
             addTask = new AddTask(print, read, tasks);
             // The AddTask command prompts the user for the name of the task to add
@@ -27,12 +27,14 @@ namespace PrioritiesTest.Commands
             // Set up the task.TaskExists() method to claim that the task has been added
             tasks.taskExists_nextReturn = true;
         }
-        [TestMethod]
+
+        [Test]
         public void TestPrompt()
         {
             Assert.AreEqual("Enter task name\n> ", print.Output);
         }
-        [TestMethod]
+
+        [Test]
         public void TestDoCallsTasksAdd()
         {
             // The tasks.Add() method should be called once
@@ -44,21 +46,23 @@ namespace PrioritiesTest.Commands
             // 1 (default) should be the priority parameter
             Assert.AreEqual(1, tasks.add_priority);
         }
-        [TestMethod]
+
+        [Test]
         public void TestUndoCallsTasksRemove()
         {
             addTask.Undo();
             // Assert the task was removed
             Assert.AreEqual(1, tasks.removeCnt);
         }
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+
+        [Test]
         public void TestRedoSomethingNotUndoneThrowsUp()
         {
             // Try to redo without undoing first
-            addTask.Redo();
+            Assert.Catch<InvalidOperationException>(() => addTask.Redo());
         }
-        [TestMethod]
+
+        [Test]
         public void TestRedoCallsTasksAdd()
         {
             addTask.Undo();
@@ -69,7 +73,7 @@ namespace PrioritiesTest.Commands
             Assert.AreEqual(2, tasks.addCnt);
         }
     }
-    [TestClass]
+    [TestFixture]
     public class NoAddTaskTests
     {
         AddTask addTask;
@@ -77,27 +81,27 @@ namespace PrioritiesTest.Commands
         TestRead read;
         TestTasks tasks;
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             print = new TestPrint();
-            read = new TestRead();
+            read = new TestRead(print);
             tasks = new TestTasks();
             addTask = new AddTask(print, read, tasks);
             // Set up the task.TaskExists() method to claim that the task doesn't exist
             tasks.taskExists_nextReturn = false;
         }
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+
+        [Test]
         public void TestUndoSomethingNotDoneThrowsUp()
         {
-            addTask.Undo();
+            Assert.Catch<InvalidOperationException>(() => addTask.Undo());
         }
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+
+        [Test]
         public void TestRedoSomethingNotDoneThrowsUp()
         {
-            addTask.Redo();
+            Assert.Catch<InvalidOperationException>(() => addTask.Redo());
         }
     }
 }

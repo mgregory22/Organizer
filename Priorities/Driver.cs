@@ -24,6 +24,8 @@ namespace Priorities
         public void Run()
         {
             Tasks tasks = new Tasks();
+            // Help is weird because of the circular dependency on the menu.
+            Help help = new Help(print);
             MenuItem[] menuItems = {
                     new MenuItem('a', new AddTask(print, read, tasks), "Add Task"),
                     new MenuItem('d', new DeleteTask(print, read, tasks), "Delete Task"),
@@ -32,9 +34,10 @@ namespace Priorities
                     new MenuItem('o', new Options(print, read), "Options Menu"),
                     new MenuItem('q', new Quit(), "Quit Program"),
                     new MenuItem('r', new RenameTask(print, read, tasks), "Rename Task"),
-                    new MenuItem('?', new Help(print, read), "Help")
+                    new MenuItem('?', help, "Help")
                 };
             Menu mainMenu = new Menu("Main Menu", menuItems, promptMsg, print, read);
+            help.SetTarget(mainMenu);
             mainMenu.Loop();
         }
     }

@@ -4,25 +4,88 @@ namespace MSGTest.IO
 {
     public class TestPrint : Print
     {
+        int bufferWidth = 80;
+        bool isCursorVisible = true;
+        ConsolePos pos;
         string output;
-        public override void Char(char c, bool nl = false)
+
+        public TestPrint()
+        {
+            pos = new ConsolePos(0, 0);
+        }
+
+        public override int BufferWidth
+        {
+            get { return bufferWidth; }
+            set { bufferWidth = value; }
+        }
+
+        public override void Char(char c)
         {
             output += c;
-            if (nl) output += '\n';
         }
+
+        public override void CharNL(char c)
+        {
+            Char(c);
+            Newline();
+        }
+
+        public void ClearOutput()
+        {
+            output = "";
+        }
+
+        public override int CursorLeft
+        {
+            get { return pos.Left; }
+            set { pos.Left = value; output += "<" + value.ToString(); }
+        }
+
+        public override ConsolePos CursorPos
+        {
+            get { return new ConsolePos(pos); }
+            set { SetCursorPos(value.Left, value.Top); }
+        }
+
+        public override int CursorTop
+        {
+            get { return pos.Top; }
+            set { pos.Top = value; output += "^" + value.ToString(); }
+        }
+
+        public override bool IsCursorVisible
+        {
+            get { return isCursorVisible; }
+            set { isCursorVisible = value; }
+        }
+
         public override void Newline(int n = 1)
         {
             for (int i = 0; i < n; i++) output += '\n';
         }
+
         public string Output
         {
-            get { string r = output; output = ""; return r; }
+            get { return output; }
             set { output = value; }
         }
-        public override void String(string s, bool nl = false)
+
+        public override void SetCursorPos(int left, int top)
+        {
+            CursorLeft = left;
+            CursorTop = top;
+        }
+
+        public override void String(string s)
         {
             output += s;
-            if (nl) output += '\n';
+        }
+
+        public override void StringNL(string s)
+        {
+            String(s);
+            Newline();
         }
     }
 }

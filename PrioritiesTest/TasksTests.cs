@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using Priorities;
 using System;
 
@@ -7,17 +7,19 @@ namespace PrioritiesTest
     /// <summary>
     ///   Tests of the Tasks class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class TasksTests
     {
         Tasks tasks;
         string testTask = "Test Task";
-        [TestInitialize]
+
+        [SetUp]
         public void Initialize()
         {
             tasks = new Tasks();
         }
-        [TestMethod]
+
+        [Test]
         public void TestTaskCanBeAdded()
         {
             int cnt = tasks.Count;

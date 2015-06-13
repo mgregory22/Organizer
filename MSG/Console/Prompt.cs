@@ -12,6 +12,7 @@ namespace MSG.Console
         protected Print print;
         protected string promptMsg;
         protected Read read;
+
         /// <summary>
         ///   The object used to display information to the user.
         /// </summary>
@@ -20,6 +21,7 @@ namespace MSG.Console
             get { return print; }
             set { print = value; }
         }
+
         /// <summary>
         ///   Uses the print object to print the prompt message (without newline).
         /// </summary>
@@ -27,6 +29,7 @@ namespace MSG.Console
         {
             Print.String(promptMsg);
         }
+
         /// <summary>
         ///   Initialize a prompt with message, print and read objects.
         /// </summary>
@@ -39,6 +42,7 @@ namespace MSG.Console
             this.promptMsg = promptMsg;
             this.read = read;
 	    }
+
         /// <summary>
         ///   The text that prompts the user for input.
         /// </summary>
@@ -47,6 +51,7 @@ namespace MSG.Console
             get { return promptMsg; }
             set { promptMsg = value; }
         }
+
         /// <summary>
         ///   The object used to get user input.
         /// </summary>

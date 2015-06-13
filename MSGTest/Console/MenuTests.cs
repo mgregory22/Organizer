@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using MSG.Console;
 using MSG.IO;
 using MSGTest.Patterns;
@@ -26,12 +26,12 @@ namespace MSGTest.Console
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class MenuCreationTests
     {
         Menu menu;
         ToStringCountMenuItem[] menuItems;
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             menuItems = new ToStringCountMenuItem[] {
@@ -40,14 +40,15 @@ namespace MSGTest.Console
                 new ToStringCountMenuItem('c', 3),
                 new ToStringCountMenuItem('d', 4)
             };
-            menu = new Menu("Test Menu", menuItems, "", new Print(), new Read());
+            Print print = new Print();
+            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
         }
-        [TestMethod]
+        [Test]
         public void TestAllMenuItemsAreStored()
         {
             Assert.AreEqual(menuItems.Length, menu.ItemCount);
         }
-        [TestMethod]
+        [Test]
         public void TestValidKeyListIsCorrect()
         {
             char[] expectedList = new char[] { 'a', 'b', 'c', 'd' };
@@ -59,12 +60,12 @@ namespace MSGTest.Console
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class MenuDisplayTests
     {
         Menu menu;
         ToStringCountMenuItem[] menuItems;
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             menuItems = new ToStringCountMenuItem[] {
@@ -73,14 +74,15 @@ namespace MSGTest.Console
                 new ToStringCountMenuItem('c', 3),
                 new ToStringCountMenuItem('d', 4)
             };
-            menu = new Menu("Test Menu", menuItems, "", new Print(), new Read());
+            Print print = new Print();
+            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
         }
-        [TestMethod]
+        [Test]
         public void TestMenuTitleDisplays()
         {
             Assert.IsTrue(menu.ToString().StartsWith("Test Menu\n---------\n"));
         }
-        [TestMethod]
+        [Test]
         public void TestToStringCallsAllMenuItemToStrings()
         {
             menu.ToString();
@@ -91,7 +93,7 @@ namespace MSGTest.Console
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class MenuCommandTests
     {
         class CommandCountMenuItem : MenuItem
@@ -110,7 +112,7 @@ namespace MSGTest.Console
         }
         Menu menu;
         CommandCountMenuItem[] menuItems;
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             menuItems = new CommandCountMenuItem[] {
@@ -119,9 +121,10 @@ namespace MSGTest.Console
                 new CommandCountMenuItem('2', new TestCommand(), "Item 2"),
                 new CommandCountMenuItem('3', new TestCommand(), "Item 3")
             };
-            menu = new Menu("Test Menu", menuItems, "", new Print(), new Read());
+            Print print = new Print();
+            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
         }
-        [TestMethod]
+        [Test]
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()
         {
             MenuItem m = menu.FindMatchingItem('1');
@@ -132,7 +135,7 @@ namespace MSGTest.Console
             Assert.AreEqual(0, menuItems[2].Command.doCount);
             Assert.AreEqual(0, menuItems[3].Command.doCount);
         }
-        [TestMethod]
+        [Test]
         public void TestFindReturnsMatchingMenuItem()
         {
             Assert.AreEqual(menuItems[1], menu.FindMatchingItem('1'));

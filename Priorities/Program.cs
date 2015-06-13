@@ -15,17 +15,19 @@ namespace Priorities
         public static void Main(string[] args)
         {
             Print print = new Print();
-            Read read = new Read();
+            Read read = new Read(print);
             Driver driver = new Driver(print, read);
+            Console.BufferWidth = Console.WindowWidth = 16; // Shrink for easier testing of wrapping
             driver.Run();
             Pause();
         }
+
         /// <summary>
         ///   Wait for key to keep the window open.
         /// </summary>
         public static void Pause()
         {
-            Console.Write("Press any key to close window");
+            Console.Write("Press a key");
             Console.ReadKey(true);
         }
     }

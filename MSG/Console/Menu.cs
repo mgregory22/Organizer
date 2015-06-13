@@ -1,9 +1,8 @@
 ﻿using MSG.IO;
+using MSG.Types.String;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MSG.Console
 {
@@ -16,10 +15,11 @@ namespace MSG.Console
     public class Menu
     {
         private MenuItem[] menuItems;
-        private KeyPrompt prompt;
+        private CharPrompt prompt;
         private Print print;
         private Read read;
         private string title;
+
         /// <summary>
         ///   Find the menu item that matches the keystroke.
         /// </summary>
@@ -38,6 +38,7 @@ namespace MSG.Console
             }
             return null;
         }
+
         /// <summary>
         ///    Returns the list of menu item keystrokes.
         /// </summary>
@@ -48,13 +49,15 @@ namespace MSG.Console
                 keystrokeList.Add(menuItem.Keystroke);
             return keystrokeList.ToArray();
         }
+
         /// <summary>
         ///   Returns the number of items in the menu.
         /// </summary>
         public int ItemCount
         {
-            get { return menuItems.Count(); }
+            get { return menuItems.Length; }
         }
+
         /// <summary>
         ///   Performs the menu input/action loop.
         /// </summary>
@@ -63,7 +66,8 @@ namespace MSG.Console
             bool done = false;
             while (!done)
             {
-                print.String(this.ToString());
+                // Seeing the menu every time is annoying
+                //print.String(this.ToString());
                 char k = prompt.DoPrompt();
                 MenuItem m = this.FindMatchingItem(k);
                 try
@@ -78,22 +82,23 @@ namespace MSG.Console
                 catch (InvalidOperationException ex)
                 {
                     // Non-fatal error
-                    print.String(ex.Message, true);
+                    print.StringNL(ex.Message);
                 }
                 catch (ArgumentException ex)
                 {
                     // Non-fatal error
-                    print.String(ex.Message, true);
+                    print.StringNL(ex.Message);
                 }
                 catch (Exception ex)
                 {
                     // Presumably fatal error
-                    print.String(ex.Message, true);
+                    print.StringNL(ex.Message);
                     done = true;
                 }
                 print.Newline();
             }
         }
+
         /// <summary>
         ///   Initializes a new menu with the given array of menu items.  The items
         ///   are displayed in the order given in the array.
@@ -105,9 +110,10 @@ namespace MSG.Console
             this.menuItems = menuItems;
             this.print = print;
             this.read = read;
-            this.prompt = new KeyPrompt(print, promptMsg, read);
+            this.prompt = new CharPrompt(print, promptMsg, read);
             this.prompt.ValidList = GetKeystrokeList();
         }
+
         /// <summary>
         ///   String to use as the prompt.
         /// </summary>
@@ -116,6 +122,7 @@ namespace MSG.Console
             get { return prompt.PromptMsg; }
             set { prompt.PromptMsg = value; }
         }
+
         /// <summary>
         ///   Title of the menu.
         /// </summary>
@@ -124,6 +131,7 @@ namespace MSG.Console
             get { return title; }
             set { title = value; }
         }
+
         /// <summary>
         ///   Returns a string of the entire menu.
         /// </summary>
@@ -140,6 +148,7 @@ namespace MSG.Console
             }
             return s;
         }
+
         /// <summary>
         ///   Returns the list of keystrokes that have corresponding
         ///   menu items.
