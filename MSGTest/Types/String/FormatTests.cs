@@ -12,7 +12,7 @@ namespace MSGTest.Types.String
         [Test]
         public void TestToLiteral()
         {
-            Assert.AreEqual("\"\\t\\n\"", Format.ToLiteral("\t\n"));
+            Assert.AreEqual("\\t\\n", Format.ToLiteral("\t\n"));
         }
 
         [Test]

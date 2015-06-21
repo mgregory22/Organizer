@@ -17,7 +17,7 @@ namespace Priorities
             Print print = new Print();
             Read read = new Read(print);
             Driver driver = new Driver(print, read);
-            Console.BufferWidth = Console.WindowWidth = 16; // Shrink for easier testing of wrapping
+            Console.BufferWidth = Console.WindowWidth = 12; // Shrunk for easier testing of wrapping
             driver.Run();
             Pause();
         }

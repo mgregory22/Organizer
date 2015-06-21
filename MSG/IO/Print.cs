@@ -63,7 +63,7 @@ namespace MSG.IO
         virtual public ConsolePos CursorPos
         {
             get { return new ConsolePos(System.Console.CursorLeft, System.Console.CursorTop); }
-            set { System.Console.SetCursorPosition(value.Left, value.Top); }
+            set { System.Console.SetCursorPosition(value.left, value.top); }
         }
 
         /// <summary>

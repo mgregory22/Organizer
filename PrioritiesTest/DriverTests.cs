@@ -26,17 +26,19 @@ namespace PrioritiesTest
         {
             read.NextKeys = new[] { '?', 'q' };
             driver.Run();
-            Assert.AreEqual("> \n"
-                    + "Main Menu\n---------\n"
-                    + "[a] Add Task\n"
-                    + "[d] Delete Task\n"
-                    + "[l] List Tasks\n"
-                    + "[m] Move Task/Change Priority\n"
-                    + "[o] Options Menu\n"
-                    + "[q] Quit Program\n"
-                    + "[r] Rename Task\n"
-                    + "[?] Help\n\n"
-                    + "> \n\n"
+            Assert.AreEqual(
+                string.Format("{0}\n"
+                        + "Main Menu\n---------\n"
+                        + "[a] Add Task\n"
+                        + "[d] Delete Task\n"
+                        + "[l] List Tasks\n"
+                        + "[m] Move Task/Change Priority\n"
+                        + "[o] Options Menu\n"
+                        + "[q] Quit Program\n"
+                        + "[r] Rename Task\n"
+                        + "[?] Help\n\n"
+                        + "{0}\n\n"
+                    , Driver.promptMsg)
                 , print.Output
             );
         }

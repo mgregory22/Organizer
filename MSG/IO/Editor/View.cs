@@ -15,6 +15,10 @@ namespace MSG.IO
         public class View
         {
             /// <summary>
+            ///   Text buffer.
+            /// </summary>
+            Buffer buffer;
+            /// <summary>
             ///   Width of the console
             /// </summary>
             int consoleWidth;
@@ -25,7 +29,7 @@ namespace MSG.IO
             /// <summary>
             ///   Current console cursor position
             /// </summary>
-            ConsolePos pos;
+            ConsolePos cursorPos;
             /// <summary>
             ///   The output object
             /// </summary>
@@ -33,11 +37,17 @@ namespace MSG.IO
             /// <summary>
             ///   The starting position of the console cursor
             /// </summary>
-            public ConsolePos start;
+            /// <remarks>
+            ///   public for what reason?
+            /// </remarks>
+            public readonly ConsolePos startCursorPos;
             /// <summary>
             ///   Calculates the positions of line breaks, cursor, etc.  This object
             ///   acts as a mediator for the view's interactions with the model. 
             /// </summary>
+            /// <remarks>
+            ///   public for what reason?
+            /// </remarks>
             public WordWrapper wordWrapper;
 
 
@@ -54,13 +64,14 @@ namespace MSG.IO
             /// </param>
             public View(Buffer buffer, Print print)
             {
+                this.buffer = buffer;
                 this.print = print;
-                this.start = new ConsolePos(print.CursorPos);
-                this.pos = new ConsolePos(print.CursorPos);
+                this.cursorPos = print.CursorPos;
                 this.consoleWidth = print.BufferWidth;
+                this.startCursorPos = print.CursorPos;
                 this.lineWidths = new EndlessArray<int>(
-                    this.consoleWidth - LineLeft(0),
-                    this.consoleWidth - LineLeft(1)
+                    this.consoleWidth - LineLeft(0, this.startCursorPos.left),
+                    this.consoleWidth - LineLeft(1, this.startCursorPos.left)
                 );
                 this.wordWrapper = new WordWrapper(buffer, lineWidths);
             }
@@ -73,13 +84,28 @@ namespace MSG.IO
                 RedrawEditor();
             }
 
+            public ConsolePos BufferPosToCursorPos(int bufferPos)
+            {
+                return EditorPosToCursorPos(wordWrapper.BufferPosToEditorPos(bufferPos));
+            }
+
             /// <summary>
             ///   Moves the cursor to the end of the line and returns the
             ///   resulting buffer position.
             /// </summary>
             public int CursorEnd()
             {
-                return Left = this.start.Left + wordWrapper.EndPosOfCurrentLine;
+                // find current line
+                int currentLineIndex = cursorPos.top;
+                // find end of current line
+                int bufferPosOfEndOfCurrentLine = wordWrapper[currentLineIndex].EndIndex;
+                // set bufferPos to end of current line
+                buffer.Cursor = bufferPosOfEndOfCurrentLine;
+                // update cursor to match bufferPos
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                SetCursorPos(cursorPos);
+                // boom, done.
+                return buffer.Cursor;
             }
 
             /// <summary>
@@ -88,7 +114,17 @@ namespace MSG.IO
             /// </summary>
             public int CursorHome()
             {
-                return Left = start.Left;
+                // find current line
+                int currentLineIndex = cursorPos.top;
+                // find start of current line
+                int bufferPosOfStartOfCurrentLine = wordWrapper[currentLineIndex].StartIndex;
+                // set bufferPos to start of current line
+                buffer.Cursor = bufferPosOfStartOfCurrentLine;
+                // update cursor to match bufferPos
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                SetCursorPos(cursorPos);
+                // boom, done.
+                return buffer.Cursor;
             }
 
             /// <summary>
@@ -96,21 +132,8 @@ namespace MSG.IO
             /// </summary>
             public void CursorLeft()
             {
-                if (Top == start.Top)
-                {
-                    if (Left > start.Left)
-                        Left--;
-                }
-                else
-                {
-                    if (Left > 0)
-                        Left--;
-                    else
-                    {
-                        Top--;
-                        Left = lineWidths[Top] + (Top == 0 ? start.Left : 0);
-                    }
-                }
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                SetCursorPos(cursorPos);
             }
 
             /// <summary>
@@ -118,9 +141,8 @@ namespace MSG.IO
             /// </summary>
             public void CursorRight()
             {
-                if (Top < wordWrapper.Count)
-                    if (Left < wordWrapper.TextLength)
-                        Left++;
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);                
+                SetCursorPos(cursorPos);
             }
 
             /// <summary>
@@ -128,12 +150,24 @@ namespace MSG.IO
             /// </summary>
             public void Delete()
             {
-                //System.Console.MoveBufferArea(
-                //    Left + 1, Top
-                //    , System.Console.BufferWidth - Left - 1, 1
-                //    , Left, Top
-                //    , ' ', ConsoleColor.Gray, ConsoleColor.Black);
                 RedrawEditor();
+            }
+
+            /// <summary>
+            ///   Converts an editor-relative cursor position to a console cursor position.
+            /// </summary>
+            /// <param name="editorPos">
+            ///   Editor-relative cursor position
+            /// </param>
+            /// <returns>
+            ///   Console cursor position
+            /// </returns>
+            public ConsolePos EditorPosToCursorPos(ConsolePos editorPos)
+            {
+                ConsolePos p;
+                p.left = LineLeft(editorPos.top, startCursorPos.left) + editorPos.left;
+                p.top = startCursorPos.top + editorPos.top;
+                return p;
             }
 
             /// <summary>
@@ -142,30 +176,7 @@ namespace MSG.IO
             /// </summary>
             public void Insert()
             {
-                // Move chars over to make room
-                //System.Console.MoveBufferArea(Left, Top, System.Console.BufferWidth - 1 - Left, 1, Left + 1, Top);
-                // Put char onto display
-                //print.Char(model.GetChar(model.Cursor - 1));
                 RedrawEditor();
-            }
-
-            /// <summary>
-            ///   Gets or sets cursor left and updates console cursor.
-            /// </summary>
-            public int Left
-            {
-                get { return pos.Left; }
-                set
-                {
-                    if (value < consoleWidth)
-                        pos.Left = value;
-                    else
-                    {
-                        pos.Left = value - consoleWidth;
-                        Top++;
-                    }
-                    SetCursorPos(pos);
-                }
             }
 
             /// <summary>
@@ -177,11 +188,9 @@ namespace MSG.IO
             /// <returns>
             ///   Left coordinate of the given line
             /// </returns>
-            public int LineLeft(int lineIndex)
+            public static int LineLeft(int lineIndex, int startLeft)
             {
-                if (lineIndex == 0)
-                    return this.start.Left;
-                return 0;
+                return lineIndex == 0 ? startLeft : 0;
             }
 
             /// <summary>
@@ -192,43 +201,37 @@ namespace MSG.IO
                 // Hide cursor during redraw
                 print.IsCursorVisible = false;
                 // Start at the beginning
-                SetCursorPos(start);
+                SetCursorPos(startCursorPos);
                 // Calculate word wrapping
                 wordWrapper.Update();
                 // Loop through each line returned by the word wrapper
                 for (int i = 0; i < wordWrapper.Count; i++)
                 {
                     // Get next word-wrapped line
-                    var s = wordWrapper[i].ToString();
-                    print.String(s);
-                    // Calc right padding length (do not scroll the window with the padding)
-                    int padLen = lineWidths[i] - s.Length - 1;
-                    // If lines have been added (and possibly erased) after this line, then
-                    // pad all the way to the right edge of the window
-                    if (i < wordWrapper.LinesScrolledFromWrapping)
+                    string s = wordWrapper[i].ToString();
+                    // Right pad to the edge of the window
+                    int padLen = lineWidths[i] - s.Length;
+                    // If this line is the last that has been scrolled into view, don't
+                    // pad all the way to the right to avoid unneeded scrolling.
+                    if (padLen > 0 && i == wordWrapper.LinesScrolledFromWrapping)
                     {
-                        padLen++;
+                        padLen--;
                     }
-                    if (padLen > 0)
-                    {
-                        // Right pad the line to erase any lingering text from backspacing
-                        string padding = Format.Padding(padLen);
-                        print.String(padding);
-                    }
+                    string padding = padLen == 0 ? String.Empty : Format.Padding(padLen);
+                    print.String(s + padding);
                 }
+                // Erase the old line if the number of lines was reduced by the last operation
                 if (wordWrapper.Dewrap)
                 {
-                    print.String(Format.Padding(lineWidths[wordWrapper.Count]));
+                    print.String(Format.Padding(lineWidths[wordWrapper.Count]
+                        - (wordWrapper.Count == wordWrapper.LinesScrolledFromWrapping ? 1 : 0)));
                 }
                 // Position cursor with respect to wrapping
-                pos.Left = LineLeft(wordWrapper.CursorPos.Top) + wordWrapper.CursorPos.Left;
-                pos.Top = start.Top + wordWrapper.CursorPos.Top;
-                if (pos.Left >= consoleWidth)
-                {
-                    pos.Left -= consoleWidth;
-                    pos.Top++;
-                }
-                SetCursorPos(pos);
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                if (cursorPos.left >= consoleWidth)
+                    throw new Exception("BufferPosToCursorPos() is broke");
+                SetCursorPos(cursorPos);
+                // Show cursor again
                 print.IsCursorVisible = true;
             }
 
@@ -245,22 +248,11 @@ namespace MSG.IO
             /// </summary>
             private void SetCursorPos(ConsolePos pos)
             {
-                if (pos.Left >= consoleWidth)
-                    throw new ArgumentOutOfRangeException("Invalid cursor left position: " + pos.Left);
+                if (pos.left < 0 || pos.left >= consoleWidth)
+                    throw new ArgumentOutOfRangeException("Invalid cursor left position: " + pos.left);
+                if (pos.top < 0 /*|| pos.top >= consoleWidth*/)
+                    throw new ArgumentOutOfRangeException("Invalid cursor top position: " + pos.top);
                 print.CursorPos = pos;
-            }
-
-            /// <summary>
-            ///   Gets or sets cursor top and updates console cursor.
-            /// </summary>
-            public int Top
-            {
-                get { return pos.Top; }
-                set
-                {
-                    pos.Top = value;
-                    SetCursorPos(pos);
-                }
             }
         }
     }

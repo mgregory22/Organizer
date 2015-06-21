@@ -6,38 +6,25 @@ using System.Threading.Tasks;
 
 namespace MSG.IO
 {
-    public class ConsolePos
+    public struct ConsolePos
     {
-        int left;
-        int top;
+        public int left, top;
 
         public ConsolePos(int left, int top)
         {
-            Left = left;
-            Top = top;
+            this.left = left;
+            this.top = top;
         }
 
-        public ConsolePos(ConsolePos pos)
+        public void Set(int left, int top)
         {
-            Left = pos.Left;
-            Top = pos.Top;
-        }
-
-        public int Left
-        {
-            get { return left; }
-            set { left = value; }
-        }
-
-        public int Top
-        {
-            get { return top; }
-            set { top = value; }
+            this.left = left;
+            this.top = top;
         }
 
         public override string ToString()
         {
-            return string.Format("({0},{1})", left, top);
+            return string.Format("({0},{1})", this.left, this.top);
         }
     }
 }

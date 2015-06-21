@@ -11,7 +11,7 @@ namespace Priorities
 {
     public class Driver
     {
-        public static string promptMsg = "> ";
+        public static string promptMsg = "! ";
         Print print;
         Read read;
 

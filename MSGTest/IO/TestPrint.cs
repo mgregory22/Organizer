@@ -38,20 +38,20 @@ namespace MSGTest.IO
 
         public override int CursorLeft
         {
-            get { return pos.Left; }
-            set { pos.Left = value; output += "<" + value.ToString(); }
+            get { return pos.left; }
+            set { pos.left = value; output += "<" + value.ToString(); }
         }
 
         public override ConsolePos CursorPos
         {
-            get { return new ConsolePos(pos); }
-            set { SetCursorPos(value.Left, value.Top); }
+            get { return pos; }
+            set { SetCursorPos(value.left, value.top); }
         }
 
         public override int CursorTop
         {
-            get { return pos.Top; }
-            set { pos.Top = value; output += "^" + value.ToString(); }
+            get { return pos.top; }
+            set { pos.top = value; output += "^" + value.ToString(); }
         }
 
         public override bool IsCursorVisible

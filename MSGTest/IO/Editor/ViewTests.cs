@@ -3,6 +3,7 @@ using MSG.Types.String;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace MSGTest.IO.EditorTests
 {
@@ -14,12 +15,28 @@ namespace MSGTest.IO.EditorTests
         TestPrint print;
         string prompt;
 
+        private void ChunkPrint(string s)
+        {
+            int chunkLen = 50;
+            for (int i = 0; i < s.Length; i += chunkLen)
+                Debug.WriteLine(s.Substring(i, Math.Min(chunkLen, s.Length - i)));
+        }
+
         private void CursorLeft(int count, Editor.Buffer buffer, Editor.View view)
         {
             for (int i = 0; i < count; i++)
             {
                 buffer.CursorLeft();
                 view.CursorLeft();
+            }
+        }
+
+        private void CursorRight(int count, Editor.Buffer buffer, Editor.View view)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                buffer.CursorRight();
+                view.CursorRight();
             }
         }
 
@@ -30,6 +47,29 @@ namespace MSGTest.IO.EditorTests
                 buffer.Insert(c);
                 view.Insert();
             }
+        }
+
+        private void Print(string s)
+        {
+            Debug.WriteLine(Format.ToLiteral(s).Replace(' ', '.'));
+        }
+
+        private void PrintCmp(string expected, string actual)
+        {
+            Debug.WriteLine("Expected:");
+            string expectedF = Format.ToLiteral(expected).Replace(' ', '.');
+            ChunkPrint(expectedF);
+            Debug.WriteLine("Actual:");
+            string actualF = Format.ToLiteral(actual).Replace(' ', '.');
+            ChunkPrint(actualF);
+            Debug.WriteLine("Differences:");
+            int diffLen = Math.Max(expectedF.Length, actualF.Length);
+            StringBuilder diffs = new StringBuilder();
+            for (int i = 0; i < diffLen; i++)
+                diffs.Append(expectedF.Length > i
+                    && actualF.Length > i
+                    && expectedF[i] == actualF[i] ? '.' : '*');
+            ChunkPrint(diffs.ToString());
         }
 
         private void SkipTestingTheInsertOutputSinceItsLongAndBoring()
@@ -68,7 +108,19 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
             view.Backspace();
-            string expected = "<2^0Word w        <0^1";
+            string expected = "<2^0Word w       <0^1";
+            Assert.AreEqual(expected, print.Output);
+        }
+
+        [Test]
+        public void TestBackspaceAtEndOfTextToPreviousLineErasesLastCharacterOnThatLine()
+        {
+            InsertText("Wordw", buffer, view);
+            InsertText("r", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            buffer.Backspace();
+            view.Backspace();
+            string expected = "<2^0Wordw        <7^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -83,11 +135,59 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestCursorEndKeyOnSecondLineMovesCursorToEndOfSecondLine()
+        {
+            InsertText("Test words", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorLeft(3, buffer, view);
+            view.CursorEnd();
+            Assert.AreEqual("<4^1<3^1<2^1<5^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorHomeKeyMovesCursorToStartOfSingleLine()
+        {
+            InsertText("Test", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.CursorHome();
+            Assert.AreEqual("<2^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorHomeKeyOnSecondLineMovesCursorToStartOfSecondLine()
+        {
+            InsertText("Test words", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.CursorHome();
+            Assert.AreEqual("<0^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorLeftAtBeginningOfNewLineBringsCursorToEndOfPreviousLine()
+        {
+            InsertText("Word wr", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorLeft(3, buffer, view);
+            string expected = "<1^1<0^1<6^0";
+            Assert.AreEqual(expected, print.Output);
+        }
+
+        [Test]
         public void TestCursorLeftCannotMoveCursorBeforeBeginning()
         {
             buffer.CursorLeft();
             view.CursorLeft();
             Assert.AreEqual(prompt.Length, print.CursorLeft);
+        }
+
+        [Test]
+        public void TestCursorLeftIntoFullLinePutsCursorAtEndOfLine()
+        {
+            InsertText("Wordwr ", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorLeft(1, buffer, view);
+            string expected = "<6^0";
+            Assert.AreEqual(expected, print.Output);
         }
 
         [Test]
@@ -112,6 +212,36 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestCursorRightBeforeEndOfFirstLineAndBeforeEndOfBufferMovesCursorOneRight()
+        {
+            //        012345678
+            InsertText("Test", buffer, view);
+            CursorLeft(3, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorRight(1, buffer, view);
+            string expected = "<4^0";
+            Assert.AreEqual(expected, print.Output);
+        }
+
+        [Test]
+        public void TestCursorRightBeforeEndOfFirstLineAndAtEndOfBufferThrowsException()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestCursorRightAtEndOfFirstLineAndBeforeEndOfBufferPutsCursorAtBeginningOfNextLine()
+        {
+            //        012345678012345678
+            InsertText("Testingwrapping", buffer, view);
+            CursorLeft(9, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorRight(1, buffer, view);
+            string expected = "<0^1";
+            Assert.AreEqual(expected, print.Output);
+        }
+
+        [Test]
         public void TestCursorRightCannotMoveCursorPastEnd()
         {
             buffer.CursorRight();
@@ -120,10 +250,15 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestEnterOnLinesOtherThanTheLastStillPrintsNextPromptAfterAllTheEnteredLines()
+        {
+            Assert.Fail(); //TODO
+        }
+
+        [Test]
         public void TestInsertDoesNotScrollWindowUnnecessarilyWhenClearingToEol()
         {
             InsertText("A", buffer, view);
-            Debug.WriteLine(Format.ToLiteral(print.Output));
             int cursorMotionLen = 4;
             int nonInputTextOutputLen = prompt.Length + cursorMotionLen * 3;
             Assert.Less(print.Output.Length - nonInputTextOutputLen, print.BufferWidth - prompt.Length);
@@ -145,14 +280,10 @@ namespace MSGTest.IO.EditorTests
                     + "<2^0Wor  <5^0" // 48
                     + "<2^0Word <6^0" // 62
                     + "<2^0Word <7^0" // 76
-                    + "<2^0Word w<0^1" // 91
+                    + "<2^0Word w       <0^1" // 91
                     + "<2^0Word  wr     <2^1"
                     + "<2^0Word  wra    <3^1"
                     + "<2^0Word  wrap   <4^1";
-            //Debug.WriteLine("Expected:");
-            //Debug.WriteLine(Format.ToLiteral(expected).Replace(' ', '.'));
-            //Debug.WriteLine("Output:");
-            //Debug.WriteLine(Format.ToLiteral(print.Output).Replace(' ', '.'));
             Assert.AreEqual(expected, print.Output);
         }
 
