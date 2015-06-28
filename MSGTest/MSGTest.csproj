@@ -59,7 +59,6 @@
     <Compile Include="Types\Array\EndlessArrayTests.cs" />
     <Compile Include="Types\String\DrawTests.cs" />
     <Compile Include="IO\EditorTests.cs" />
-    <Compile Include="IO\Editor\LineDisplaySubstringsTests.cs" />
     <Compile Include="IO\Editor\ViewTests.cs" />
     <Compile Include="IO\Editor\WordWrapperTests.cs" />
     <Compile Include="IO\TestPrint.cs" />

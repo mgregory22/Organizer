@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IO\Editor\LineDisplaySubstring.cs" />
     <Compile Include="Types\Array\EndlessArray.cs" />
     <Compile Include="Types\String\Draw.cs" />
     <Compile Include="IO\ConsolePos.cs" />

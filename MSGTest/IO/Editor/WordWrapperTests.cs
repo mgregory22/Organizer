@@ -24,12 +24,11 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestLineEqualToWindowWidthYieldsTwoLines()
+        public void TestLineEqualToWindowWidthYieldsOneLine()
         {
             wordWrapper = CreateWordWrapper("Word", 4);
-            Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual(text, wordWrapper[0].ToString());
-            Assert.AreEqual(String.Empty, wordWrapper[1].ToString());
+            Assert.AreEqual(1, wordWrapper.Count);
+            Assert.AreEqual(text, wordWrapper.GetLineBoundaries(0).ToString());
         }
 
         [Test]
@@ -37,7 +36,7 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word", 10);
             Assert.AreEqual(1, wordWrapper.Count);
-            Assert.AreEqual(text, wordWrapper[0].ToString());
+            Assert.AreEqual(text, wordWrapper.GetLineBoundaries(0).ToString());
         }
 
         [Test]
@@ -45,9 +44,9 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word soup", 4);
             Assert.AreEqual(3, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("soup", wordWrapper[1].ToString());
-            Assert.AreEqual("", wordWrapper[2].ToString());
+            Assert.AreEqual("Word", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual(" ", wordWrapper.GetLineBoundaries(1).ToString());
+            Assert.AreEqual("soup", wordWrapper.GetLineBoundaries(2).ToString());
         }
 
         [Test]
@@ -55,8 +54,8 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Words", 4);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("s", wordWrapper[1].ToString());
+            Assert.AreEqual("Word", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("s", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         [Test]
@@ -64,17 +63,18 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word break", 6);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("break", wordWrapper[1].ToString());
+            Assert.AreEqual("Word ", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("break", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         [Test]
-        public void TestWhitespaceBeforeAndAfterSoftBreakIsIgnored()
+        public void TestWhitespaceBeforeAndAfterSoftBreakIsRespected()
         {
             wordWrapper = CreateWordWrapper("Word     break", 6);
-            Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("break", wordWrapper[1].ToString());
+            Assert.AreEqual(3, wordWrapper.Count);
+            Assert.AreEqual("Word  ", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("   ", wordWrapper.GetLineBoundaries(1).ToString());
+            Assert.AreEqual("break", wordWrapper.GetLineBoundaries(2).ToString());
         }
 
         [Test]
@@ -82,17 +82,17 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word\nbreak", 6);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("break", wordWrapper[1].ToString());
+            Assert.AreEqual("Word\n", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("break", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         [Test]
-        public void TestWhiteSpaceBeforeHardBreakIsIgnored()
+        public void TestWhiteSpaceBeforeHardBreakIsRespected()
         {
             wordWrapper = CreateWordWrapper("Word \nbreak", 8);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("break", wordWrapper[1].ToString());
+            Assert.AreEqual("Word \n", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("break", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         [Test]
@@ -100,8 +100,8 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word br\neak", 8);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word br", wordWrapper[0].ToString());
-            Assert.AreEqual("eak", wordWrapper[1].ToString());
+            Assert.AreEqual("Word br\n", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("eak", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         [Test]
@@ -109,14 +109,14 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word break fury is here.", 12);
             Assert.AreEqual(3, wordWrapper.Count);
-            Assert.AreEqual("Word break", wordWrapper[0].ToString());
-            Assert.AreEqual("fury is", wordWrapper[1].ToString());
-            Assert.AreEqual("here.", wordWrapper[2].ToString());
+            Assert.AreEqual("Word break ", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("fury is ", wordWrapper.GetLineBoundaries(1).ToString());
+            Assert.AreEqual("here.", wordWrapper.GetLineBoundaries(2).ToString());
             wordWrapper = CreateWordWrapper("Word \nbreak fury is here.", 12);
             Assert.AreEqual(3, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("break fury", wordWrapper[1].ToString());
-            Assert.AreEqual("is here.", wordWrapper[2].ToString());
+            Assert.AreEqual("Word \n", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("break fury ", wordWrapper.GetLineBoundaries(1).ToString());
+            Assert.AreEqual("is here.", wordWrapper.GetLineBoundaries(2).ToString());
         }
 
         [Test]
@@ -124,8 +124,8 @@ namespace MSGTest.IO.EditorTests
         {
             wordWrapper = CreateWordWrapper("Word\n     break", 12);
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word", wordWrapper[0].ToString());
-            Assert.AreEqual("     break", wordWrapper[1].ToString());
+            Assert.AreEqual("Word\n", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("     break", wordWrapper.GetLineBoundaries(1).ToString());
         }
 
         //[Test]
@@ -161,15 +161,15 @@ namespace MSGTest.IO.EditorTests
         //}
 
         [Test]
-        public void TestSpaceBeginningAfterWidthWrappedLineDoesNotWrapPreviousWord()
+        public void TestSpaceBeginningAfterWidthWrappedLineWrapsPreviousWord()
         {
             wordWrapper = CreateWordWrapper("Word soup ", 9);
             //Debug.WriteLine(wordWrapper.Count);
-            //Debug.WriteLine(Format.ToLiteral(wordWrapper[0].ToString()));
-            //Debug.WriteLine(Format.ToLiteral(wordWrapper[1].ToString()));
+            //Debug.WriteLine(Format.ToLiteral(wordWrapper.GetLineBoundaries(0).ToString()));
+            //Debug.WriteLine(Format.ToLiteral(wordWrapper.GetLineBoundaries(1).ToString()));
             Assert.AreEqual(2, wordWrapper.Count);
-            Assert.AreEqual("Word soup", wordWrapper[0].ToString());
-            Assert.AreEqual(String.Empty, wordWrapper[1].ToString());
+            Assert.AreEqual("Word ", wordWrapper.GetLineBoundaries(0).ToString());
+            Assert.AreEqual("soup ", wordWrapper.GetLineBoundaries(1).ToString());
         }
     }
 }

@@ -95,14 +95,16 @@ namespace MSG.IO
             /// </summary>
             public int CursorEnd()
             {
+                ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current line
-                int currentLineIndex = cursorPos.top;
+                int currentLineIndex = editorPos.top;
                 // find end of current line
-                int bufferPosOfEndOfCurrentLine = wordWrapper[currentLineIndex].EndIndex;
+                int bufferPosOfEndOfCurrentLine = wordWrapper.GetLineBoundaries(currentLineIndex).lineBreak
+                    - (wordWrapper.IsLastLine(currentLineIndex) ? 0 : 1);
                 // set bufferPos to end of current line
                 buffer.Cursor = bufferPosOfEndOfCurrentLine;
                 // update cursor to match bufferPos
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                cursorPos = BufferPosToCursorPos(bufferPosOfEndOfCurrentLine);
                 SetCursorPos(cursorPos);
                 // boom, done.
                 return buffer.Cursor;
@@ -114,14 +116,15 @@ namespace MSG.IO
             /// </summary>
             public int CursorHome()
             {
+                ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current line
-                int currentLineIndex = cursorPos.top;
+                int currentLineIndex = editorPos.top;
                 // find start of current line
-                int bufferPosOfStartOfCurrentLine = wordWrapper[currentLineIndex].StartIndex;
+                int bufferPosOfStartOfCurrentLine = wordWrapper.GetLineBoundaries(currentLineIndex).startIndex;
                 // set bufferPos to start of current line
                 buffer.Cursor = bufferPosOfStartOfCurrentLine;
                 // update cursor to match bufferPos
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                cursorPos = BufferPosToCursorPos(bufferPosOfStartOfCurrentLine);
                 SetCursorPos(cursorPos);
                 // boom, done.
                 return buffer.Cursor;
@@ -134,6 +137,14 @@ namespace MSG.IO
             {
                 cursorPos = BufferPosToCursorPos(buffer.Cursor);
                 SetCursorPos(cursorPos);
+            }
+
+            public ConsolePos CursorPosToEditorPos(ConsolePos cursorPos)
+            {
+                ConsolePos editorPos;
+                editorPos.left = cursorPos.left;
+                editorPos.top = cursorPos.top - startCursorPos.top;
+                return editorPos;
             }
 
             /// <summary>
@@ -168,6 +179,18 @@ namespace MSG.IO
                 p.left = LineLeft(editorPos.top, startCursorPos.left) + editorPos.left;
                 p.top = startCursorPos.top + editorPos.top;
                 return p;
+            }
+
+            /// <summary>
+            ///   Moves the cursor to the end of the input and prints a newline
+            ///   (for after the user is done typing).
+            /// </summary>
+            public void Enter()
+            {
+                cursorPos.left = 0;
+                cursorPos.top = startCursorPos.top + wordWrapper.Count - 1;
+                SetCursorPos(cursorPos);
+                print.Newline();
             }
 
             /// <summary>
@@ -208,7 +231,7 @@ namespace MSG.IO
                 for (int i = 0; i < wordWrapper.Count; i++)
                 {
                     // Get next word-wrapped line
-                    string s = wordWrapper[i].ToString();
+                    string s = wordWrapper.GetLineBoundaries(i).ToString();
                     // Right pad to the edge of the window
                     int padLen = lineWidths[i] - s.Length;
                     // If this line is the last that has been scrolled into view, don't
@@ -233,14 +256,6 @@ namespace MSG.IO
                 SetCursorPos(cursorPos);
                 // Show cursor again
                 print.IsCursorVisible = true;
-            }
-
-            /// <summary>
-            ///   Prints a newline after the user is done typing.
-            /// </summary>
-            public void Return()
-            {
-                print.Newline();
             }
 
             /// <summary>

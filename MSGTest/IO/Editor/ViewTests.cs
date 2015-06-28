@@ -108,7 +108,7 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
             view.Backspace();
-            string expected = "<2^0Word w       <0^1";
+            string expected = "<2^0Word w        <0^1";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -120,7 +120,7 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
             view.Backspace();
-            string expected = "<2^0Wordw        <7^0";
+            string expected = "<2^0Wordw <7^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -145,6 +145,17 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestCursorEndKeyOnFirstLineOfTwoLineEntryMovesCursorToEndOfFirstLine()
+        {
+            //        01234567012345670
+            InsertText("Testy wording", buffer, view);
+            CursorLeft(12, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.CursorEnd();
+            Assert.AreEqual("<7^0", print.Output);
+        }
+
+        [Test]
         public void TestCursorHomeKeyMovesCursorToStartOfSingleLine()
         {
             InsertText("Test", buffer, view);
@@ -160,6 +171,16 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorHome();
             Assert.AreEqual("<0^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorHomeKeyOnFirstLineOfTwoLineInputMovesCursorToStartOfFirstLine()
+        {
+            InsertText("Test words", buffer, view);
+            CursorLeft(6, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.CursorHome();
+            Assert.AreEqual("<2^0", print.Output);
         }
 
         [Test]
@@ -185,8 +206,8 @@ namespace MSGTest.IO.EditorTests
         {
             InsertText("Wordwr ", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
-            CursorLeft(1, buffer, view);
-            string expected = "<6^0";
+            CursorLeft(2, buffer, view);
+            string expected = "<0^1<7^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -224,17 +245,11 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorRightBeforeEndOfFirstLineAndAtEndOfBufferThrowsException()
-        {
-            Assert.Fail();
-        }
-
-        [Test]
         public void TestCursorRightAtEndOfFirstLineAndBeforeEndOfBufferPutsCursorAtBeginningOfNextLine()
         {
-            //        012345678012345678
-            InsertText("Testingwrapping", buffer, view);
-            CursorLeft(9, buffer, view);
+            //        01234567012345
+            InsertText("Testingwrap", buffer, view);
+            CursorLeft(6, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorRight(1, buffer, view);
             string expected = "<0^1";
@@ -252,7 +267,12 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestEnterOnLinesOtherThanTheLastStillPrintsNextPromptAfterAllTheEnteredLines()
         {
-            Assert.Fail(); //TODO
+            //        01234567012345670123456701234567
+            InsertText("Test of wrapping w/ enter key", buffer, view);
+            CursorLeft(19, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.Enter();
+            Assert.AreEqual("<0^5\n", print.Output);
         }
 
         [Test]
@@ -275,12 +295,12 @@ namespace MSGTest.IO.EditorTests
         {
             InsertText("Word wrap", buffer, view);
             string expected = "> <2^0" // 6
-                    + "<2^0W    <3^0" // 20
-                    + "<2^0Wo   <4^0" // 34
-                    + "<2^0Wor  <5^0" // 48
-                    + "<2^0Word <6^0" // 62
-                    + "<2^0Word <7^0" // 76
-                    + "<2^0Word w       <0^1" // 91
+                    + "<2^0W    <3^0" // 19
+                    + "<2^0Wo   <4^0" // 32
+                    + "<2^0Wor  <5^0" // 45
+                    + "<2^0Word <6^0" // 58
+                    + "<2^0Word <7^0" // 71
+                    + "<2^0Word w<0^1" // 85
                     + "<2^0Word  wr     <2^1"
                     + "<2^0Word  wra    <3^1"
                     + "<2^0Word  wrap   <4^1";

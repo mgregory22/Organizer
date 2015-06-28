@@ -72,14 +72,14 @@ namespace MSG.IO
                     // ignore enter on empty line
                     if (!buffer.IsEmpty())
                     {
-                        view.Return();
+                        view.Enter();
                         done = true;
                     }
                 }
                 else if (IsEscape(keyInfo))
                 {
                     buffer.Clear();
-                    view.Return();
+                    view.Enter();
                     done = true;
                 }
                 else if (IsHome(keyInfo))
