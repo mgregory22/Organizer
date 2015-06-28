@@ -27,7 +27,7 @@ namespace MSGTest.IO.EditorTests
             for (int i = 0; i < count; i++)
             {
                 buffer.CursorLeft();
-                view.CursorLeft();
+                view.UpdateCursor();
             }
         }
 
@@ -36,7 +36,7 @@ namespace MSGTest.IO.EditorTests
             for (int i = 0; i < count; i++)
             {
                 buffer.CursorRight();
-                view.CursorRight();
+                view.UpdateCursor();
             }
         }
 
@@ -45,7 +45,7 @@ namespace MSGTest.IO.EditorTests
             foreach (char c in text)
             {
                 buffer.Insert(c);
-                view.Insert();
+                view.RedrawEditor();
             }
         }
 
@@ -96,7 +96,7 @@ namespace MSGTest.IO.EditorTests
             InsertText("Word", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
-            view.Backspace();
+            view.RedrawEditor();
             string expected = "<2^0Wor  <5^0";
             Assert.AreEqual(expected, print.Output);
         }
@@ -107,7 +107,7 @@ namespace MSGTest.IO.EditorTests
             InsertText("Word wr", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
-            view.Backspace();
+            view.RedrawEditor();
             string expected = "<2^0Word w        <0^1";
             Assert.AreEqual(expected, print.Output);
         }
@@ -119,7 +119,7 @@ namespace MSGTest.IO.EditorTests
             InsertText("r", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.Backspace();
-            view.Backspace();
+            view.RedrawEditor();
             string expected = "<2^0Wordw <7^0";
             Assert.AreEqual(expected, print.Output);
         }
@@ -197,7 +197,7 @@ namespace MSGTest.IO.EditorTests
         public void TestCursorLeftCannotMoveCursorBeforeBeginning()
         {
             buffer.CursorLeft();
-            view.CursorLeft();
+            view.UpdateCursor();
             Assert.AreEqual(prompt.Length, print.CursorLeft);
         }
 
@@ -260,7 +260,7 @@ namespace MSGTest.IO.EditorTests
         public void TestCursorRightCannotMoveCursorPastEnd()
         {
             buffer.CursorRight();
-            view.CursorRight();
+            view.UpdateCursor();
             Assert.AreEqual(prompt.Length, print.CursorLeft);
         }
 
@@ -271,7 +271,7 @@ namespace MSGTest.IO.EditorTests
             InsertText("Test of wrapping w/ enter key", buffer, view);
             CursorLeft(19, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
-            view.Enter();
+            view.ExitEditor();
             Assert.AreEqual("<0^5\n", print.Output);
         }
 

@@ -76,14 +76,6 @@ namespace MSG.IO
                 this.wordWrapper = new WordWrapper(buffer, lineWidths);
             }
 
-            /// <summary>
-            ///   Handle backspace key.
-            /// </summary>
-            public void Backspace()
-            {
-                RedrawEditor();
-            }
-
             public ConsolePos BufferPosToCursorPos(int bufferPos)
             {
                 return EditorPosToCursorPos(wordWrapper.BufferPosToEditorPos(bufferPos));
@@ -130,38 +122,12 @@ namespace MSG.IO
                 return buffer.Cursor;
             }
 
-            /// <summary>
-            ///   Handles the left cursor key.
-            /// </summary>
-            public void CursorLeft()
-            {
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);
-                SetCursorPos(cursorPos);
-            }
-
             public ConsolePos CursorPosToEditorPos(ConsolePos cursorPos)
             {
                 ConsolePos editorPos;
                 editorPos.left = cursorPos.left;
                 editorPos.top = cursorPos.top - startCursorPos.top;
                 return editorPos;
-            }
-
-            /// <summary>
-            ///   Handles the right cursor key.
-            /// </summary>
-            public void CursorRight()
-            {
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);                
-                SetCursorPos(cursorPos);
-            }
-
-            /// <summary>
-            ///   Deletes the character at the cursor.
-            /// </summary>
-            public void Delete()
-            {
-                RedrawEditor();
             }
 
             /// <summary>
@@ -185,21 +151,12 @@ namespace MSG.IO
             ///   Moves the cursor to the end of the input and prints a newline
             ///   (for after the user is done typing).
             /// </summary>
-            public void Enter()
+            public void ExitEditor()
             {
                 cursorPos.left = 0;
                 cursorPos.top = startCursorPos.top + wordWrapper.Count - 1;
                 SetCursorPos(cursorPos);
                 print.Newline();
-            }
-
-            /// <summary>
-            ///   Insert a character into the current line on the console, moving
-            ///   other characters forward or breaking the line if necessary.
-            /// </summary>
-            public void Insert()
-            {
-                RedrawEditor();
             }
 
             /// <summary>
@@ -268,6 +225,16 @@ namespace MSG.IO
                 if (pos.top < 0 /*|| pos.top >= consoleWidth*/)
                     throw new ArgumentOutOfRangeException("Invalid cursor top position: " + pos.top);
                 print.CursorPos = pos;
+            }
+
+            /// <summary>
+            ///   Moves the console cursor to the position corresponding
+            ///   to the buffer cursor.
+            /// </summary>
+            public void UpdateCursor()
+            {
+                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                SetCursorPos(cursorPos);
             }
         }
     }

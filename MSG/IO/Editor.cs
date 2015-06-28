@@ -33,32 +33,32 @@ namespace MSG.IO
                 {
                     // insert any of the printable keys
                     buffer.Insert(keyInfo.KeyChar);
-                    view.Insert();
+                    view.RedrawEditor();
                 }
                 else if (IsShiftEnter(keyInfo))
                 {
                     buffer.Insert('\n');
-                    view.Insert();
+                    view.RedrawEditor();
                 }
                 else if (IsBackspace(keyInfo))
                 {
                     buffer.Backspace();
-                    view.Backspace();
+                    view.RedrawEditor();
                 }
                 else if (IsCursorLeft(keyInfo))
                 {
                     buffer.CursorLeft();
-                    view.CursorLeft();
+                    view.UpdateCursor();
                 }
                 else if (IsCursorRight(keyInfo))
                 {
                     buffer.CursorRight();
-                    view.CursorRight();
+                    view.UpdateCursor();
                 }
                 else if (IsDelete(keyInfo))
                 {
                     buffer.Delete();
-                    view.Delete();
+                    view.RedrawEditor();
                 }
                 else if (IsEnd(keyInfo))
                 {
@@ -72,14 +72,14 @@ namespace MSG.IO
                     // ignore enter on empty line
                     if (!buffer.IsEmpty())
                     {
-                        view.Enter();
+                        view.ExitEditor();
                         done = true;
                     }
                 }
                 else if (IsEscape(keyInfo))
                 {
                     buffer.Clear();
-                    view.Enter();
+                    view.ExitEditor();
                     done = true;
                 }
                 else if (IsHome(keyInfo))
