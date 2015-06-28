@@ -99,7 +99,7 @@ namespace MSG.IO
                 // find current line
                 int currentLineIndex = editorPos.top;
                 // find end of current line
-                int bufferPosOfEndOfCurrentLine = wordWrapper.GetLineBoundaries(currentLineIndex).lineBreak
+                int bufferPosOfEndOfCurrentLine = wordWrapper.GetLineBreak(currentLineIndex)
                     - (wordWrapper.IsLastLine(currentLineIndex) ? 0 : 1);
                 // set bufferPos to end of current line
                 buffer.Cursor = bufferPosOfEndOfCurrentLine;
@@ -120,7 +120,7 @@ namespace MSG.IO
                 // find current line
                 int currentLineIndex = editorPos.top;
                 // find start of current line
-                int bufferPosOfStartOfCurrentLine = wordWrapper.GetLineBoundaries(currentLineIndex).startIndex;
+                int bufferPosOfStartOfCurrentLine = wordWrapper.GetLineStart(currentLineIndex);
                 // set bufferPos to start of current line
                 buffer.Cursor = bufferPosOfStartOfCurrentLine;
                 // update cursor to match bufferPos
@@ -231,7 +231,7 @@ namespace MSG.IO
                 for (int i = 0; i < wordWrapper.Count; i++)
                 {
                     // Get next word-wrapped line
-                    string s = wordWrapper.GetLineBoundaries(i).ToString();
+                    string s = wordWrapper.GetLine(i);
                     // Right pad to the edge of the window
                     int padLen = lineWidths[i] - s.Length;
                     // If this line is the last that has been scrolled into view, don't

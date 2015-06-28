@@ -1,4 +1,8 @@
-﻿using MSG.Types.Array;
+﻿//
+// Wordwrapper.cs
+//
+
+using MSG.Types.Array;
 using MSG.Types.String;
 using System;
 using System.Collections.Generic;
@@ -9,17 +13,6 @@ namespace MSG.IO
 {
     public partial class Editor
     {
-        public struct LineBoundaries
-        {
-            public int startIndex, lineBreak;
-            public string text;
-
-            public override string ToString()
-            {
-                return text.Substring(startIndex, lineBreak - startIndex);
-            }
-        }
-
         public class WordWrapper
         {
             Editor.Buffer buffer;
@@ -62,9 +55,15 @@ namespace MSG.IO
                 Update();
             }
 
-            public void AddLine(int lineEnd)
+            /// <summary>
+            ///   Adds a line break to the list.
+            /// </summary>
+            /// <param name="lineBreak">
+            ///   The position of the char right after the line break.
+            /// </param>
+            public void AddLineBreak(int lineBreak)
             {
-                lineBreaks.Add(lineEnd);
+                lineBreaks.Add(lineBreak);
                 linesScrolledFromWrapping = Math.Max(linesScrolledFromWrapping, lineBreaks.Count - 1);
             }
 
@@ -89,7 +88,7 @@ namespace MSG.IO
                     top = lineBreaks.Count - 1;
                 }
                 ConsolePos editorPos;
-                editorPos.left = bufferPos - LineStart(top);
+                editorPos.left = bufferPos - GetLineStart(top);
                 // Cursor wraps around if it's at the end of a full line
                 if (editorPos.left == lineWidths[top])
                 {
@@ -100,6 +99,9 @@ namespace MSG.IO
                 return editorPos;
             }
 
+            /// <summary>
+            ///   Returns the number of lines of wrapped text.
+            /// </summary>
             public int Count
             {
                 get { return lineBreaks.Count; }
@@ -115,51 +117,79 @@ namespace MSG.IO
                 get { return dewrap; }
             }
 
-            public LineBoundaries GetLineBoundaries(int i)
+            /// <summary>
+            ///   Returns the text of the given wrapped line.
+            /// </summary>
+            public string GetLine(int wrappedLineIndex)
             {
-                LineBoundaries lb;
-                lb.startIndex = LineStart(i);
-                lb.lineBreak = lineBreaks[i];
-                lb.text = buffer.Text;
-                return lb;
+                int startIndex = GetLineStart(wrappedLineIndex);
+                return buffer.Text.Substring(startIndex, GetLineBreak(wrappedLineIndex) - startIndex);
             }
 
-            public bool Is_i_AtAHardLineReturnChar(char charAtI)
+            /// <summary>
+            ///   Returns the break position of the line given by 
+            ///   _lineIndex_, which is one past the last character 
+            ///   on the line.
+            /// </summary>
+            public int GetLineBreak(int wrappedLineIndex)
+            {
+                return lineBreaks[wrappedLineIndex];
+            }
+
+            /// <summary>
+            ///   Returns the position of the start of the line 
+            ///   given by _lineIndex_.
+            /// </summary>
+            public int GetLineStart(int wrappedLineIndex)
+            {
+                // The start of the first line is zero.  The start of 
+                // any other line is the previous break.
+                return wrappedLineIndex == 0 ? 0 : lineBreaks[wrappedLineIndex - 1];
+            }
+
+            /// <summary>
+            ///   Returns true if the cursor is on a LF or CR char.
+            /// </summary>
+            public bool IsIAtAHardLineReturnChar(char charAtI)
             {
                 return charAtI == '\n' || charAtI == '\r';
             }
 
-            public bool Is_i_AtTheWindowBreak(int lineLen, char charAtI)
-            {
-                return lineLen == this.lineWidths[lineBreaks.Count];
-            }
-
             /// <summary>
-            ///   Returns true if the pointer at _i_ is on a word break
-            ///   (ie char i is a space and char i-1 is a letter).
+            ///   Returns true if the cursor is just after a word
+            ///   (ie cursor is on a space just after a nonspace).
             /// </summary>
-            /// <param name="charBeforeCursor">
-            ///   Character before the cursor
-            /// </param>
-            /// <param name="charAtCursor">
-            ///   Character at the cursor
-            /// </param>
-            /// <returns>
-            ///   True if cursor is on a word break
-            /// </returns>
-            public bool Is_i_JustAfterAWord(char charBeforeI, char charAtI)
+            public bool IsIJustAfterAWord(char charBeforeI, char charAtI)
             {
                 return !char.IsWhiteSpace(charBeforeI) && char.IsWhiteSpace(charAtI);
             }
 
-            public bool Is_i_OnWordBeginning(char charBeforeI, char charAtI)
+            /// <summary>
+            ///   Returns true if the cursor is on the beginning
+            ///   of a word (ie cursor is on a nonspace just after
+            ///   a space).
+            /// </summary>
+            public bool IsIOnWordBeginning(char charBeforeI, char charAtI)
             {
                 return char.IsWhiteSpace(charBeforeI) && !char.IsWhiteSpace(charAtI);
             }
 
-            public bool IsLastLine(int lineIndex)
+            /// <summary>
+            ///   Returns true if _lineIndex_ refers to the last 
+            ///   wrapped line of input.
+            /// </summary>
+            public bool IsLastLine(int wrappedLineIndex)
             {
-                return lineIndex == lineBreaks.Count - 1;
+                return wrappedLineIndex == lineBreaks.Count - 1;
+            }
+
+            /// <summary>
+            ///   Returns true if the length of the wrapped line text is equal
+            ///   to the width of the window.
+            /// </summary>
+            public bool IsWindowLineCompletelyFilled(int wrappedLineLen, int wrappedLineIndex)
+            {
+                return wrappedLineLen == this.lineWidths[wrappedLineIndex];
             }
 
             /// <summary>
@@ -168,18 +198,6 @@ namespace MSG.IO
             public int LinesScrolledFromWrapping
             {
                 get { return linesScrolledFromWrapping; }
-            }
-
-            /// <summary>
-            ///   Returns the start of the line given by -index-.
-            /// </summary>
-            /// <param name="index"></param>
-            /// <returns></returns>
-            public int LineStart(int index)
-            {
-                // The start of the first line is zero.  The start of any other line
-                // is the previous break.
-                return index == 0 ? 0 : lineBreaks[index - 1];
             }
 
             /// <summary>
@@ -203,7 +221,11 @@ namespace MSG.IO
                 char charBeforeI = '\n';
                 // Sanity check
                 if (buffer.Cursor < 0 || buffer.Cursor > textLen)
-                    throw new IndexOutOfRangeException(String.Format("Cursor cannot move outside text: Position {0}", buffer.Cursor));
+                {
+                    throw new IndexOutOfRangeException(
+                        String.Format("Cursor cannot move outside text: Position {0}", buffer.Cursor)
+                    );
+                }
                 // Set dewrap flag at the end of this method if the user deleted 
                 // enough characters to reduce the number of lines (ie the lost 
                 // line needs to be erased).
@@ -219,28 +241,27 @@ namespace MSG.IO
                 {
                     // Shortcut
                     char charAtI = text[i];
-                    // _i_ is at the beginning of a word?
-                    if (Is_i_OnWordBeginning(charBeforeI, charAtI))
+                    // Save the latest line break candidate
+                    if (IsIOnWordBeginning(charBeforeI, charAtI))
                     {
-                        // Save word break position
                         lastWordBreak = i;
                     }
-                    // Length of line up to _i_
+                    // Length of line so far in the scan
                     int lineLen = i - lineStart;
-                    // _i_ is at a hard line return?
-                    if (Is_i_AtAHardLineReturnChar(charAtI))
+                    // Break the line unconditionally at a line break char
+                    if (IsIAtAHardLineReturnChar(charAtI))
                     {
                         // Advance cursor past line return
                         i = Scan.SkipHardReturn(text, i);
                         // Break line for hard return
-                        AddLine(i);
-                        // Next bol
+                        AddLineBreak(i);
+                        // Next start of line
                         lineStart = i;
                         // Save word break position
                         lastWordBreak = lineStart;
                     }
-                    // Reached window break?
-                    else if (Is_i_AtTheWindowBreak(lineLen, charAtI))
+                    // When the window edge is reached, break at a word if possible
+                    else if (IsWindowLineCompletelyFilled(lineLen, lineBreaks.Count))
                     {
                         // Found word break during scan?
                         if (lastWordBreak > lineStart)
@@ -251,23 +272,24 @@ namespace MSG.IO
                             lineLen = i - lineStart;
                         }
                         // Add the line indexes
-                        AddLine(i);
+                        AddLineBreak(i);
                         // Next bol
                         lineStart = i;
                         // Save word break position
                         lastWordBreak = lineStart;
                     }
                     charBeforeI = charAtI;
+                    // End of scanning loop
                 }
-                // Add the last line, whatever it is
-                AddLine(textLen);
+                // Add a break for the end of the text
+                AddLineBreak(textLen);
                 // If the cursor wrapped around but no text did, then there is
                 // another scrolled line.
                 if (textLen - lineStart == lineWidths[lineBreaks.Count - 1])
                 {
                     linesScrolledFromWrapping++;
                 }
-                // Update dewrap
+                // If the number of lines decreased since the last update, flag it
                 dewrap = lineBreaks.Count < previousLineCnt;
             }
         }
