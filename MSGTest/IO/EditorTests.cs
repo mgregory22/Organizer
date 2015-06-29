@@ -22,14 +22,14 @@ namespace MSGTest.IO
         {
             buffer.Backspace();
             Assert.AreEqual("", buffer.Text);
-            Assert.AreEqual(0, buffer.Cursor);
+            Assert.AreEqual(0, buffer.Point);
         }
 
         [Test]
         public void TestClearResetsCursorPosition()
         {
             buffer.Clear();
-            Assert.AreEqual(0, buffer.Cursor);
+            Assert.AreEqual(0, buffer.Point);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace MSGTest.IO
         [Test]
         public void TestCreatingEmptyBufferResetsCursorPosition()
         {
-            Assert.AreEqual(0, buffer.Cursor);
+            Assert.AreEqual(0, buffer.Point);
         }
 
         [Test]
@@ -54,16 +54,16 @@ namespace MSGTest.IO
         [Test]
         public void TestCursorLeftHasNoEffectOnEmptyBuffer()
         {
-            buffer.CursorLeft();
-            Assert.AreEqual(0, buffer.Cursor);
+            buffer.RetreatPoint();
+            Assert.AreEqual(0, buffer.Point);
             Assert.AreEqual("", buffer.Text);
         }
 
         [Test]
         public void TestCursorRightHasNoEffectOnEmptyBuffer()
         {
-            buffer.CursorRight();
-            Assert.AreEqual(0, buffer.Cursor);
+            buffer.AdvancePoint();
+            Assert.AreEqual(0, buffer.Point);
             Assert.AreEqual("", buffer.Text);
         }
 
@@ -72,7 +72,7 @@ namespace MSGTest.IO
         {
             buffer.Delete();
             Assert.AreEqual("", buffer.Text);
-            Assert.AreEqual(0, buffer.Cursor);
+            Assert.AreEqual(0, buffer.Point);
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace MSGTest.IO
         [Test]
         public void TestCreatingExistingTextBufferSetsInitialCursorPosition()
         {
-            Assert.AreEqual(4, buffer.Cursor);
+            Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace MSGTest.IO
         public void TestBackspaceMovesCursorBackOne()
         {
             buffer.Backspace();
-            Assert.AreEqual(3, buffer.Cursor);
+            Assert.AreEqual(3, buffer.Point);
         }
 
         [Test]
@@ -145,14 +145,14 @@ namespace MSGTest.IO
         {
             buffer.Backspace();
             buffer.Insert('x');
-            Assert.AreEqual(4, buffer.Cursor);
+            Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]
         public void TestClearResetsCursorPosition()
         {
             buffer.Clear();
-            Assert.AreEqual(0, buffer.Cursor);
+            Assert.AreEqual(0, buffer.Point);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace MSGTest.IO
         [Test]
         public void TestCursorLeftAndInsert()
         {
-            buffer.CursorLeft();
+            buffer.RetreatPoint();
             buffer.Insert('x');
             Assert.AreEqual("abcxd", buffer.Text);
         }
@@ -173,36 +173,36 @@ namespace MSGTest.IO
         [Test]
         public void TestCursorLeftAndInsertRestoresCursorPosition()
         {
-            buffer.CursorLeft();
+            buffer.RetreatPoint();
             buffer.Insert('x');
-            Assert.AreEqual(4, buffer.Cursor);
+            Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]
         public void TestCursorLeftMovesCursorLeftOne()
         {
-            buffer.CursorLeft();
-            Assert.AreEqual(3, buffer.Cursor);
+            buffer.RetreatPoint();
+            Assert.AreEqual(3, buffer.Point);
         }
 
         [Test]
         public void TestCursorLeftHasNoEffectOnText()
         {
-            buffer.CursorLeft();
+            buffer.RetreatPoint();
             Assert.AreEqual("abcd", buffer.Text);
         }
 
         [Test]
         public void TestCursorRightAtEndHasNoEffectOnCursorPosition()
         {
-            buffer.CursorRight();
-            Assert.AreEqual(4, buffer.Cursor);
+            buffer.AdvancePoint();
+            Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]
         public void TestCursorRightAtEndHasNoEffectOnText()
         {
-            buffer.CursorRight();
+            buffer.AdvancePoint();
             Assert.AreEqual("abcd", buffer.Text);
         }
 
@@ -210,7 +210,7 @@ namespace MSGTest.IO
         public void TestDeleteAtEndDoesntMoveCursor()
         {
             buffer.Delete();
-            Assert.AreEqual(4, buffer.Cursor);
+            Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]

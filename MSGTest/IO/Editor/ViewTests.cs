@@ -26,7 +26,7 @@ namespace MSGTest.IO.EditorTests
         {
             for (int i = 0; i < count; i++)
             {
-                buffer.CursorLeft();
+                buffer.RetreatPoint();
                 view.UpdateCursor();
             }
         }
@@ -35,7 +35,7 @@ namespace MSGTest.IO.EditorTests
         {
             for (int i = 0; i < count; i++)
             {
-                buffer.CursorRight();
+                buffer.AdvancePoint();
                 view.UpdateCursor();
             }
         }
@@ -196,7 +196,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorLeftCannotMoveCursorBeforeBeginning()
         {
-            buffer.CursorLeft();
+            buffer.RetreatPoint();
             view.UpdateCursor();
             Assert.AreEqual(prompt.Length, print.CursorLeft);
         }
@@ -259,7 +259,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorRightCannotMoveCursorPastEnd()
         {
-            buffer.CursorRight();
+            buffer.AdvancePoint();
             view.UpdateCursor();
             Assert.AreEqual(prompt.Length, print.CursorLeft);
         }

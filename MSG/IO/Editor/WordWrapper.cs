@@ -68,19 +68,19 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Converts the position of a character in the buffer to a console cursor position.
+            ///   Converts a point in the buffer to a console cursor position.
             /// </summary>
-            /// <param name="bufferPos">
-            ///   Buffer position
+            /// <param name="point">
+            ///   Buffer point
             /// </param>
             /// <returns>
             ///   The (left, top) position within the editor (eg (0,0) is the first column on the
             ///   first line, etc)
             /// </returns>
-            public ConsolePos BufferPosToEditorPos(int bufferPos)
+            public ConsolePos BufferPointToEditorPos(int point)
             {
                 int top = lineBreaks.FindIndex(
-                    lineBreak => bufferPos < lineBreak
+                    lineBreak => point < lineBreak
                 );
                 // If the cursor is sitting at the end of the text, then top will be the last line
                 if (top == -1)
@@ -88,7 +88,7 @@ namespace MSG.IO
                     top = lineBreaks.Count - 1;
                 }
                 ConsolePos editorPos;
-                editorPos.left = bufferPos - GetLineStart(top);
+                editorPos.left = point - GetLineStart(top);
                 // Cursor wraps around if it's at the end of a full line
                 if (editorPos.left == lineWidths[top])
                 {
@@ -220,10 +220,10 @@ namespace MSG.IO
                 int textLen = buffer.Text.Length;
                 char charBeforeI = '\n';
                 // Sanity check
-                if (buffer.Cursor < 0 || buffer.Cursor > textLen)
+                if (buffer.Point < 0 || buffer.Point > textLen)
                 {
                     throw new IndexOutOfRangeException(
-                        String.Format("Cursor cannot move outside text: Position {0}", buffer.Cursor)
+                        String.Format("Cursor cannot move outside text: Position {0}", buffer.Point)
                     );
                 }
                 // Set dewrap flag at the end of this method if the user deleted 

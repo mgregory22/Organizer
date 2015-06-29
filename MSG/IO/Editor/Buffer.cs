@@ -14,7 +14,14 @@ namespace MSG.IO
         /// </summary>
         public class Buffer
         {
-            int cursor;
+            /// <summary>
+            ///   Insertion point
+            /// </summary>
+            int point;
+
+            /// <summary>
+            ///   Text being edited
+            /// </summary>
             string text;
 
             /// <summary>
@@ -29,90 +36,58 @@ namespace MSG.IO
             ///   Initializes a memory buffer for editing previously
             ///   existing text and for testing.
             /// </summary>
-            /// <param name="text">Text to edit</param>
-            /// <param name="cursor">Initial cursor position</param>
-            public Buffer(string text, int cursor)
+            /// <param name="text">
+            ///   Text to edit
+            /// </param>
+            /// <param name="point">
+            ///   Initial insertion point
+            /// </param>
+            public Buffer(string text, int point)
             {
                 Text = text;
-                Cursor = cursor;
+                Point = point;
             }
 
             /// <summary>
-            ///   Deletes the character before the cursor position.
+            ///   Moves the point right one character, ensuring it can go
+            ///   just to the end of the text and no further.
+            /// </summary>
+            public void AdvancePoint()
+            {
+                if (Point < Text.Length)
+                {
+                    Point++;
+                }
+            }
+
+            /// <summary>
+            ///   Deletes the character before the insertion point.
             /// </summary>
             public void Backspace()
             {
-                if (Cursor > 0)
+                if (Point > 0)
                 {
-                    Text = Text.Remove(--Cursor, 1);
+                    Text = Text.Remove(--Point, 1);
                 }
             }
 
             /// <summary>
-            ///   Removes all the text and resets the cursor.
+            ///   Removes all the text and resets the point.
             /// </summary>
             public void Clear()
             {
-                Cursor = 0;
                 Text = "";
+                Point = 0;
             }
 
             /// <summary>
-            ///   Gets or sets the cursor position.
-            /// </summary>
-            public int Cursor
-            {
-                get { return cursor; }
-                set { cursor = value; }
-            }
-
-            /// <summary>
-            ///   Moves the cursor left one character, ensuring it can go
-            ///   just to the beginning of the text and no further.
-            /// </summary>
-            public void CursorLeft()
-            {
-                if (Cursor > 0)
-                {
-                    Cursor--;
-                }
-            }
-
-            /// <summary>
-            ///   Moves the cursor to the given position.
-            /// </summary>
-            /// <param name="pos">
-            ///   Cursor position
-            /// </param>
-            public void CursorMove(int pos)
-            {
-                if (pos < 0)
-                    throw new ArgumentOutOfRangeException("Cursor position must be nonnegative");
-                if (pos > Text.Length)
-                    throw new ArgumentOutOfRangeException("Cursor position cannot be set past end of text");
-                Cursor = pos;
-            }
-
-            /// <summary>
-            ///   Moves the cursor right one character, ensuring it can go
-            ///   just to the end of the text and no further.
-            /// </summary>
-            public void CursorRight()
-            {
-                if (Cursor < Text.Length)
-                {
-                    Cursor++;
-                }
-            }
-
-            /// <summary>
-            ///   Deletes the character at the cursor position.
+            ///   Deletes the character at the point.
             /// </summary>
             public void Delete()
             {
-                if (Cursor < Text.Length)
+                if (Point < Text.Length)
                 {
-                    Text = Text.Remove(Cursor, 1);
+                    Text = Text.Remove(Point, 1);
                 }
             }
 
@@ -122,21 +97,58 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Inserts the given character at the cursor position.
+            ///   Inserts the given character at the point.
             /// </summary>
-            /// <param name="c">Character to insert</param>
+            /// <param name="c">
+            ///   Character to insert
+            /// </param>
             public void Insert(char c)
             {
-                Text = Text.Insert(Cursor++, c.ToString());
+                Text = Text.Insert(Point++, c.ToString());
             }
 
             /// <summary>
-            ///   Returns true if the line is empty.
+            ///   Returns true if the text is empty.
             /// </summary>
-            /// <returns>True if the line is empty</returns>
             public bool IsEmpty()
             {
                 return Text.Length == 0;
+            }
+
+            /// <summary>
+            ///   Moves the point to the given position.
+            /// </summary>
+            /// <param name="point">
+            ///   New insertion point
+            /// </param>
+            public void MovePoint(int point)
+            {
+                if (point < 0)
+                    throw new ArgumentOutOfRangeException("Insertion point must be nonnegative");
+                if (point > Text.Length)
+                    throw new ArgumentOutOfRangeException("Insertion point cannot be set past end of text");
+                Point = point;
+            }
+
+            /// <summary>
+            ///   Gets or sets the insertion point.
+            /// </summary>
+            public int Point
+            {
+                get { return point; }
+                set { point = value; }
+            }
+
+            /// <summary>
+            ///   Moves the point left one character, ensuring it can go
+            ///   just to the beginning of the text and no further.
+            /// </summary>
+            public void RetreatPoint()
+            {
+                if (Point > 0)
+                {
+                    Point--;
+                }
             }
 
             /// <summary>
@@ -151,7 +163,6 @@ namespace MSG.IO
             /// <summary>
             ///   Returns the text being edited.
             /// </summary>
-            /// <returns>Text being edited.</returns>
             public override string ToString()
             {
                 return Text;

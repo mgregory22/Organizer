@@ -27,7 +27,7 @@ namespace MSG.IO
             /// </summary>
             EndlessArray<int> lineWidths;
             /// <summary>
-            ///   Current console cursor position
+            ///   Current cursor position
             /// </summary>
             ConsolePos cursorPos;
             /// <summary>
@@ -35,7 +35,7 @@ namespace MSG.IO
             /// </summary>
             Print print;
             /// <summary>
-            ///   The starting position of the console cursor
+            ///   The cursor position of the first character of the edited text
             /// </summary>
             /// <remarks>
             ///   public for what reason?
@@ -76,14 +76,14 @@ namespace MSG.IO
                 this.wordWrapper = new WordWrapper(buffer, lineWidths);
             }
 
-            public ConsolePos BufferPosToCursorPos(int bufferPos)
+            public ConsolePos BufferPointToCursorPos(int point)
             {
-                return EditorPosToCursorPos(wordWrapper.BufferPosToEditorPos(bufferPos));
+                return EditorPosToCursorPos(wordWrapper.BufferPointToEditorPos(point));
             }
 
             /// <summary>
             ///   Moves the cursor to the end of the line and returns the
-            ///   resulting buffer position.
+            ///   resulting buffer point.
             /// </summary>
             public int CursorEnd()
             {
@@ -91,15 +91,15 @@ namespace MSG.IO
                 // find current line
                 int currentLineIndex = editorPos.top;
                 // find end of current line
-                int bufferPosOfEndOfCurrentLine = wordWrapper.GetLineBreak(currentLineIndex)
+                int endPointOfCurrentLine = wordWrapper.GetLineBreak(currentLineIndex)
                     - (wordWrapper.IsLastLine(currentLineIndex) ? 0 : 1);
                 // set bufferPos to end of current line
-                buffer.Cursor = bufferPosOfEndOfCurrentLine;
+                buffer.Point = endPointOfCurrentLine;
                 // update cursor to match bufferPos
-                cursorPos = BufferPosToCursorPos(bufferPosOfEndOfCurrentLine);
+                cursorPos = BufferPointToCursorPos(endPointOfCurrentLine);
                 SetCursorPos(cursorPos);
                 // boom, done.
-                return buffer.Cursor;
+                return buffer.Point;
             }
 
             /// <summary>
@@ -112,14 +112,14 @@ namespace MSG.IO
                 // find current line
                 int currentLineIndex = editorPos.top;
                 // find start of current line
-                int bufferPosOfStartOfCurrentLine = wordWrapper.GetLineStart(currentLineIndex);
+                int startPointOfCurrentLine = wordWrapper.GetLineStart(currentLineIndex);
                 // set bufferPos to start of current line
-                buffer.Cursor = bufferPosOfStartOfCurrentLine;
+                buffer.Point = startPointOfCurrentLine;
                 // update cursor to match bufferPos
-                cursorPos = BufferPosToCursorPos(bufferPosOfStartOfCurrentLine);
+                cursorPos = BufferPointToCursorPos(startPointOfCurrentLine);
                 SetCursorPos(cursorPos);
                 // boom, done.
-                return buffer.Cursor;
+                return buffer.Point;
             }
 
             public ConsolePos CursorPosToEditorPos(ConsolePos cursorPos)
@@ -131,7 +131,8 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Converts an editor-relative cursor position to a console cursor position.
+            ///   Converts an editor-relative cursor position to a position relative
+            ///   to the whole console window.
             /// </summary>
             /// <param name="editorPos">
             ///   Editor-relative cursor position
@@ -207,9 +208,7 @@ namespace MSG.IO
                         - (wordWrapper.Count == wordWrapper.LinesScrolledFromWrapping ? 1 : 0)));
                 }
                 // Position cursor with respect to wrapping
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);
-                if (cursorPos.left >= consoleWidth)
-                    throw new Exception("BufferPosToCursorPos() is broke");
+                cursorPos = BufferPointToCursorPos(buffer.Point);
                 SetCursorPos(cursorPos);
                 // Show cursor again
                 print.IsCursorVisible = true;
@@ -222,18 +221,18 @@ namespace MSG.IO
             {
                 if (pos.left < 0 || pos.left >= consoleWidth)
                     throw new ArgumentOutOfRangeException("Invalid cursor left position: " + pos.left);
-                if (pos.top < 0 /*|| pos.top >= consoleWidth*/)
+                if (pos.top < 0 /*|| pos.top >= consoleHeight*/)
                     throw new ArgumentOutOfRangeException("Invalid cursor top position: " + pos.top);
                 print.CursorPos = pos;
             }
 
             /// <summary>
             ///   Moves the console cursor to the position corresponding
-            ///   to the buffer cursor.
+            ///   to the buffer insertion point.
             /// </summary>
             public void UpdateCursor()
             {
-                cursorPos = BufferPosToCursorPos(buffer.Cursor);
+                cursorPos = BufferPointToCursorPos(buffer.Point);
                 SetCursorPos(cursorPos);
             }
         }

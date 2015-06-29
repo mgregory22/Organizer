@@ -47,12 +47,12 @@ namespace MSG.IO
                 }
                 else if (IsCursorLeft(keyInfo))
                 {
-                    buffer.CursorLeft();
+                    buffer.RetreatPoint();
                     view.UpdateCursor();
                 }
                 else if (IsCursorRight(keyInfo))
                 {
-                    buffer.CursorRight();
+                    buffer.AdvancePoint();
                     view.UpdateCursor();
                 }
                 else if (IsDelete(keyInfo))
@@ -62,10 +62,8 @@ namespace MSG.IO
                 }
                 else if (IsEnd(keyInfo))
                 {
-                    // Order reversed because the cursor position needs to come
-                    // from the view . . . the buffer knows nothing of lines.
-                    int pos = view.CursorEnd();
-                    buffer.CursorMove(pos);
+                    int point = view.CursorEnd();
+                    buffer.MovePoint(point);
                 }
                 else if (IsEnter(keyInfo))
                 {
@@ -84,10 +82,8 @@ namespace MSG.IO
                 }
                 else if (IsHome(keyInfo))
                 {
-                    // Order reversed because the cursor position needs to come
-                    // from the view . . . the buffer knows nothing of lines.
-                    int pos = view.CursorHome();
-                    buffer.CursorMove(pos);
+                    int point = view.CursorHome();
+                    buffer.MovePoint(point);
                 }
                 else
                 {
