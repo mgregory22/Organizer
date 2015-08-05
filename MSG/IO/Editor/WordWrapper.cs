@@ -61,7 +61,7 @@ namespace MSG.IO
             /// <param name="lineBreak">
             ///   The position of the char right after the line break.
             /// </param>
-            public void AddLineBreak(int lineBreak)
+            private void AddLineBreak(int lineBreak)
             {
                 lineBreaks.Add(lineBreak);
                 linesScrolledFromWrapping = Math.Max(linesScrolledFromWrapping, lineBreaks.Count - 1);
@@ -137,6 +137,14 @@ namespace MSG.IO
             }
 
             /// <summary>
+            ///   Returns the length of the given wrapped line.
+            /// </summary>
+            public int GetLineLen(int wrappedLineIndex)
+            {
+                return GetLineBreak(wrappedLineIndex) - GetLineStart(wrappedLineIndex);
+            }
+
+            /// <summary>
             ///   Returns the position of the start of the line 
             ///   given by _lineIndex_.
             /// </summary>
@@ -150,7 +158,7 @@ namespace MSG.IO
             /// <summary>
             ///   Returns true if the cursor is on a LF or CR char.
             /// </summary>
-            public bool IsIAtAHardLineReturnChar(char charAtI)
+            private bool IsIAtAHardLineReturnChar(char charAtI)
             {
                 return charAtI == '\n' || charAtI == '\r';
             }
@@ -159,7 +167,7 @@ namespace MSG.IO
             ///   Returns true if the cursor is just after a word
             ///   (ie cursor is on a space just after a nonspace).
             /// </summary>
-            public bool IsIJustAfterAWord(char charBeforeI, char charAtI)
+            private bool IsIJustAfterAWord(char charBeforeI, char charAtI)
             {
                 return !char.IsWhiteSpace(charBeforeI) && char.IsWhiteSpace(charAtI);
             }
@@ -169,13 +177,21 @@ namespace MSG.IO
             ///   of a word (ie cursor is on a nonspace just after
             ///   a space).
             /// </summary>
-            public bool IsIOnWordBeginning(char charBeforeI, char charAtI)
+            private bool IsIOnWordBeginning(char charBeforeI, char charAtI)
             {
                 return char.IsWhiteSpace(charBeforeI) && !char.IsWhiteSpace(charAtI);
             }
 
             /// <summary>
-            ///   Returns true if _lineIndex_ refers to the last 
+            ///   For symmetry
+            /// </summary>
+            public bool IsFirstLine(int wrappedLineIndex)
+            {
+                return wrappedLineIndex == 0;
+            }
+
+            /// <summary>
+            ///   Returns true if the given line index refers to the last
             ///   wrapped line of input.
             /// </summary>
             public bool IsLastLine(int wrappedLineIndex)
@@ -187,7 +203,7 @@ namespace MSG.IO
             ///   Returns true if the length of the wrapped line text is equal
             ///   to the width of the window.
             /// </summary>
-            public bool IsWindowLineCompletelyFilled(int wrappedLineLen, int wrappedLineIndex)
+            private bool IsWindowLineCompletelyFilled(int wrappedLineLen, int wrappedLineIndex)
             {
                 return wrappedLineLen == this.lineWidths[wrappedLineIndex];
             }
@@ -198,14 +214,6 @@ namespace MSG.IO
             public int LinesScrolledFromWrapping
             {
                 get { return linesScrolledFromWrapping; }
-            }
-
-            /// <summary>
-            ///   Returns the length of the buffer text.
-            /// </summary>
-            public int TextLength
-            {
-                get { return buffer.Text.Length; }
             }
 
             /// <summary>

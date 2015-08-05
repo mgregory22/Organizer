@@ -61,17 +61,6 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Deletes the character before the insertion point.
-            /// </summary>
-            public void Backspace()
-            {
-                if (Point > 0)
-                {
-                    Text = Text.Remove(--Point, 1);
-                }
-            }
-
-            /// <summary>
             ///   Removes all the text and resets the point.
             /// </summary>
             public void Clear()

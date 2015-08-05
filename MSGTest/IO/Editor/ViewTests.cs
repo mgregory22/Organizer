@@ -86,42 +86,84 @@ namespace MSGTest.IO.EditorTests
             // Emulate a prompt that was printed before the editor was created.
             prompt = "> ";
             print.String(prompt);
-            print.SetCursorPos(2, 0);
             view = new Editor.View(buffer, print);
         }
 
         [Test]
-        public void TestBackspace()
-        {
-            InsertText("Word", buffer, view);
-            SkipTestingTheInsertOutputSinceItsLongAndBoring();
-            buffer.Backspace();
-            view.RedrawEditor();
-            string expected = "<2^0Wor  <5^0";
-            Assert.AreEqual(expected, print.Output);
-        }
-
-        [Test]
-        public void TestBackspaceThatUnwrapsErasesSecondLine()
+        public void TestBackspaceThatUnwrapsErasesSecondLineAndMovesCursorToBeginningOfBlankLine()
         {
             InsertText("Word wr", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
-            buffer.Backspace();
+            buffer.RetreatPoint();
+            buffer.Delete();
             view.RedrawEditor();
-            string expected = "<2^0Word w        <0^1";
+            string expected = "<7^0w  <0^1";
             Assert.AreEqual(expected, print.Output);
         }
 
         [Test]
-        public void TestBackspaceAtEndOfTextToPreviousLineErasesLastCharacterOnThatLine()
+        public void TestBackspaceAtEndOfTextToPreviousLineErasesLastCharacterOnThatLineAndPutsCursorAtTheEnd()
         {
             InsertText("Wordw", buffer, view);
             InsertText("r", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
-            buffer.Backspace();
+            buffer.RetreatPoint();
+            buffer.Delete();
             view.RedrawEditor();
-            string expected = "<2^0Wordw <7^0";
+            string expected = "<7^0 <7^0";
             Assert.AreEqual(expected, print.Output);
+        }
+
+        [Test]
+        public void TestCursorDownAtEndOfSingleLineOfInputHasNoEffect()
+        {
+            InsertText("Test", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown();
+            buffer.MovePoint(point);
+            Assert.AreEqual("", print.Output);
+        }
+
+        [Test]
+        public void TestCursorDownInMiddleOfSingleLineOfInputHasNoEffect()
+        {
+            InsertText("Test", buffer, view);
+            CursorLeft(2, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown();
+            buffer.MovePoint(point);
+            Assert.AreEqual("", print.Output);
+        }
+
+        [Test]
+        public void TestCursorDownOnFirstLineOfTwoPutsCursorDirectlyUnderOriginalPosition()
+        {
+            InsertText("Testy Wordwrap", buffer, view);
+            CursorLeft(11, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<5^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorDownOnSecondLineOfThreePutsCursorDirectlyUnderOriginalPosition()
+        {
+            InsertText("Testy Wordwrapmuthar", buffer, view);
+            CursorLeft(11, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<3^2", print.Output);
+        }
+
+        [Test]
+        public void TestCursorDownOnEmptyLineHasNoEffect()
+        {
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown();
+            buffer.MovePoint(point);
+            Assert.AreEqual("", print.Output);
         }
 
         [Test]
@@ -265,6 +307,50 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestCursorUpInMiddleOfSecondLineOfTwoPutsCursorDirectlyAboveOriginalPosition()
+        {
+            InsertText("Testy Wordwrap", buffer, view);
+            CursorLeft(5, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorUp();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<3^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorUpUnderLastCharInFirstLinePutsCursorOnLastCharOfFirstLine()
+        {
+            InsertText("Test Wordwrap", buffer, view);
+            CursorLeft(2, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorUp();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<6^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorUpToTheRightOfLastCharInFirstLinePutsCursorOnLastCharOfFirstLine()
+        {
+            InsertText("Test Wordwrap", buffer, view);
+            CursorLeft(1, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorUp();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<6^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorUpInMiddleOfThirdLineOfThreePutsCursorDirectlyAboveOriginalPosition()
+        {
+            InsertText("Testy Wordwrapmuthar", buffer, view);
+            CursorLeft(3, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorUp();
+            buffer.MovePoint(point);
+            Assert.AreEqual("<3^1", print.Output);
+        }
+
+        [Test]
         public void TestEnterOnLinesOtherThanTheLastStillPrintsNextPromptAfterAllTheEnteredLines()
         {
             //        01234567012345670123456701234567
@@ -294,16 +380,7 @@ namespace MSGTest.IO.EditorTests
         public void TestInsertLineThatNeedsToBeWrapped()
         {
             InsertText("Word wrap", buffer, view);
-            string expected = "> <2^0" // 6
-                    + "<2^0W    <3^0" // 19
-                    + "<2^0Wo   <4^0" // 32
-                    + "<2^0Wor  <5^0" // 45
-                    + "<2^0Word <6^0" // 58
-                    + "<2^0Word <7^0" // 71
-                    + "<2^0Word w<0^1" // 85
-                    + "<2^0Word  wr     <2^1"
-                    + "<2^0Word  wra    <3^1"
-                    + "<2^0Word  wrap   <4^1";
+            string expected = "> Word <6^0 w<0^1<7^0 wrap";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -311,17 +388,14 @@ namespace MSGTest.IO.EditorTests
         public void TestInsertOnce()
         {
             InsertText("a", buffer, view);
-            Assert.AreEqual("> <2^0"
-                + "<2^0a    <3^0", print.Output);
+            Assert.AreEqual("> a", print.Output);
         }
 
         [Test]
         public void TestInsertTwice()
         {
             InsertText("ab", buffer, view);
-            Assert.AreEqual("> <2^0"
-                + "<2^0a    <3^0"
-                + "<2^0ab   <4^0", print.Output);
+            Assert.AreEqual("> ab", print.Output);
         }
 
     }

@@ -14,7 +14,7 @@ namespace MSG.IO
     /// </summary>
     public class Read
     {
-        Print print;
+        protected Print print;
 
         /// <summary>
         ///   The read object needs the ability to output the stuff read.

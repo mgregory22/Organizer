@@ -37,6 +37,14 @@ namespace MSG.IO
         }
 
         /// <summary>
+        ///   Returns true if the keypress moves the cursor one line down.
+        /// </summary>
+        public static bool IsCursorDown(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.DownArrow;
+        }
+
+        /// <summary>
         ///   Returns true if the keypress moves the cursor one char left.
         /// </summary>
         public static bool IsCursorLeft(ConsoleKeyInfo keyInfo)
@@ -50,6 +58,14 @@ namespace MSG.IO
         public static bool IsCursorRight(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Key == ConsoleKey.RightArrow;
+        }
+
+        /// <summary>
+        ///   Returns true if the keypress moves the cursor one line up.
+        /// </summary>
+        public static bool IsCursorUp(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.UpArrow;
         }
 
         /// <summary>

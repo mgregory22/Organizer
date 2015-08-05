@@ -6,238 +6,93 @@ using System.Diagnostics;
 
 namespace MSGTest.IO
 {
+    // I thought I'd try doing setup stuff exclusively in SetUp() methods
+    // (which leads to more test classes) and see how that goes.
+
     [TestFixture]
-    public class EditorNewBufferTests
+    public class InsertOneCharTests
     {
-        Editor.Buffer buffer; // creation buffer
+        TestPrint print;
+        TestRead read;
+        string input;
 
         [SetUp]
         public void SetUp()
         {
-            buffer = new Editor.Buffer();
+            print = new TestPrint();
+            print.BufferWidth = 10;
+            read = new TestRead(null);
+            read.NextKeys = new char[] { 'a', '\r' };
+            input = Editor.GetInput(print, read);
         }
 
         [Test]
-        public void TestBackspaceHasNoEffect()
+        public void TestCharWasInsertedIntoBuffer()
         {
-            buffer.Backspace();
-            Assert.AreEqual("", buffer.Text);
-            Assert.AreEqual(0, buffer.Point);
+            Assert.AreEqual("a", input);
         }
 
         [Test]
-        public void TestClearResetsCursorPosition()
+        public void TestCharWasEchoedOnScreen()
         {
-            buffer.Clear();
-            Assert.AreEqual(0, buffer.Point);
-        }
-
-        [Test]
-        public void TestClearResetsText()
-        {
-            buffer.Clear();
-            Assert.AreEqual("", buffer.Text);
-        }
-
-        [Test]
-        public void TestCreatingEmptyBufferResetsCursorPosition()
-        {
-            Assert.AreEqual(0, buffer.Point);
-        }
-
-        [Test]
-        public void TestCreatingEmptyBufferResetsText()
-        {
-            Assert.AreEqual("", buffer.Text);
-        }
-
-        [Test]
-        public void TestCursorLeftHasNoEffectOnEmptyBuffer()
-        {
-            buffer.RetreatPoint();
-            Assert.AreEqual(0, buffer.Point);
-            Assert.AreEqual("", buffer.Text);
-        }
-
-        [Test]
-        public void TestCursorRightHasNoEffectOnEmptyBuffer()
-        {
-            buffer.AdvancePoint();
-            Assert.AreEqual(0, buffer.Point);
-            Assert.AreEqual("", buffer.Text);
-        }
-
-        [Test]
-        public void TestDeleteHasNoEffectOnEmptyBuffer()
-        {
-            buffer.Delete();
-            Assert.AreEqual("", buffer.Text);
-            Assert.AreEqual(0, buffer.Point);
-        }
-
-        [Test]
-        public void TestInsertCharIntoEmptyBuffer()
-        {
-            buffer.Insert('z');
-            Assert.AreEqual("z", buffer.Text);
-        }
-
-        [Test]
-        public void TestIsEmptyIsTrueOnEmptyBuffer()
-        {
-            Assert.IsTrue(buffer.IsEmpty());
-        }
-
-        [Test]
-        public void TestToStringOnEmptyBufferReturnsEmptyString()
-        {
-            Assert.AreEqual("", buffer.ToString());
+            Assert.AreEqual("a<0^0\n"
+                       , print.Output);
         }
     }
 
     [TestFixture]
-    public class EditorOldBufferTests
+    public class InsertWordTests
     {
-        Editor.Buffer buffer; // editing buffer
+        TestPrint print;
+        TestRead read;
+        string input;
 
         [SetUp]
         public void SetUp()
         {
-            buffer = new Editor.Buffer("abcd", 4); // editing "abcd", cursor position 4
+            print = new TestPrint();
+            print.BufferWidth = 10;
+            read = new TestRead(null);
+            read.NextKeys = new char[] { 'W', 'o', 'r', 'd', '\r' };
+            input = Editor.GetInput(print, read);
         }
 
         [Test]
-        public void TestCreatingExistingTextBufferSetsInitialCursorPosition()
+        public void TestCharsWereInsertedIntoBuffer()
         {
-            Assert.AreEqual(4, buffer.Point);
+            Assert.AreEqual("Word", input);
         }
 
         [Test]
-        public void TestCreatingExistingTextBufferSetsInitialString()
+        public void TestCharsWereEchoedOnScreen()
         {
-            Assert.AreEqual("abcd", buffer.Text);
-        }
-
-        [Test]
-        public void TestBackspaceRemovesCharBeforeCursor()
-        {
-            buffer.Backspace();
-            Assert.AreEqual("abc", buffer.Text);
-        }
-
-        [Test]
-        public void TestBackspaceMovesCursorBackOne()
-        {
-            buffer.Backspace();
-            Assert.AreEqual(3, buffer.Point);
-        }
-
-        [Test]
-        public void TestBackspaceAndInsertReplacesChar()
-        {
-            buffer.Backspace();
-            buffer.Insert('x');
-            Assert.AreEqual("abcx", buffer.Text);
-        }
-
-        [Test]
-        public void TestBackspaceAndInsertRestoresCursorToSamePosition()
-        {
-            buffer.Backspace();
-            buffer.Insert('x');
-            Assert.AreEqual(4, buffer.Point);
-        }
-
-        [Test]
-        public void TestClearResetsCursorPosition()
-        {
-            buffer.Clear();
-            Assert.AreEqual(0, buffer.Point);
-        }
-
-        [Test]
-        public void TestClearResetsText()
-        {
-            buffer.Clear();
-            Assert.AreEqual("", buffer.Text);
-        }
-
-        [Test]
-        public void TestCursorLeftAndInsert()
-        {
-            buffer.RetreatPoint();
-            buffer.Insert('x');
-            Assert.AreEqual("abcxd", buffer.Text);
-        }
-
-        [Test]
-        public void TestCursorLeftAndInsertRestoresCursorPosition()
-        {
-            buffer.RetreatPoint();
-            buffer.Insert('x');
-            Assert.AreEqual(4, buffer.Point);
-        }
-
-        [Test]
-        public void TestCursorLeftMovesCursorLeftOne()
-        {
-            buffer.RetreatPoint();
-            Assert.AreEqual(3, buffer.Point);
-        }
-
-        [Test]
-        public void TestCursorLeftHasNoEffectOnText()
-        {
-            buffer.RetreatPoint();
-            Assert.AreEqual("abcd", buffer.Text);
-        }
-
-        [Test]
-        public void TestCursorRightAtEndHasNoEffectOnCursorPosition()
-        {
-            buffer.AdvancePoint();
-            Assert.AreEqual(4, buffer.Point);
-        }
-
-        [Test]
-        public void TestCursorRightAtEndHasNoEffectOnText()
-        {
-            buffer.AdvancePoint();
-            Assert.AreEqual("abcd", buffer.Text);
-        }
-
-        [Test]
-        public void TestDeleteAtEndDoesntMoveCursor()
-        {
-            buffer.Delete();
-            Assert.AreEqual(4, buffer.Point);
-        }
-
-        [Test]
-        public void TestDeleteAtEndDoesntRemoveChar()
-        {
-            buffer.Delete();
-            Assert.AreEqual("abcd", buffer.Text);
-        }
-
-        [Test]
-        public void TestInsertCharAtEnd()
-        {
-            buffer.Insert('x');
-            Assert.AreEqual("abcdx", buffer.Text);
-        }
-
-        [Test]
-        public void TestIsEmptyIsFalse()
-        {
-            Assert.IsFalse(buffer.IsEmpty());
-        }
-
-        [Test]
-        public void TestToStringReturnsText()
-        {
-            Assert.AreEqual("abcd", buffer.ToString());
+            string expected = "Word<0^0\n";
+            Assert.AreEqual(expected, print.Output);
         }
     }
 
+    [TestFixture]
+    public class InsertWordAndBackspaceTests
+    {
+        TestPrint print;
+        TestRead read;
+        string input;
+
+        [SetUp]
+        public void SetUp()
+        {
+            print = new TestPrint();
+            print.BufferWidth = 10;
+            read = new TestRead(null);
+            read.NextKeys = new char[] { 'W', 'o', 'r', 'd', '\b', '\r' };
+            input = Editor.GetInput(print, read);
+        }
+
+        [Test]
+        public void TestBackspace()
+        {
+            string expected = "Word<3^0 <3^0<0^0\n";
+            Assert.AreEqual(expected, print.Output);
+        }
+    }
 }

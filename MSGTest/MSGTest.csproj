@@ -56,6 +56,7 @@
     <Compile Include="Console\StringPromptTests.cs" />
     <Compile Include="Console\MenuItemTests.cs" />
     <Compile Include="Console\CharPromptTests.cs" />
+    <Compile Include="IO\Editor\BufferTests.cs" />
     <Compile Include="Types\Array\EndlessArrayTests.cs" />
     <Compile Include="Types\String\DrawTests.cs" />
     <Compile Include="IO\EditorTests.cs" />
@@ -78,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IO\Editor\Wordwrap test.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

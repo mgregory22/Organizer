@@ -23,6 +23,12 @@ namespace MSGTest.IO
         public override void Char(char c)
         {
             output += c;
+            pos.left++;
+            if (pos.left > bufferWidth)
+            {
+                pos.left -= bufferWidth;
+                pos.top++;
+            }
         }
 
         public override void CharNL(char c)
@@ -39,7 +45,7 @@ namespace MSGTest.IO
         public override int CursorLeft
         {
             get { return pos.left; }
-            set { pos.left = value; output += "<" + value.ToString(); }
+            set { /*output += "◄" + pos.left.ToString();*/ pos.left = value; output += "<" + value.ToString(); }
         }
 
         public override ConsolePos CursorPos
@@ -51,7 +57,7 @@ namespace MSGTest.IO
         public override int CursorTop
         {
             get { return pos.top; }
-            set { pos.top = value; output += "^" + value.ToString(); }
+            set { /*output += "▲" + pos.top.ToString();*/ pos.top = value; output += "^" + value.ToString(); }
         }
 
         public override bool IsCursorVisible
@@ -62,7 +68,13 @@ namespace MSGTest.IO
 
         public override void Newline(int n = 1)
         {
-            for (int i = 0; i < n; i++) output += '\n';
+            for (int i = 0; i < n; i++)
+            {
+                output += '\n';
+                // Mimic the cursor motion
+                pos.left = 0;
+                pos.top++;
+            }
         }
 
         public string Output
@@ -80,6 +92,13 @@ namespace MSGTest.IO
         public override void String(string s)
         {
             output += s;
+            // Mimic the cursor motion
+            pos.left += s.Length;
+            while (pos.left > bufferWidth)
+            {
+                pos.left -= bufferWidth;
+                pos.top++;
+            }
         }
 
         public override void StringNL(string s)
