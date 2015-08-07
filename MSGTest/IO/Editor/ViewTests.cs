@@ -104,8 +104,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestBackspaceAtEndOfTextToPreviousLineErasesLastCharacterOnThatLineAndPutsCursorAtTheEnd()
         {
-            InsertText("Wordw", buffer, view);
-            InsertText("r", buffer, view);
+            InsertText("234567", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.RetreatPoint();
             buffer.Delete();
@@ -117,7 +116,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownAtEndOfSingleLineOfInputHasNoEffect()
         {
-            InsertText("Test", buffer, view);
+            InsertText("2345", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
             buffer.MovePoint(point);
@@ -127,7 +126,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownInMiddleOfSingleLineOfInputHasNoEffect()
         {
-            InsertText("Test", buffer, view);
+            InsertText("2345", buffer, view);
             CursorLeft(2, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
@@ -138,7 +137,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownOnFirstLineOfTwoPutsCursorDirectlyUnderOriginalPosition()
         {
-            InsertText("Testy Wordwrap", buffer, view);
+            InsertText("23456 01234567", buffer, view);
             CursorLeft(11, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
@@ -149,7 +148,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownOnSecondLineOfThreePutsCursorDirectlyUnderOriginalPosition()
         {
-            InsertText("Testy Wordwrapmuthar", buffer, view);
+            InsertText("23456 01234567012345", buffer, view);
             CursorLeft(11, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
@@ -167,9 +166,9 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorEndKeyMovesCursorToEndOfSingleLine()
+        public void TestCursorEndMovesCursorToEndOfSingleLine()
         {
-            InsertText("Test", buffer, view);
+            InsertText("2345", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
             view.CursorEnd();
@@ -177,9 +176,9 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorEndKeyOnSecondLineMovesCursorToEndOfSecondLine()
+        public void TestCursorEndOnSecondLineMovesCursorToEndOfSecondLine()
         {
-            InsertText("Test words", buffer, view);
+            InsertText("2345 70123", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
             view.CursorEnd();
@@ -187,10 +186,9 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorEndKeyOnFirstLineOfTwoLineEntryMovesCursorToEndOfFirstLine()
+        public void TestCursorEndOnFirstLineOfTwoLineEntryMovesCursorToEndOfFirstLine()
         {
-            //        01234567012345670
-            InsertText("Testy wording", buffer, view);
+            InsertText("23456 0123456", buffer, view);
             CursorLeft(12, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorEnd();
@@ -198,27 +196,37 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorHomeKeyMovesCursorToStartOfSingleLine()
+        public void TestCursorEndOnFullLinePutsCursorAtEndOfSameLine()
         {
-            InsertText("Test", buffer, view);
+            InsertText("23456 01234567", buffer, view);
+            CursorLeft(3, buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            view.CursorEnd();
+            Assert.AreEqual("<7^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorHomeMovesCursorToStartOfSingleLine()
+        {
+            InsertText("2345", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorHome();
             Assert.AreEqual("<2^0", print.Output);
         }
 
         [Test]
-        public void TestCursorHomeKeyOnSecondLineMovesCursorToStartOfSecondLine()
+        public void TestCursorHomeOnSecondLineMovesCursorToStartOfSecondLine()
         {
-            InsertText("Test words", buffer, view);
+            InsertText("2345 70123", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorHome();
             Assert.AreEqual("<0^1", print.Output);
         }
 
         [Test]
-        public void TestCursorHomeKeyOnFirstLineOfTwoLineInputMovesCursorToStartOfFirstLine()
+        public void TestCursorHomeOnFirstLineOfTwoLineInputMovesCursorToStartOfFirstLine()
         {
-            InsertText("Test words", buffer, view);
+            InsertText("2345 70123", buffer, view);
             CursorLeft(6, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorHome();
@@ -228,7 +236,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorLeftAtBeginningOfNewLineBringsCursorToEndOfPreviousLine()
         {
-            InsertText("Word wr", buffer, view);
+            InsertText("2345 70", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
             string expected = "<1^1<0^1<6^0";
@@ -246,7 +254,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorLeftIntoFullLinePutsCursorAtEndOfLine()
         {
-            InsertText("Wordwr ", buffer, view);
+            InsertText("234567 ", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(2, buffer, view);
             string expected = "<0^1<7^0";
@@ -256,7 +264,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorLeftWorksOnSecondLine()
         {
-            InsertText("Test\nmulti", buffer, view);
+            InsertText("2345\n01234", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(1, buffer, view);
             string expected = "<4^1";
@@ -266,8 +274,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorLeftWorksOnWrappedSecondLine()
         {
-            //        012345678
-            InsertText("Word wrap", buffer, view);
+            InsertText("2345 7012", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(1, buffer, view);
             string expected = "<3^1";
@@ -277,8 +284,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorRightBeforeEndOfFirstLineAndBeforeEndOfBufferMovesCursorOneRight()
         {
-            //        012345678
-            InsertText("Test", buffer, view);
+            InsertText("2345", buffer, view);
             CursorLeft(3, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorRight(1, buffer, view);
@@ -289,8 +295,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorRightAtEndOfFirstLineAndBeforeEndOfBufferPutsCursorAtBeginningOfNextLine()
         {
-            //        01234567012345
-            InsertText("Testingwrap", buffer, view);
+            InsertText("23456701234", buffer, view);
             CursorLeft(6, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorRight(1, buffer, view);
@@ -309,7 +314,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorUpInMiddleOfSecondLineOfTwoPutsCursorDirectlyAboveOriginalPosition()
         {
-            InsertText("Testy Wordwrap", buffer, view);
+            InsertText("23456 01234567", buffer, view);
             CursorLeft(5, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
@@ -320,7 +325,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorUpInMiddleOfThirdLineOfThreePutsCursorDirectlyAboveOriginalPosition()
         {
-            InsertText("Testy Wordwrapmuthar", buffer, view);
+            InsertText("23456 01234567012345", buffer, view);
             CursorLeft(3, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
@@ -345,7 +350,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorUpToTheRightOfLastCharInFirstLinePutsCursorOnLastCharOfFirstLine()
         {
-            InsertText("Test Wordwrap", buffer, view);
+            InsertText("2345 70123456", buffer, view);
             CursorLeft(1, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
@@ -356,7 +361,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorUpUnderLastCharInFirstLinePutsCursorOnLastCharOfFirstLine()
         {
-            InsertText("Test Wordwrap", buffer, view);
+            InsertText("2345 70123456", buffer, view);
             CursorLeft(2, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
@@ -367,8 +372,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestEnterOnLinesOtherThanTheLastStillPrintsNextPromptAfterAllTheEnteredLines()
         {
-            //        01234567012345670123456701234567
-            InsertText("Test of wrapping w/ enter key", buffer, view);
+            InsertText("2345 70 23456701 34 67012 456", buffer, view);
             CursorLeft(19, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.ExitEditor();
@@ -387,7 +391,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestInsertDoesNotThrowExceptionWhenTextWraps()
         {
-            Assert.DoesNotThrow(() => InsertText("Testof wrap", buffer, view));
+            Assert.DoesNotThrow(() => InsertText("234567 1234", buffer, view));
         }
 
         [Test]

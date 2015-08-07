@@ -128,38 +128,6 @@ namespace MSGTest.IO.EditorTests
             Assert.AreEqual("     break", wordWrapper.GetLine(buffer.Text, 1));
         }
 
-        //[Test]
-        //public void TestCursorPositionIsCorrectWithOneCharacter()
-        //{
-        //    wordWrapper = CreateWordWrapper("a", 10);
-        //    Assert.AreEqual(1, wordWrapper.CursorPos.Left);
-        //    Assert.AreEqual(0, wordWrapper.CursorPos.Top);
-        //}
-
-        //[Test]
-        //public void TestCursorPositionIsCorrectWithTwoCharacters()
-        //{
-        //    wordWrapper = CreateWordWrapper("ab", 10);
-        //    Assert.AreEqual(2, wordWrapper.CursorPos.Left);
-        //    Assert.AreEqual(0, wordWrapper.CursorPos.Top);
-        //}
-
-        //[Test]
-        //public void TestCursorPositionIsCorrectWhenTheresNoWrapping()
-        //{
-        //    wordWrapper = CreateWordWrapper("Word", 10);
-        //    Assert.AreEqual(text.Length, wordWrapper.CursorPos.Left);
-        //    Assert.AreEqual(0, wordWrapper.CursorPos.Top);
-        //}
-
-        //[Test]
-        //public void TestCursorPositionIsCorrectAfterWrappingOnce()
-        //{
-        //    wordWrapper = CreateWordWrapper("Word break", 6);
-        //    Assert.AreEqual(5, wordWrapper.CursorPos.Left);
-        //    Assert.AreEqual(1, wordWrapper.CursorPos.Top);
-        //}
-
         [Test]
         public void TestSpaceBeginningAfterWidthWrappedLineWrapsPreviousWord()
         {

@@ -14,20 +14,14 @@ namespace MSG.IO
         /// </summary>
         public class View
         {
-            class OutputPair
+            class OutputDiff
             {
-                public ConsolePos pos;
-                public string text;
-                public OutputPair(ConsolePos editorPos, string text)
+                public int point;
+                public int length;
+                public OutputDiff(int point, int length)
                 {
-                    this.pos = editorPos;
-                    this.text = text;
-                }
-                public OutputPair(int left, int top, string text)
-                {
-                    this.pos.left = left;
-                    this.pos.top = top;
-                    this.text = text;
+                    this.point = point;
+                    this.length = length;
                 }
             }
 
@@ -113,11 +107,14 @@ namespace MSG.IO
             ///   The position of the current point, which is returned if
             ///   the cursor cannot move down.
             /// </param>
+            /// <param name="count">
+            ///   Number of lines to move cursor down
+            /// </param>
             /// <returns>
             ///   The buffer point in the next line at the same
             ///   horizontal position (if possible)
             /// </returns>
-            public int CursorDown(int point)
+            public int CursorDown(int point, int count = 1)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
@@ -176,9 +173,22 @@ namespace MSG.IO
                 return SetCursorByPoint(startPointOfLine);
             }
 
-            public int CursorLeft(int count)
+            /// <summary>
+            ///   Moves the cursor left one column unless it wraps or it's
+            ///   at the beginning.
+            /// </summary>
+            /// <param name="point">
+            ///   Original cursor position
+            /// </param>
+            /// <param name="count">
+            ///   Number of columns to move cursor left
+            /// </param>
+            /// <returns>
+            ///   The new cursor position
+            /// </returns>
+            public int CursorLeft(int point, int count = 1)
             {
-                return count; //TODO
+                return point; // TODO
             }
 
             /// <summary>
@@ -188,12 +198,15 @@ namespace MSG.IO
             ///   The position of the current point, which is returned if
             ///   the cursor cannot move up.
             /// </param>
+            /// <param name="count">
+            ///   Number of lines to move cursor up
+            /// </param>
             /// <returns>
             ///   If possible, the buffer point in the previous line at
             ///   the same horizontal position.  Otherwise, the current
             ///   point.
             /// </returns>
-            public int CursorUp(int point)
+            public int CursorUp(int point, int count = 1)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
@@ -218,6 +231,16 @@ namespace MSG.IO
                 return point;
             }
 
+            /// <summary>
+            ///   Converts an absolute cursor position to a position relative
+            ///   to the editor.
+            /// </summary>
+            /// <param name="cursorPos">
+            ///   Absolute cursor position
+            /// </param>
+            /// <returns>
+            ///   Editor-relative cursor position
+            /// </returns>
             public ConsolePos CursorPosToEditorPos(ConsolePos cursorPos)
             {
                 ConsolePos editorPos;
@@ -226,9 +249,23 @@ namespace MSG.IO
                 return editorPos;
             }
 
-            private List<OutputPair> DiffStrings(string newStr, string oldStr)
+            /// <summary>
+            ///   Creates a list of differences between a new string and an old
+            ///   string.
+            /// </summary>
+            /// <param name="newStr">
+            ///   New string
+            /// </param>
+            /// <param name="oldStr">
+            ///   Old string
+            /// </param>
+            /// <returns>
+            ///   List of diffs to the old string that change it to the new
+            ///   string
+            /// </returns>
+            private List<OutputDiff> DiffStrings(string newStr, string oldStr)
             {
-                List<OutputPair> outputPairs = new List<OutputPair>();
+                List<OutputDiff> outputDiffs = new List<OutputDiff>();
                 int scanLen = Math.Min(newStr.Length, oldStr.Length);
                 bool inChangedBlock = false;
                 int changeStart = 0;
@@ -239,10 +276,10 @@ namespace MSG.IO
                         if (newStr[i] == oldStr[i])
                         {
                             // End of changed block: add the changed block to the list
-                            outputPairs.Add(
-                                new OutputPair(
-                                    BufferPointToUnwrappedCursorPos(changeStart)
-                                  , newStr.Substring(changeStart, i - changeStart)
+                            outputDiffs.Add(
+                                new OutputDiff(
+                                    changeStart
+                                  , i - changeStart
                             ));
                             inChangedBlock = false;
                         }
@@ -264,9 +301,9 @@ namespace MSG.IO
                     {
                         changeStart = scanLen;
                     }
-                    outputPairs.Add(new OutputPair(
-                        BufferPointToUnwrappedCursorPos(changeStart)
-                      , newStr.Substring(changeStart)
+                    outputDiffs.Add(new OutputDiff(
+                        changeStart
+                      , newStr.Length - changeStart
                     ));
                 }
                 else if (oldStr.Length > scanLen)  // eg backspacing at the end of the input
@@ -275,25 +312,23 @@ namespace MSG.IO
                     {
                         changeStart = scanLen;
                     }
-                    outputPairs.Add(
-                        new OutputPair(
-                            BufferPointToUnwrappedCursorPos(changeStart)
-                          , newStr.Substring(changeStart, scanLen - changeStart)
-                                + new String(' ', oldStr.Length - scanLen)
+                    outputDiffs.Add(
+                        new OutputDiff(
+                            changeStart
+                          , (scanLen - changeStart) + (oldStr.Length - scanLen)
                     ));
                 }
                 else  // eg replacing a character at the end of the input
                 {
                     if (inChangedBlock)
                     {
-                        outputPairs.Add(new OutputPair(
-                            BufferPointToUnwrappedCursorPos(changeStart)
-                          , newStr.Substring(changeStart)
+                        outputDiffs.Add(new OutputDiff(
+                            changeStart
+                          , newStr.Length - changeStart
                         ));
                     }
                 }
-                
-                return outputPairs;
+                return outputDiffs;
             }
 
             /// <summary>
@@ -340,12 +375,32 @@ namespace MSG.IO
                 return lineIndex == 0 ? startLeft : 0;
             }
 
-            private void PrintTuples(List<OutputPair> outputPairs)
+            /// <summary>
+            ///   Prints each string at the associated position in the given list.
+            /// </summary>
+            /// <param name="outputDiffs">
+            ///   List of ((left, top), text) tuples
+            /// </param>
+            private void PrintDiffs(string newStr, List<OutputDiff> outputDiffs)
             {
-                foreach (OutputPair pair in outputPairs)
+                foreach (OutputDiff diff in outputDiffs)
                 {
-                    SetCursorPos(pair.pos);
-                    print.String(pair.text);
+                    SetCursorPos(BufferPointToUnwrappedCursorPos(diff.point));
+                    int diffEnd = diff.point + diff.length;
+                    if (diff.point < newStr.Length && diffEnd < newStr.Length)
+                    {
+                        print.String(newStr.Substring(diff.point, diff.length));
+                    }
+                    else if (diff.point < newStr.Length)
+                    {
+                        print.String(newStr.Substring(diff.point, newStr.Length - diff.point));
+                        print.String(new String(' ', diffEnd - newStr.Length));
+                    }
+                    // diffEnd < diff.point is impossible
+                    else // diff.point >= newStr.Length && diffEnd >= newStr.Length
+                    {
+                        print.String(new String(' ', diffEnd - diff.point));
+                    }
                 }
             }
 
@@ -382,21 +437,21 @@ namespace MSG.IO
                 //        - (wordWrapper.Count == wordWrapper.LinesScrolledFromWrapping ? 1 : 0)));
                 //}
                 // Print everything
-                string s = newState.ToString();
+                string newStr = newState.ToString();
                 // Compare newState to consoleState to create diff list of
                 // (cursorLeft, cursorTop, string) tuples.
-                List<OutputPair> outputTuples = DiffStrings(s, consoleState);
+                List<OutputDiff> outputDiffs = DiffStrings(newStr, consoleState);
                 // Hide cursor during redraw
                 print.IsCursorVisible = false;
-                // Print each tuple in diff list
-                PrintTuples(outputTuples);
+                // Print each diff in list
+                PrintDiffs(newStr, outputDiffs);
                 // Position cursor with respect to wrapping
                 cursorPos = BufferPointToCursorPos(point);
                 SetCursorPos(cursorPos);
                 // Show cursor again
                 print.IsCursorVisible = true;
                 // Save the console state
-                consoleState = s.TrimEnd(' ');
+                consoleState = newStr.TrimEnd(' ');
             }
 
             /// <summary>
