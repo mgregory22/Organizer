@@ -57,43 +57,43 @@ namespace MSG.IO
             {
                 // insert any of the printable keys
                 buffer.Insert(keyInfo.KeyChar);
-                view.RedrawEditor();
+                view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsShiftEnter(keyInfo))
             {
                 buffer.Insert('\n');
-                view.RedrawEditor();
+                view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsBackspace(keyInfo))
             {
                 buffer.RetreatPoint();
                 buffer.Delete();
-                view.RedrawEditor();
+                view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsCursorDown(keyInfo))
             {
-                int point = view.CursorDown();
+                int point = view.CursorDown(buffer.Point);
                 buffer.MovePoint(point);
             }
             else if (IsCursorLeft(keyInfo))
             {
                 buffer.RetreatPoint();
-                view.UpdateCursor();
+                view.UpdateCursor(buffer.Point);
             }
             else if (IsCursorRight(keyInfo))
             {
                 buffer.AdvancePoint();
-                view.UpdateCursor();
+                view.UpdateCursor(buffer.Point);
             }
             else if (IsCursorUp(keyInfo))
             {
-                int point = view.CursorUp();
+                int point = view.CursorUp(buffer.Point);
                 buffer.MovePoint(point);
             }
             else if (IsDelete(keyInfo))
             {
                 buffer.Delete();
-                view.RedrawEditor();
+                view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsEnd(keyInfo))
             {

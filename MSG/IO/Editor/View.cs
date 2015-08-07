@@ -32,10 +32,6 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Text buffer.
-            /// </summary>
-            Buffer buffer;
-            /// <summary>
             ///   What's currently displayed on the console
             /// </summary>
             string consoleState;
@@ -85,7 +81,6 @@ namespace MSG.IO
             /// </param>
             public View(Buffer buffer, Print print)
             {
-                this.buffer = buffer;
                 this.print = print;
                 this.cursorPos = print.CursorPos;
                 this.consoleState = "";
@@ -95,7 +90,7 @@ namespace MSG.IO
                     this.consoleWidth - LineLeft(0, this.startCursorPos.left),
                     this.consoleWidth - LineLeft(1, this.startCursorPos.left)
                 );
-                this.wordWrapper = new WordWrapper(buffer, lineWidths);
+                this.wordWrapper = new WordWrapper(buffer.Text, lineWidths);
             }
 
             public ConsolePos BufferPointToCursorPos(int point)
@@ -114,11 +109,15 @@ namespace MSG.IO
             /// <summary>
             ///   Moves the cursor down one line.
             /// </summary>
+            /// <param name="point">
+            ///   The position of the current point, which is returned if
+            ///   the cursor cannot move down.
+            /// </param>
             /// <returns>
             ///   The buffer point in the next line at the same
             ///   horizontal position (if possible)
             /// </returns>
-            public int CursorDown()
+            public int CursorDown(int point)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
@@ -139,7 +138,7 @@ namespace MSG.IO
                     return SetCursorByPoint(newPoint);
                 }
                 // return the current point if the cursor can't move down
-                return buffer.Point;
+                return point;
             }
 
             /// <summary>
@@ -171,21 +170,30 @@ namespace MSG.IO
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current line index
                 int line = editorPos.top;
-                // find start of current line
+                // find start of current line in the buffer
                 int startPointOfLine = wordWrapper.GetLineStart(line);
                 // set point to start of line and update cursor to match
                 return SetCursorByPoint(startPointOfLine);
             }
 
+            public int CursorLeft(int count)
+            {
+                return count; //TODO
+            }
+
             /// <summary>
             ///   Moves the cursor up one line.
             /// </summary>
+            /// <param name="point">
+            ///   The position of the current point, which is returned if
+            ///   the cursor cannot move up.
+            /// </param>
             /// <returns>
             ///   If possible, the buffer point in the previous line at
             ///   the same horizontal position.  Otherwise, the current
             ///   point.
             /// </returns>
-            public int CursorUp()
+            public int CursorUp(int point)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
@@ -207,7 +215,7 @@ namespace MSG.IO
                     return SetCursorByPoint(newPoint);
                 }
                 // return the current point if the cursor can't move up
-                return buffer.Point;
+                return point;
             }
 
             public ConsolePos CursorPosToEditorPos(ConsolePos cursorPos)
@@ -344,10 +352,10 @@ namespace MSG.IO
             /// <summary>
             ///   Updates the console when the text has changed.
             /// </summary>
-            public void RedrawEditor()
+            public void RedrawEditor(string text, int point)
             {
                 // Calculate word wrapping
-                wordWrapper.Update();
+                wordWrapper.Update(text);
                 // Buffer used to compare with the console state in order to calculate the
                 // minimal number of console writes
                 StringBuilder newState = new StringBuilder();
@@ -364,9 +372,9 @@ namespace MSG.IO
                         padLen--;
                     }
                     string padding = padLen == 0 ? String.Empty : Format.Padding(padLen);
-                    newState.Append(wordWrapper.GetLine(i) + padding);
+                    newState.Append(wordWrapper.GetLine(text, i) + padding);
                 }
-                newState.Append(wordWrapper.GetLine(wordWrapper.Count - 1));
+                newState.Append(wordWrapper.GetLine(text, wordWrapper.Count - 1));
                 // Erase the old line if the number of lines was reduced by the last operation
                 //if (wordWrapper.Dewrap)
                 //{
@@ -383,7 +391,7 @@ namespace MSG.IO
                 // Print each tuple in diff list
                 PrintTuples(outputTuples);
                 // Position cursor with respect to wrapping
-                cursorPos = BufferPointToCursorPos(buffer.Point);
+                cursorPos = BufferPointToCursorPos(point);
                 SetCursorPos(cursorPos);
                 // Show cursor again
                 print.IsCursorVisible = true;
@@ -428,9 +436,9 @@ namespace MSG.IO
             ///   Moves the console cursor to the position corresponding
             ///   to the buffer insertion point.
             /// </summary>
-            public void UpdateCursor()
+            public void UpdateCursor(int point)
             {
-                cursorPos = BufferPointToCursorPos(buffer.Point);
+                cursorPos = BufferPointToCursorPos(point);
                 SetCursorPos(cursorPos);
             }
         }

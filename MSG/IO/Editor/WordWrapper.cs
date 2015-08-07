@@ -15,8 +15,6 @@ namespace MSG.IO
     {
         public class WordWrapper
         {
-            Editor.Buffer buffer;
-            
             bool dewrap;
             
             /// <summary>
@@ -35,24 +33,24 @@ namespace MSG.IO
             ///   and determines the substring coordinates needed to wordwrap
             ///   the text in the window.
             /// </summary>
-            /// <param name="buffer">
-            ///   The memory buffer for the text being edited.  Should be
-            ///   treated as read-only.  Do not modify this object within
-            ///   this class.
+            /// <param name="text">
+            ///   Text to scan for line breaks
+            /// </param>
+            /// <param name="point">
+            ///   The current cursor in the text
             /// </param>
             /// <param name="lineWidths">
             ///   The maximum width of each line in characters.  If there are
             ///   more lines than there are entries in lineWidths, then the
             ///   last entry is used for subsequent lines.
             /// </param>
-            public WordWrapper(Editor.Buffer buffer, EndlessArray<int> lineWidths)
+            public WordWrapper(string text, EndlessArray<int> lineWidths)
             {
-                this.buffer = buffer;
                 this.dewrap = false;
                 this.lineBreaks = new List<int>();
                 this.lineWidths = lineWidths;
                 this.linesScrolledFromWrapping = 0;
-                Update();
+                Update(text);
             }
 
             /// <summary>
@@ -120,10 +118,10 @@ namespace MSG.IO
             /// <summary>
             ///   Returns the text of the given wrapped line.
             /// </summary>
-            public string GetLine(int wrappedLineIndex)
+            public string GetLine(string text, int wrappedLineIndex)
             {
                 int startIndex = GetLineStart(wrappedLineIndex);
-                return buffer.Text.Substring(startIndex, GetLineBreak(wrappedLineIndex) - startIndex);
+                return text.Substring(startIndex, GetLineBreak(wrappedLineIndex) - startIndex);
             }
 
             /// <summary>
@@ -221,19 +219,14 @@ namespace MSG.IO
             ///   a list of word break positions for each extra line
             ///   that needs to be displayed.
             /// </summary>
-            public void Update()
+            /// <param name="text">
+            ///   Text to scan for line breaks
+            /// </param>
+            public void Update(string text)
             {
                 // Shortcuts
-                string text = buffer.Text;
-                int textLen = buffer.Text.Length;
+                int textLen = text.Length;
                 char charBeforeI = '\n';
-                // Sanity check
-                if (buffer.Point < 0 || buffer.Point > textLen)
-                {
-                    throw new IndexOutOfRangeException(
-                        String.Format("Cursor cannot move outside text: Position {0}", buffer.Point)
-                    );
-                }
                 // Set dewrap flag at the end of this method if the user deleted 
                 // enough characters to reduce the number of lines (ie the lost 
                 // line needs to be erased).
