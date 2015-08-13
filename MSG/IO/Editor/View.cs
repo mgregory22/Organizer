@@ -14,6 +14,11 @@ namespace MSG.IO
         /// </summary>
         public class View
         {
+            enum UpdatePreferredCursorColumn
+            {
+                Update,
+                Keep
+            }
             class OutputDiff
             {
                 public int point;
@@ -41,6 +46,12 @@ namespace MSG.IO
             ///   The width of each line in the edit buffer
             /// </summary>
             EndlessArray<int> lineWidths;
+            /// <summary>
+            ///   Vertical cursor motions will try to place the cursor as close as
+            ///   possible to the preferred cursor column, which is set by the last
+            ///   horizontal cursor motion.
+            /// </summary>
+            int preferredCursorColumn;
             /// <summary>
             ///   The output object
             /// </summary>
@@ -79,6 +90,7 @@ namespace MSG.IO
                 this.cursorPos = print.CursorPos;
                 this.consoleState = "";
                 this.consoleWidth = print.BufferWidth;
+                this.preferredCursorColumn = print.CursorPos.left;
                 this.startCursorPos = print.CursorPos;
                 this.lineWidths = new EndlessArray<int>(
                     this.consoleWidth - LineLeft(0, this.startCursorPos.left),
@@ -87,17 +99,80 @@ namespace MSG.IO
                 this.wordWrapper = new WordWrapper(buffer.Text, lineWidths);
             }
 
-            public ConsolePos BufferPointToCursorPos(int point)
+            /// <summary>
+            ///   Converts a buffer position to an absolute console cursor
+            ///   position.
+            /// </summary>
+            /// <param name="point">
+            ///   Buffer position
+            /// </param>
+            /// <param name="bolPositionPreference">
+            ///   The point at the beginning of a line (other than the first and
+            ///   last) can represent one of two cursor positions: the position
+            ///   at the BOL and the position after the last character of the
+            ///   previous line.  If this flag is set to true, then the cursor
+            ///   will be set at the end of the previous line (before the soft
+            ///   linebreak).
+            /// </param>
+            /// <returns>
+            ///   Absolute cursor position
+            /// </returns>
+            ConsolePos BufferPointToCursorPos(int point, WordWrapper.BolPositionPreference bolPositionPreference)
             {
-                return EditorPosToCursorPos(wordWrapper.BufferPointToEditorPos(point));
+                ConsolePos pos = wordWrapper.BufferPointToEditorPos(point, bolPositionPreference);
+                return EditorPosToCursorPos(pos);
             }
 
+            /// <summary>
+            ///   A kludge to try and workaround the fact that I'm using points
+            ///   to communicate cursor positions across calls and it doesn't
+            ///   work for the eol case since the cursor at that point can be
+            ///   before (clicking past the eol, the end key, cursoring up or
+            ///   down from the end of a longer line) or after the  soft newline
+            ///   (cursoring left or right to the eol).
+            /// </summary>
+            /// <param name="point"></param>
+            /// <returns></returns>
             public ConsolePos BufferPointToUnwrappedCursorPos(int point)
             {
                 ConsolePos pos;
                 pos.left = (point + startCursorPos.left) % consoleWidth;
                 pos.top = startCursorPos.top + (point + startCursorPos.left) / consoleWidth;
                 return pos;
+            }
+
+            /// <summary>
+            ///   Computes the text that needs to be printed to update the view in one
+            ///   string.
+            /// </summary>
+            /// <param name="text">
+            ///   Buffer text
+            /// </param>
+            /// <returns>
+            ///   View text to be printed from the start cursor position
+            /// </returns>
+            private string CalculateViewState(string text)
+            {
+                // Buffer used to compare with the console state in order to calculate the
+                // minimal number of console writes
+                StringBuilder newState = new StringBuilder();
+                // Loop through each line returned by the word wrapper
+                for (int i = 0; i < wordWrapper.Count - 1; i++)
+                {
+                    // Right pad to the edge of the window to erase all characters and
+                    // incidentally eliminate the need for newlines
+                    int padLen = lineWidths[i] - wordWrapper.GetLineLen(i);
+                    // If this line is the last that has been scrolled into view, don't
+                    // pad all the way to the right to avoid unneeded scrolling.
+                    if (padLen > 0 && i == wordWrapper.LinesScrolledFromWrapping)
+                    {
+                        padLen--;
+                    }
+                    string padding = padLen == 0 ? String.Empty : Format.Padding(padLen);
+                    newState.Append(wordWrapper.GetLine(text, i) + padding);
+                }
+                newState.Append(wordWrapper.GetLine(text, wordWrapper.Count - 1));
+                return newState.ToString();
             }
 
             /// <summary>
@@ -114,11 +189,11 @@ namespace MSG.IO
             ///   The buffer point in the next line at the same
             ///   horizontal position (if possible)
             /// </returns>
-            public int CursorDown(int point, int count = 1)
+            public int CursorDown(int point, int count = 1 /* TODO */)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
-                int column = editorPos.left;
+                int column = preferredCursorColumn;
                 // find current line index
                 int line = editorPos.top;
                 // if moving down is possible
@@ -132,7 +207,11 @@ namespace MSG.IO
                     // could be too short
                     int endPointOfNextLine = wordWrapper.GetLineBreak(nextLine);
                     int newPoint = Math.Min(startPointOfNextLine + column, endPointOfNextLine);
-                    return SetCursorByPoint(newPoint);
+                    int lineLen = endPointOfNextLine - startPointOfNextLine;
+                    WordWrapper.BolPositionPreference bpp = preferredCursorColumn < lineLen
+                            ? WordWrapper.BolPositionPreference.AfterBol
+                            : WordWrapper.BolPositionPreference.BeforeBol;
+                    return SetCursorByPoint(newPoint, bpp, UpdatePreferredCursorColumn.Keep);
                 }
                 // return the current point if the cursor can't move down
                 return point;
@@ -153,7 +232,12 @@ namespace MSG.IO
                 int endPointOfLine = wordWrapper.GetLineBreak(line)
                     - (wordWrapper.IsLastLine(line) ? 0 : 1);
                 // set point to end of line and update cursor to match
-                return SetCursorByPoint(endPointOfLine);
+                SetCursorByPoint(endPointOfLine
+                    , WordWrapper.BolPositionPreference.BeforeBol
+                    , UpdatePreferredCursorColumn.Update
+                );
+                preferredCursorColumn = cursorPos.left;
+                return endPointOfLine;
             }
 
             /// <summary>
@@ -170,7 +254,12 @@ namespace MSG.IO
                 // find start of current line in the buffer
                 int startPointOfLine = wordWrapper.GetLineStart(line);
                 // set point to start of line and update cursor to match
-                return SetCursorByPoint(startPointOfLine);
+                SetCursorByPoint(startPointOfLine
+                    , WordWrapper.BolPositionPreference.AfterBol
+                    , UpdatePreferredCursorColumn.Update
+                );
+                preferredCursorColumn = cursorPos.left;
+                return startPointOfLine;
             }
 
             /// <summary>
@@ -188,46 +277,14 @@ namespace MSG.IO
             /// </returns>
             public int CursorLeft(int point, int count = 1)
             {
-                return point; // TODO
-            }
-
-            /// <summary>
-            ///   Moves the cursor up one line.
-            /// </summary>
-            /// <param name="point">
-            ///   The position of the current point, which is returned if
-            ///   the cursor cannot move up.
-            /// </param>
-            /// <param name="count">
-            ///   Number of lines to move cursor up
-            /// </param>
-            /// <returns>
-            ///   If possible, the buffer point in the previous line at
-            ///   the same horizontal position.  Otherwise, the current
-            ///   point.
-            /// </returns>
-            public int CursorUp(int point, int count = 1)
-            {
-                ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
-                // find current column
-                int column = editorPos.left;
-                // find current line index
-                int line = editorPos.top;
-                // if moving up is possible
-                if (!wordWrapper.IsFirstLine(line))
-                {
-                    // move up one
-                    int prevLine = line - 1;
-                    // find start in buffer of previous line
-                    int startPointOfPrevLine = wordWrapper.GetLineStart(prevLine);
-                    // try to set the same column number
-                    int newColumn = Math.Max(startPointOfPrevLine + column - LineLeft(prevLine, startCursorPos.left), 0);
-                    // the new line could be too short
-                    int endPointOfPrevLine = wordWrapper.GetLineBreak(prevLine) - 1;
-                    int newPoint = Math.Min(newColumn, endPointOfPrevLine);
-                    return SetCursorByPoint(newPoint);
-                }
-                // return the current point if the cursor can't move up
+                if (point == 0)
+                    return point;
+                point -= count;
+                SetCursorByPoint(point
+                    , WordWrapper.BolPositionPreference.AfterBol
+                    , UpdatePreferredCursorColumn.Update
+                );
+                preferredCursorColumn = cursorPos.left;
                 return point;
             }
 
@@ -250,6 +307,77 @@ namespace MSG.IO
             }
 
             /// <summary>
+            ///   Moves the cursor right one column unless it wraps or it's
+            ///   at the end.
+            /// </summary>
+            /// <param name="point">
+            ///   Original cursor position
+            /// </param>
+            /// <param name="count">
+            ///   Number of columns to move cursor right
+            /// </param>
+            /// <returns>
+            ///   The new cursor position
+            /// </returns>
+            public int CursorRight(int point, int count = 1)
+            {
+                int bufferEnd = wordWrapper.GetBufferLen();
+                if (point + count > bufferEnd)
+                    count = bufferEnd - point;
+                point += count;
+                SetCursorByPoint(point
+                    , WordWrapper.BolPositionPreference.AfterBol
+                    , UpdatePreferredCursorColumn.Update
+                );
+                preferredCursorColumn = cursorPos.left;
+                return point;
+            }
+
+            /// <summary>
+            ///   Moves the cursor up one line.
+            /// </summary>
+            /// <param name="point">
+            ///   The position of the current point, which is returned if
+            ///   the cursor cannot move up.
+            /// </param>
+            /// <param name="count">
+            ///   Number of lines to move cursor up
+            /// </param>
+            /// <returns>
+            ///   If possible, the buffer point in the previous line at
+            ///   the same horizontal position.  Otherwise, the current
+            ///   point.
+            /// </returns>
+            public int CursorUp(int point, int count = 1 /* TODO */)
+            {
+                ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
+                // find current column
+                int column = preferredCursorColumn;
+                // find current line index
+                int line = editorPos.top;
+                // if moving up is possible
+                if (!wordWrapper.IsFirstLine(line))
+                {
+                    // move up one
+                    int prevLine = line - 1;
+                    // find start in buffer of previous line
+                    int startPointOfPrevLine = wordWrapper.GetLineStart(prevLine);
+                    // try to set the same column number
+                    int newColumn = Math.Max(startPointOfPrevLine + column - LineLeft(prevLine, startCursorPos.left), 0);
+                    // the new line could be too short
+                    int endPointOfPrevLine = wordWrapper.GetLineBreak(prevLine) - 1;
+                    int newPoint = Math.Min(newColumn, endPointOfPrevLine);
+                    int lineLen = endPointOfPrevLine - startPointOfPrevLine;
+                    WordWrapper.BolPositionPreference bpp = preferredCursorColumn < lineLen
+                            ? WordWrapper.BolPositionPreference.AfterBol
+                            : WordWrapper.BolPositionPreference.BeforeBol;
+                    return SetCursorByPoint(newPoint, bpp, UpdatePreferredCursorColumn.Keep);
+                }
+                // return the current point if the cursor can't move up
+                return point;
+            }
+
+            /// <summary>
             ///   Creates a list of differences between a new string and an old
             ///   string.
             /// </summary>
@@ -263,7 +391,7 @@ namespace MSG.IO
             ///   List of diffs to the old string that change it to the new
             ///   string
             /// </returns>
-            private List<OutputDiff> DiffStrings(string newStr, string oldStr)
+            List<OutputDiff> DiffStrings(string newStr, string oldStr)
             {
                 List<OutputDiff> outputDiffs = new List<OutputDiff>();
                 int scanLen = Math.Min(newStr.Length, oldStr.Length);
@@ -276,11 +404,7 @@ namespace MSG.IO
                         if (newStr[i] == oldStr[i])
                         {
                             // End of changed block: add the changed block to the list
-                            outputDiffs.Add(
-                                new OutputDiff(
-                                    changeStart
-                                  , i - changeStart
-                            ));
+                            outputDiffs.Add(new OutputDiff(changeStart, i - changeStart));
                             inChangedBlock = false;
                         }
                     }
@@ -301,10 +425,7 @@ namespace MSG.IO
                     {
                         changeStart = scanLen;
                     }
-                    outputDiffs.Add(new OutputDiff(
-                        changeStart
-                      , newStr.Length - changeStart
-                    ));
+                    outputDiffs.Add(new OutputDiff(changeStart, newStr.Length - changeStart));
                 }
                 else if (oldStr.Length > scanLen)  // eg backspacing at the end of the input
                 {
@@ -312,20 +433,13 @@ namespace MSG.IO
                     {
                         changeStart = scanLen;
                     }
-                    outputDiffs.Add(
-                        new OutputDiff(
-                            changeStart
-                          , (scanLen - changeStart) + (oldStr.Length - scanLen)
-                    ));
+                    outputDiffs.Add(new OutputDiff(changeStart, (scanLen - changeStart) + (oldStr.Length - scanLen)));
                 }
                 else  // eg replacing a character at the end of the input
                 {
                     if (inChangedBlock)
                     {
-                        outputDiffs.Add(new OutputDiff(
-                            changeStart
-                          , newStr.Length - changeStart
-                        ));
+                        outputDiffs.Add(new OutputDiff(changeStart, newStr.Length - changeStart));
                     }
                 }
                 return outputDiffs;
@@ -376,10 +490,14 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Prints each string at the associated position in the given list.
+            ///   Prints each substring of newStr given by the outputDiffs list
+            ///   at its associated cursor position.
             /// </summary>
+            /// <param name="newStr">
+            ///   Source of the substring text
+            /// </param>
             /// <param name="outputDiffs">
-            ///   List of ((left, top), text) tuples
+            ///   List of (point, length) pairs
             /// </param>
             private void PrintDiffs(string newStr, List<OutputDiff> outputDiffs)
             {
@@ -411,47 +529,30 @@ namespace MSG.IO
             {
                 // Calculate word wrapping
                 wordWrapper.Update(text);
-                // Buffer used to compare with the console state in order to calculate the
-                // minimal number of console writes
-                StringBuilder newState = new StringBuilder();
-                // Loop through each line returned by the word wrapper
-                for (int i = 0; i < wordWrapper.Count - 1; i++)
-                {
-                    // Right pad to the edge of the window to erase all characters and
-                    // incidentally eliminate the need for newlines
-                    int padLen = lineWidths[i] - wordWrapper.GetLineLen(i);
-                    // If this line is the last that has been scrolled into view, don't
-                    // pad all the way to the right to avoid unneeded scrolling.
-                    if (padLen > 0 && i == wordWrapper.LinesScrolledFromWrapping)
-                    {
-                        padLen--;
-                    }
-                    string padding = padLen == 0 ? String.Empty : Format.Padding(padLen);
-                    newState.Append(wordWrapper.GetLine(text, i) + padding);
-                }
-                newState.Append(wordWrapper.GetLine(text, wordWrapper.Count - 1));
-                // Erase the old line if the number of lines was reduced by the last operation
-                //if (wordWrapper.Dewrap)
-                //{
-                //    newState.Append(Format.Padding(lineWidths[wordWrapper.Count]
-                //        - (wordWrapper.Count == wordWrapper.LinesScrolledFromWrapping ? 1 : 0)));
-                //}
-                // Print everything
-                string newStr = newState.ToString();
-                // Compare newState to consoleState to create diff list of
-                // (cursorLeft, cursorTop, string) tuples.
-                List<OutputDiff> outputDiffs = DiffStrings(newStr, consoleState);
-                // Hide cursor during redraw
-                print.IsCursorVisible = false;
-                // Print each diff in list
-                PrintDiffs(newStr, outputDiffs);
+                // Calculate view state
+                string viewState = CalculateViewState(text);
                 // Position cursor with respect to wrapping
-                cursorPos = BufferPointToCursorPos(point);
+                // (TODO: probably needs further analysis - BeforeBol should be passed when
+                // cursor is in BeforeBol state, but I don't have anything that tracks that
+                // right now)
+                cursorPos = BufferPointToCursorPos(point, WordWrapper.BolPositionPreference.AfterBol);
+                // Compare view state to the previous state and create list of diffs.
+                List<OutputDiff> outputDiffs = DiffStrings(viewState, consoleState);
+                // Was the text modified?
+                if (outputDiffs.Count > 0)
+                {
+                    // Hide cursor during redraw
+                    print.IsCursorVisible = false;
+                    // Print each diff in list
+                    PrintDiffs(viewState, outputDiffs);
+                    // Text changes need to update the preferred cursor column
+                    preferredCursorColumn = cursorPos.left;
+                }
                 SetCursorPos(cursorPos);
                 // Show cursor again
                 print.IsCursorVisible = true;
                 // Save the console state
-                consoleState = newStr.TrimEnd(' ');
+                consoleState = viewState.TrimEnd(' ');
             }
 
             /// <summary>
@@ -475,26 +576,30 @@ namespace MSG.IO
             /// <param name="point">
             ///   Point
             /// </param>
+            /// <param name="bolPositionPreference">
+            ///   The point at the beginning of a line (other than the first and
+            ///   last) can represent one of two cursor positions: the position
+            ///   at the BOL and the position after the last character of the
+            ///   previous line.  If this flag is set to true, then the cursor
+            ///   will be set at the end of the previous line (before the soft
+            ///   linebreak).
+            /// </param>
             /// <returns>
             ///   Point
             /// </returns>
-            private int SetCursorByPoint(int point)
+            private int SetCursorByPoint(int point
+                    , WordWrapper.BolPositionPreference bolPositionPreference
+                    , UpdatePreferredCursorColumn updatePreferredCursorColumn)
             {
                 // update cursor to match bufferPos
-                cursorPos = BufferPointToCursorPos(point);
+                cursorPos = BufferPointToCursorPos(point, bolPositionPreference);
                 SetCursorPos(cursorPos);
+                if (updatePreferredCursorColumn == UpdatePreferredCursorColumn.Update)
+                {
+                    preferredCursorColumn = cursorPos.left;
+                }
                 // return point just for convenience
                 return point;
-            }
-
-            /// <summary>
-            ///   Moves the console cursor to the position corresponding
-            ///   to the buffer insertion point.
-            /// </summary>
-            public void UpdateCursor(int point)
-            {
-                cursorPos = BufferPointToCursorPos(point);
-                SetCursorPos(cursorPos);
             }
         }
     }

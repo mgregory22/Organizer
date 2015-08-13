@@ -15,18 +15,37 @@ namespace MSG.IO
     {
         public class WordWrapper
         {
+            public enum BolPositionPreference
+            {
+                BeforeBol,
+                AfterBol
+            }
+
+            /// <summary>
+            ///   The Update() method will set this to true if the number of lines
+            ///   displayed was reduced by the update.
+            /// </summary>
             bool dewrap;
-            
             /// <summary>
             ///   Marks the buffer position of the end of each line exclusive.  So a
             ///   first lineBreak of 6 would put the first char of the next line at
             ///   position 6 and the first line would be length 6.
             /// </summary>
             List<int> lineBreaks;
-
+            /// <summary>
+            ///   Total number of lines that have been scrolled into view since the
+            ///   start of editing, whether or not those lines still exist.
+            /// </summary>
             int linesScrolledFromWrapping;
-
+            /// <summary>
+            ///   List of line widths of usable screen space.
+            /// </summary>
             EndlessArray<int> lineWidths;
+            /// <summary>
+            ///   Turns out to be helpful to have a gutter on the right where the cursor
+            ///   can go at the end of a full line.
+            /// </summary>
+            const int rightMargin = 1;
 
             /// <summary>
             ///   Scans the given text with respect to the given window width
@@ -71,29 +90,48 @@ namespace MSG.IO
             /// <param name="point">
             ///   Buffer point
             /// </param>
+            /// <param name="bolPositionPreference">
+            ///   The point at the beginning of a line (other than the first and
+            ///   last) can represent one of two cursor positions: the position
+            ///   at the BOL and the position after the last character of the
+            ///   previous line.  If this flag is set to true, then the cursor
+            ///   will be set at the end of the previous line (before the soft
+            ///   linebreak).
+            /// </param>
             /// <returns>
             ///   The (left, top) position within the editor (eg (0,0) is the first column on the
             ///   first line, etc)
             /// </returns>
-            public ConsolePos BufferPointToEditorPos(int point)
+            public ConsolePos BufferPointToEditorPos(int point, BolPositionPreference bolPositionPreference)
             {
-                int top = lineBreaks.FindIndex(
+                // Find the line index of the point
+                int line = lineBreaks.FindIndex(
                     lineBreak => point < lineBreak
                 );
-                // If the cursor is sitting at the end of the text, then top will be the last line
-                if (top == -1)
+                // If the cursor is sitting at the end of the text, then top will be the last line,
+                // which will be missed by the FindIndex() call above because then point == lineBreak
+                if (line == -1)
                 {
-                    top = lineBreaks.Count - 1;
+                    line = lineBreaks.Count - 1;
                 }
                 ConsolePos editorPos;
-                editorPos.left = point - GetLineStart(top);
+                // The left coordinate = the point - the start of the line it's on
+                editorPos.left = point - GetLineStart(line);
                 // Cursor wraps around if it's at the end of a full line
-                if (editorPos.left == lineWidths[top])
+                if (editorPos.left >= lineWidths[line])
                 {
                     editorPos.left = 0;
-                    top++;
+                    line++;
                 }
-                editorPos.top = top;
+                // Respect the BOL position preference
+                if (bolPositionPreference == BolPositionPreference.BeforeBol
+                        && editorPos.left == 0
+                        && line > 0)
+                {
+                    line--;
+                    editorPos.left = GetLineBreak(line) - GetLineStart(line) - 1;
+                }
+                editorPos.top = line;
                 return editorPos;
             }
 
@@ -113,6 +151,14 @@ namespace MSG.IO
             public bool Dewrap
             {
                 get { return dewrap; }
+            }
+
+            /// <summary>
+            ///   Returns the maximum valid value of the point.
+            /// </summary>
+            public int GetBufferLen()
+            {
+                return lineBreaks[lineBreaks.Count - 1];
             }
 
             /// <summary>
@@ -154,6 +200,14 @@ namespace MSG.IO
             }
 
             /// <summary>
+            ///   For symmetry
+            /// </summary>
+            public bool IsFirstLine(int wrappedLineIndex)
+            {
+                return wrappedLineIndex == 0;
+            }
+
+            /// <summary>
             ///   Returns true if the cursor is on a LF or CR char.
             /// </summary>
             private bool IsIAtAHardLineReturnChar(char charAtI)
@@ -181,14 +235,6 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   For symmetry
-            /// </summary>
-            public bool IsFirstLine(int wrappedLineIndex)
-            {
-                return wrappedLineIndex == 0;
-            }
-
-            /// <summary>
             ///   Returns true if the given line index refers to the last
             ///   wrapped line of input.
             /// </summary>
@@ -201,9 +247,9 @@ namespace MSG.IO
             ///   Returns true if the length of the wrapped line text is equal
             ///   to the width of the window.
             /// </summary>
-            private bool IsWindowLineCompletelyFilled(int wrappedLineLen, int wrappedLineIndex)
+            private bool IsWindowLineCompletelyFilled(int wrappedLineLen, int wrappedLineIndex, int rightMargin)
             {
-                return wrappedLineLen == this.lineWidths[wrappedLineIndex];
+                return wrappedLineLen == this.lineWidths[wrappedLineIndex] - rightMargin;
             }
 
             /// <summary>
@@ -262,10 +308,15 @@ namespace MSG.IO
                         lastWordBreak = lineStart;
                     }
                     // When the window edge is reached, break at a word if possible
-                    else if (IsWindowLineCompletelyFilled(lineLen, lineBreaks.Count))
+                    else if (IsWindowLineCompletelyFilled(lineLen, lineBreaks.Count, rightMargin))
                     {
+                        // If a word just ended, break right here before the space
+                        if (IsIJustAfterAWord(charBeforeI, charAtI))
+                        {
+                            ; // All set
+                        }
                         // Found word break during scan?
-                        if (lastWordBreak > lineStart)
+                        else if (lastWordBreak > lineStart)
                         {
                             // Back up cursor to last word break
                             i = lastWordBreak;
@@ -284,12 +335,6 @@ namespace MSG.IO
                 }
                 // Add a break for the end of the text
                 AddLineBreak(textLen);
-                // If the cursor wrapped around but no text did, then there is
-                // another scrolled line.
-                if (textLen - lineStart == lineWidths[lineBreaks.Count - 1])
-                {
-                    linesScrolledFromWrapping++;
-                }
                 // If the number of lines decreased since the last update, flag it
                 dewrap = lineBreaks.Count < previousLineCnt;
             }

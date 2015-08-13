@@ -24,20 +24,14 @@ namespace MSGTest.IO.EditorTests
 
         private void CursorLeft(int count, Editor.Buffer buffer, Editor.View view)
         {
-            for (int i = 0; i < count; i++)
-            {
-                buffer.RetreatPoint();
-                view.UpdateCursor(buffer.Point);
-            }
+            int point = view.CursorLeft(buffer.Point, count);
+            buffer.MovePoint(point);
         }
 
         private void CursorRight(int count, Editor.Buffer buffer, Editor.View view)
         {
-            for (int i = 0; i < count; i++)
-            {
-                buffer.AdvancePoint();
-                view.UpdateCursor(buffer.Point);
-            }
+            int point = view.CursorRight(buffer.Point, count);
+            buffer.MovePoint(point);
         }
 
         private void InsertText(string text, Editor.Buffer buffer, Editor.View view)
@@ -90,26 +84,28 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestBackspaceThatUnwrapsErasesSecondLineAndMovesCursorToBeginningOfBlankLine()
+        public void TestBackspaceThatUnwrapsErasesSecondLineAndMovesCursorToMarginOfFirstLine()
         {
-            InsertText("Word wr", buffer, view);
+            //        012345012
+            //        01234567012
+            InsertText("Wor wr", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.RetreatPoint();
             buffer.Delete();
             view.RedrawEditor(buffer.Text, buffer.Point);
-            string expected = "<7^0w  <0^1";
+            string expected = "<6^0w   <7^0";
             Assert.AreEqual(expected, print.Output);
         }
 
         [Test]
         public void TestBackspaceAtEndOfTextToPreviousLineErasesLastCharacterOnThatLineAndPutsCursorAtTheEnd()
         {
-            InsertText("234567", buffer, view);
+            InsertText("23456", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             buffer.RetreatPoint();
             buffer.Delete();
             view.RedrawEditor(buffer.Text, buffer.Point);
-            string expected = "<7^0 <7^0";
+            string expected = "<6^0 <6^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -137,8 +133,9 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownOnFirstLineOfTwoPutsCursorDirectlyUnderOriginalPosition()
         {
-            InsertText("23456 01234567", buffer, view);
-            CursorLeft(11, buffer, view);
+            InsertText("2345 012345", buffer, view);
+            InsertText("6", buffer, view);
+            CursorLeft(9, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
             buffer.MovePoint(point);
@@ -148,8 +145,8 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorDownOnSecondLineOfThreePutsCursorDirectlyUnderOriginalPosition()
         {
-            InsertText("23456 01234567012345", buffer, view);
-            CursorLeft(11, buffer, view);
+            InsertText("2345 012345601234", buffer, view);
+            CursorLeft(9, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
             buffer.MovePoint(point);
@@ -167,12 +164,13 @@ namespace MSGTest.IO.EditorTests
 
         [Test]
         public void TestCursorEndMovesCursorToEndOfSingleLine()
+
         {
             InsertText("2345", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
             view.CursorEnd();
-            Assert.AreEqual("<5^0<4^0<3^0<6^0", print.Output);
+            Assert.AreEqual("<3^0<6^0", print.Output);
         }
 
         [Test]
@@ -182,27 +180,27 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
             view.CursorEnd();
-            Assert.AreEqual("<4^1<3^1<2^1<5^1", print.Output);
+            Assert.AreEqual("<2^1<5^1", print.Output);
         }
 
         [Test]
         public void TestCursorEndOnFirstLineOfTwoLineEntryMovesCursorToEndOfFirstLine()
         {
-            InsertText("23456 0123456", buffer, view);
-            CursorLeft(12, buffer, view);
+            InsertText("2345 012345", buffer, view);
+            CursorLeft(9, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorEnd();
-            Assert.AreEqual("<7^0", print.Output);
+            Assert.AreEqual("<6^0", print.Output);
         }
 
         [Test]
         public void TestCursorEndOnFullLinePutsCursorAtEndOfSameLine()
         {
-            InsertText("23456 01234567", buffer, view);
+            InsertText("234 012345", buffer, view);
             CursorLeft(3, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             view.CursorEnd();
-            Assert.AreEqual("<7^1", print.Output);
+            Assert.AreEqual("<6^1", print.Output);
         }
 
         [Test]
@@ -239,25 +237,25 @@ namespace MSGTest.IO.EditorTests
             InsertText("2345 70", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(3, buffer, view);
-            string expected = "<1^1<0^1<6^0";
+            string expected = "<6^0";
             Assert.AreEqual(expected, print.Output);
         }
 
         [Test]
         public void TestCursorLeftCannotMoveCursorBeforeBeginning()
         {
-            buffer.RetreatPoint();
-            view.UpdateCursor(buffer.Point);
+            int point = view.CursorRight(buffer.Point);
+            buffer.MovePoint(point);
             Assert.AreEqual(prompt.Length, print.CursorLeft);
         }
 
         [Test]
         public void TestCursorLeftIntoFullLinePutsCursorAtEndOfLine()
         {
-            InsertText("234567 ", buffer, view);
+            InsertText("23456 ", buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorLeft(2, buffer, view);
-            string expected = "<0^1<7^0";
+            string expected = "<6^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -295,7 +293,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorRightAtEndOfFirstLineAndBeforeEndOfBufferPutsCursorAtBeginningOfNextLine()
         {
-            InsertText("23456701234", buffer, view);
+            InsertText("2345601234", buffer, view);
             CursorLeft(6, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             CursorRight(1, buffer, view);
@@ -304,18 +302,26 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestCursorRightCannotMoveCursorPastEnd()
+        public void TestCursorRightCannotMoveCursorPastEndOfEmptyBuffer()
         {
-            buffer.AdvancePoint();
-            view.UpdateCursor(buffer.Point);
+            CursorRight(1, buffer, view);
             Assert.AreEqual(prompt.Length, print.CursorLeft);
+        }
+
+        [Test]
+        public void TestCursorRightCannotMoveCursorPastEndOfWrappingBuffer()
+        {
+            InsertText("2345601234", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            CursorRight(1, buffer, view);
+            Assert.AreEqual(5, print.CursorLeft);
         }
 
         [Test]
         public void TestCursorUpInMiddleOfSecondLineOfTwoPutsCursorDirectlyAboveOriginalPosition()
         {
-            InsertText("23456 01234567", buffer, view);
-            CursorLeft(5, buffer, view);
+            InsertText("2345 0123456", buffer, view);
+            CursorLeft(4, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
             buffer.MovePoint(point);
@@ -323,10 +329,20 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
+        public void TestCursorUpInMiddleOfSecondLineOfTwoPutsCursorDirectlyAboveOriginalPosition2()
+        {
+            InsertText("234 0123 56", buffer, view);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorUp(buffer.Point);
+            buffer.MovePoint(point);
+            Assert.AreEqual("<5^0", print.Output);
+        }
+
+        [Test]
         public void TestCursorUpInMiddleOfThirdLineOfThreePutsCursorDirectlyAboveOriginalPosition()
         {
-            InsertText("23456 01234567012345", buffer, view);
-            CursorLeft(3, buffer, view);
+            InsertText("2345 012345601234", buffer, view);
+            CursorLeft(2, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
             buffer.MovePoint(point);
@@ -336,7 +352,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestCursorUpToShorterLinesAndBackDownToOriginalLinePutsCursorInOriginalColumn()
         {
-            InsertText("1234 12345 123456 1234567", buffer, view);
+            InsertText("2345 01234 012345 0123456", buffer, view);
             CursorLeft(1, buffer, view);
             view.CursorUp(buffer.Point);
             view.CursorUp(buffer.Point);
@@ -344,18 +360,31 @@ namespace MSGTest.IO.EditorTests
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorDown(buffer.Point);
             buffer.MovePoint(point);
-            Assert.AreEqual("<8^3", print.Output);
+            Assert.AreEqual("<6^3", print.Output);
         }
 
         [Test]
-        public void TestCursorUpToTheRightOfLastCharInFirstLinePutsCursorOnLastCharOfFirstLine()
+        public void TestCursorUpToShorterLinesAndBackDownToOriginalLinePutsCursorInOriginalColumn2()
         {
-            InsertText("2345 70123456", buffer, view);
+            InsertText("2345 01234 012345 0123456", buffer, view);
+            view.CursorUp(buffer.Point);
+            view.CursorUp(buffer.Point);
+            view.CursorDown(buffer.Point);
+            SkipTestingTheInsertOutputSinceItsLongAndBoring();
+            int point = view.CursorDown(buffer.Point);
+            buffer.MovePoint(point);
+            Assert.AreEqual("<7^3", print.Output);
+        }
+
+        [Test]
+        public void TestCursorUpToTheRightOfLastCharInFirstLinePutsCursorAfterLastCharOfFirstLine()
+        {
+            InsertText("23 012345", buffer, view);
             CursorLeft(1, buffer, view);
             SkipTestingTheInsertOutputSinceItsLongAndBoring();
             int point = view.CursorUp(buffer.Point);
             buffer.MovePoint(point);
-            Assert.AreEqual("<6^0", print.Output);
+            Assert.AreEqual("<4^0", print.Output);
         }
 
         [Test]
@@ -391,14 +420,16 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestInsertDoesNotThrowExceptionWhenTextWraps()
         {
-            Assert.DoesNotThrow(() => InsertText("234567 1234", buffer, view));
+            Assert.DoesNotThrow(() => InsertText("2345 1234", buffer, view));
         }
 
         [Test]
         public void TestInsertLineThatNeedsToBeWrapped()
         {
-            InsertText("Word wrap", buffer, view);
-            string expected = "> Word <6^0 w<0^1<7^0 wrap";
+            //        0123456701
+            //        0123450123
+            InsertText("War wrap", buffer, view);
+            string expected = "> War <5^0 w<6^0  wrap";
             Assert.AreEqual(expected, print.Output);
         }
 

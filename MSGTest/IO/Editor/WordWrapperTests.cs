@@ -24,15 +24,15 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestLineEqualToWindowWidthYieldsOneLine()
+        public void TestLineEqualToWindowWidthMinusMarginYieldsOneLine()
         {
-            wordWrapper = CreateWordWrapper("Word", 4);
+            wordWrapper = CreateWordWrapper("Word", 5);
             Assert.AreEqual(1, wordWrapper.Count);
             Assert.AreEqual(text, wordWrapper.GetLine(buffer.Text, 0));
         }
 
         [Test]
-        public void TestLineShorterThanWindowWidthYieldsOneLine()
+        public void TestLineShorterThanWindowWidthMinusMarginYieldsOneLine()
         {
             wordWrapper = CreateWordWrapper("Word", 10);
             Assert.AreEqual(1, wordWrapper.Count);
@@ -42,7 +42,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestLineFilledToEndIgnoresSpaceThatWouldPrefixNextLine()
         {
-            wordWrapper = CreateWordWrapper("Word soup", 4);
+            wordWrapper = CreateWordWrapper("Word soup", 5);
             Assert.AreEqual(3, wordWrapper.Count);
             Assert.AreEqual("Word", wordWrapper.GetLine(buffer.Text, 0));
             Assert.AreEqual(" ", wordWrapper.GetLine(buffer.Text, 1));
@@ -50,18 +50,18 @@ namespace MSGTest.IO.EditorTests
         }
 
         [Test]
-        public void TestLineWithWordLongerThanWindowWidthYieldsTwoLines()
+        public void TestLineWithWordLongerThanWindowWidthMinusMarginYieldsTwoLines()
         {
-            wordWrapper = CreateWordWrapper("Words", 4);
+            wordWrapper = CreateWordWrapper("Words", 5);
             Assert.AreEqual(2, wordWrapper.Count);
             Assert.AreEqual("Word", wordWrapper.GetLine(buffer.Text, 0));
             Assert.AreEqual("s", wordWrapper.GetLine(buffer.Text, 1));
         }
 
         [Test]
-        public void TestLineWithWordsLongerThanWindowWidthYieldsTwoLinesBrokenBetweenWords()
+        public void TestLineWithWordsLongerThanWindowWidthMinusMarginYieldsTwoLinesBrokenBetweenWords()
         {
-            wordWrapper = CreateWordWrapper("Word break", 6);
+            wordWrapper = CreateWordWrapper("Word break", 7);
             Assert.AreEqual(2, wordWrapper.Count);
             Assert.AreEqual("Word ", wordWrapper.GetLine(buffer.Text, 0));
             Assert.AreEqual("break", wordWrapper.GetLine(buffer.Text, 1));
@@ -70,7 +70,7 @@ namespace MSGTest.IO.EditorTests
         [Test]
         public void TestWhitespaceBeforeAndAfterSoftBreakIsRespected()
         {
-            wordWrapper = CreateWordWrapper("Word     break", 6);
+            wordWrapper = CreateWordWrapper("Word     break", 7);
             Assert.AreEqual(3, wordWrapper.Count);
             Assert.AreEqual("Word  ", wordWrapper.GetLine(buffer.Text, 0));
             Assert.AreEqual("   ", wordWrapper.GetLine(buffer.Text, 1));

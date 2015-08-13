@@ -77,13 +77,13 @@ namespace MSG.IO
             }
             else if (IsCursorLeft(keyInfo))
             {
-                buffer.RetreatPoint();
-                view.UpdateCursor(buffer.Point);
+                int point = view.CursorLeft(buffer.Point);
+                buffer.MovePoint(point);
             }
             else if (IsCursorRight(keyInfo))
             {
-                buffer.AdvancePoint();
-                view.UpdateCursor(buffer.Point);
+                int point = view.CursorRight(buffer.Point);
+                buffer.MovePoint(point);
             }
             else if (IsCursorUp(keyInfo))
             {
