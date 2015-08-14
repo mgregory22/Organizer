@@ -120,6 +120,16 @@ namespace MSG.IO
                 int point = view.CursorHome();
                 buffer.MovePoint(point);
             }
+            else if (IsWordLeft(keyInfo))
+            {
+                buffer.WordBack();
+                view.RedrawEditor(buffer.Text, buffer.Point);
+            }
+            else if (IsWordRight(keyInfo))
+            {
+                buffer.WordForward();
+                view.RedrawEditor(buffer.Text, buffer.Point);
+            }
             else
             {
                 // Ignore everything else

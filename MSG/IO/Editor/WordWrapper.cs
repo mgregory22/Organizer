@@ -208,33 +208,6 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Returns true if the cursor is on a LF or CR char.
-            /// </summary>
-            private bool IsIAtAHardLineReturnChar(char charAtI)
-            {
-                return charAtI == '\n' || charAtI == '\r';
-            }
-
-            /// <summary>
-            ///   Returns true if the cursor is just after a word
-            ///   (ie cursor is on a space just after a nonspace).
-            /// </summary>
-            private bool IsIJustAfterAWord(char charBeforeI, char charAtI)
-            {
-                return !char.IsWhiteSpace(charBeforeI) && char.IsWhiteSpace(charAtI);
-            }
-
-            /// <summary>
-            ///   Returns true if the cursor is on the beginning
-            ///   of a word (ie cursor is on a nonspace just after
-            ///   a space).
-            /// </summary>
-            private bool IsIOnWordBeginning(char charBeforeI, char charAtI)
-            {
-                return char.IsWhiteSpace(charBeforeI) && !char.IsWhiteSpace(charAtI);
-            }
-
-            /// <summary>
             ///   Returns true if the given line index refers to the last
             ///   wrapped line of input.
             /// </summary>
@@ -272,7 +245,6 @@ namespace MSG.IO
             {
                 // Shortcuts
                 int textLen = text.Length;
-                char charBeforeI = '\n';
                 // Set dewrap flag at the end of this method if the user deleted 
                 // enough characters to reduce the number of lines (ie the lost 
                 // line needs to be erased).
@@ -283,27 +255,25 @@ namespace MSG.IO
                 int lineStart = 0;
                 // Save the cursor position of last scanned word break
                 int lastWordBreak = 0;
-                // Scan through all cursor positions
-                for (int i = 0; i < textLen; i++)
+                // Scan through all points
+                for (int point = 0; point < textLen; point++)
                 {
-                    // Shortcut
-                    char charAtI = text[i];
                     // Save the latest line break candidate
-                    if (IsIOnWordBeginning(charBeforeI, charAtI))
+                    if (Scan.IsPointOnWordBeginning(text, point))
                     {
-                        lastWordBreak = i;
+                        lastWordBreak = point;
                     }
                     // Length of line so far in the scan
-                    int lineLen = i - lineStart;
+                    int lineLen = point - lineStart;
                     // Break the line unconditionally at a line break char
-                    if (IsIAtAHardLineReturnChar(charAtI))
+                    if (Scan.IsPointAtAHardLineReturn(text, point))
                     {
                         // Advance cursor past line return
-                        i = Scan.SkipHardReturn(text, i);
+                        point = Scan.SkipHardReturn(text, point);
                         // Break line for hard return
-                        AddLineBreak(i);
+                        AddLineBreak(point);
                         // Next start of line
-                        lineStart = i;
+                        lineStart = point;
                         // Save word break position
                         lastWordBreak = lineStart;
                     }
@@ -311,7 +281,7 @@ namespace MSG.IO
                     else if (IsWindowLineCompletelyFilled(lineLen, lineBreaks.Count, rightMargin))
                     {
                         // If a word just ended, break right here before the space
-                        if (IsIJustAfterAWord(charBeforeI, charAtI))
+                        if (Scan.IsPointJustAfterAWord(text, point))
                         {
                             ; // All set
                         }
@@ -319,18 +289,17 @@ namespace MSG.IO
                         else if (lastWordBreak > lineStart)
                         {
                             // Back up cursor to last word break
-                            i = lastWordBreak;
+                            point = lastWordBreak;
                             // Set eol at word break
-                            lineLen = i - lineStart;
+                            lineLen = point - lineStart;
                         }
                         // Add the line indexes
-                        AddLineBreak(i);
+                        AddLineBreak(point);
                         // Next bol
-                        lineStart = i;
+                        lineStart = point;
                         // Save word break position
                         lastWordBreak = lineStart;
                     }
-                    charBeforeI = charAtI;
                     // End of scanning loop
                 }
                 // Add a break for the end of the text

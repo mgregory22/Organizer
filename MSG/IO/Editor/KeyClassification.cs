@@ -22,7 +22,7 @@ namespace MSG.IO
         /// <summary>
         ///   Returns true if the keypress was modified by alt or ctrl.
         /// </summary>
-        public static bool IsAltOrCtrlModified(ConsoleKeyInfo keyInfo)
+        public static bool IsAltedOrCtrled(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Alt)
                     || keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
@@ -37,11 +37,19 @@ namespace MSG.IO
         }
 
         /// <summary>
+        ///   Returns true if the keypress was modified by ctrl.
+        /// </summary>
+        public static bool IsCtrled(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
+        }
+
+        /// <summary>
         ///   Returns true if the keypress moves the cursor one line down.
         /// </summary>
         public static bool IsCursorDown(ConsoleKeyInfo keyInfo)
         {
-            return keyInfo.Key == ConsoleKey.DownArrow;
+            return keyInfo.Key == ConsoleKey.DownArrow && !AnyModifiers(keyInfo);
         }
 
         /// <summary>
@@ -49,7 +57,7 @@ namespace MSG.IO
         /// </summary>
         public static bool IsCursorLeft(ConsoleKeyInfo keyInfo)
         {
-            return keyInfo.Key == ConsoleKey.LeftArrow;
+            return keyInfo.Key == ConsoleKey.LeftArrow && !AnyModifiers(keyInfo);
         }
 
         /// <summary>
@@ -57,7 +65,7 @@ namespace MSG.IO
         /// </summary>
         public static bool IsCursorRight(ConsoleKeyInfo keyInfo)
         {
-            return keyInfo.Key == ConsoleKey.RightArrow;
+            return keyInfo.Key == ConsoleKey.RightArrow && !AnyModifiers(keyInfo);
         }
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace MSG.IO
         /// </summary>
         public static bool IsCursorUp(ConsoleKeyInfo keyInfo)
         {
-            return keyInfo.Key == ConsoleKey.UpArrow;
+            return keyInfo.Key == ConsoleKey.UpArrow && !AnyModifiers(keyInfo);
         }
 
         /// <summary>
@@ -182,7 +190,7 @@ namespace MSG.IO
                 case ConsoleKey.NumPad0:
                 case ConsoleKey.Decimal:
                     // Shift is ok, but ctrl and alt keys are non-printable
-                    return !IsAltOrCtrlModified(keyInfo);
+                    return !IsAltedOrCtrled(keyInfo);
             }
             return false;
         }
@@ -199,6 +207,22 @@ namespace MSG.IO
         public static bool IsShifted(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Shift);
+        }
+
+        /// <summary>
+        ///   Returns true if the keypress moves the cursor one word left.
+        /// </summary>
+        public static bool IsWordLeft(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.LeftArrow && IsCtrled(keyInfo);
+        }
+
+        /// <summary>
+        ///   Returns true if the keypress moves the cursor one word right.
+        /// </summary>
+        public static bool IsWordRight(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.RightArrow && IsCtrled(keyInfo);
         }
     }
 }

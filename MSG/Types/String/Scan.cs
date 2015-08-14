@@ -12,54 +12,81 @@ namespace MSG.Types.String
     public class Scan
     {
         /// <summary>
-        ///   Given that text[i] is on a newline character, returns
-        ///   the index of the next character that is not that newline.
-        ///   If text[i] is not on a newline, it returns i.
+        ///   Returns true if the point is on a LF or CR char.
         /// </summary>
-        public static int SkipHardReturn(string text, int i)
+        public static bool IsPointAtAHardLineReturn(string text, int point)
+        {
+            return text[point] == '\n' || text[point] == '\r';
+        }
+
+        /// <summary>
+        ///   Returns true if the point is just after a word
+        ///   (ie point is on a space just after a nonspace).
+        /// </summary>
+        public static bool IsPointJustAfterAWord(string text, int point)
+        {
+            if (point == 0) return true;
+            return !char.IsWhiteSpace(text[point - 1]) && char.IsWhiteSpace(text[point]);
+        }
+
+        /// <summary>
+        ///   Returns true if the point is on the beginning
+        ///   of a word (ie point is on a nonspace just after
+        ///   a space).
+        /// </summary>
+        public static bool IsPointOnWordBeginning(string text, int point)
+        {
+            if (point == 0) return true;
+            return char.IsWhiteSpace(text[point - 1]) && !char.IsWhiteSpace(text[point]);
+        }
+
+        /// <summary>
+        ///   Given that the point is on a newline character, returns
+        ///   the index of the next character that is not that newline.
+        ///   If the point is not on a newline, it returns the same point.
+        /// </summary>
+        public static int SkipHardReturn(string text, int point)
         {
             // Skip only a single newline.
             // Works whether the newline is \n, \r, \r\n, or \n\r
             bool newlineSkipped = false;
-            if (i == text.Length)
-                return i;
-            if (text[i] == '\n')
+            if (point == text.Length) return point;
+            if (text[point] == '\n')
             {
-                i++;
-                if (i == text.Length)
-                    return i;
+                point++;
+                if (point == text.Length)
+                    return point;
                 newlineSkipped = true;
             }
-            if (text[i] == '\r')
+            if (text[point] == '\r')
             {
-                i++;
-                if (i == text.Length)
-                    return i;
+                point++;
+                if (point == text.Length)
+                    return point;
             }
-            if (!newlineSkipped && text[i] == '\n')
+            if (!newlineSkipped && text[point] == '\n')
             {
-                i++;
-                if (i == text.Length)
-                    return i;
+                point++;
+                if (point == text.Length)
+                    return point;
             }
-            return i;
+            return point;
         }
 
         /// <summary>
-        ///   Given that text[i] is on a whitespace character, returns
+        ///   Given that the point is on a whitespace character, returns
         ///   the index of the next character that is not whitespace.
         /// </summary>
-        public static int SkipWhiteSpace(string text, int i)
+        public static int SkipWhiteSpace(string text, int point)
         {
-            if (i == text.Length)
-                return i;
-            while (char.IsWhiteSpace(text[i]))
+            if (point == text.Length) return point;
+            while (char.IsWhiteSpace(text[point]))
             {
-                i++;
-                if (i == text.Length)
-                    return i;
+                point++;
+                if (point == text.Length)
+                    return point;
             }
-            return i;
+            return point;
         }
 
     }

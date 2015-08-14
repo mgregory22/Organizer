@@ -1,4 +1,5 @@
 ﻿using MSG.IO;
+using MSG.Types.String;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,9 +55,9 @@ namespace MSG.IO
             /// </summary>
             public void AdvancePoint()
             {
-                if (Point < Text.Length)
+                if (point < text.Length)
                 {
-                    Point++;
+                    point++;
                 }
             }
 
@@ -65,8 +66,8 @@ namespace MSG.IO
             /// </summary>
             public void Clear()
             {
-                Text = "";
-                Point = 0;
+                text = "";
+                point = 0;
             }
 
             /// <summary>
@@ -74,15 +75,15 @@ namespace MSG.IO
             /// </summary>
             public void Delete()
             {
-                if (Point < Text.Length)
+                if (point < text.Length)
                 {
-                    Text = Text.Remove(Point, 1);
+                    text = text.Remove(point, 1);
                 }
             }
 
-            public char GetChar(int p)
+            public char GetChar(int point)
             {
-                return Text[p];
+                return text[point];
             }
 
             /// <summary>
@@ -93,7 +94,7 @@ namespace MSG.IO
             /// </param>
             public void Insert(char c)
             {
-                Text = Text.Insert(Point++, c.ToString());
+                text = text.Insert(point++, c.ToString());
             }
 
             /// <summary>
@@ -101,7 +102,7 @@ namespace MSG.IO
             /// </summary>
             public bool IsEmpty()
             {
-                return Text.Length == 0;
+                return text.Length == 0;
             }
 
             /// <summary>
@@ -134,9 +135,9 @@ namespace MSG.IO
             /// </summary>
             public void RetreatPoint()
             {
-                if (Point > 0)
+                if (point > 0)
                 {
-                    Point--;
+                    point--;
                 }
             }
 
@@ -154,7 +155,31 @@ namespace MSG.IO
             /// </summary>
             public override string ToString()
             {
-                return Text;
+                return text;
+            }
+
+            /// <summary>
+            ///   Moves the cursor back one word.
+            /// </summary>
+            public void WordBack()
+            {
+                while (point > 0)
+                {
+                    point--;
+                    if (Scan.IsPointOnWordBeginning(text, point)) break;
+                }
+            }
+
+            /// <summary>
+            ///   Moves the cursor forward one word.
+            /// </summary>
+            public void WordForward()
+            {
+                while (point < text.Length - 1)
+                {
+                    point++;
+                    if (Scan.IsPointOnWordBeginning(text, point)) break;
+                }
             }
         }
     }
