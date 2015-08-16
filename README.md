@@ -1,6 +1,6 @@
 # Priorities
 
-Primarily an experiment in TDD (or quasi-TDD as the case may be) and C#.
+Primarily an exploraton in C#, program design and TDD.
 
 This is going to be a command-line hierarchical task list and priority organizer.
 

@@ -3,18 +3,19 @@ using MSG.Types.String;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
+using Buffer = MSG.IO.Editor.Buffer;
 
 namespace MSGTest.IO
 {
     [TestFixture]
     public class NewBufferTests
     {
-        Editor.Buffer buffer; // creation buffer
+        Buffer buffer; // creation buffer
 
         [SetUp]
         public void SetUp()
         {
-            buffer = new Editor.Buffer();
+            buffer = new Buffer();
         }
 
         [Test]
@@ -90,12 +91,12 @@ namespace MSGTest.IO
     [TestFixture]
     public class OldBufferTests
     {
-        Editor.Buffer buffer; // editing buffer
+        Buffer buffer; // editing buffer
 
         [SetUp]
         public void SetUp()
         {
-            buffer = new Editor.Buffer("abcd", 4); // editing "abcd", cursor position 4
+            buffer = new Buffer("abcd", 4); // editing "abcd", cursor position 4
         }
 
         [Test]

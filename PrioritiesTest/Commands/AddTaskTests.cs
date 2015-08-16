@@ -22,7 +22,7 @@ namespace PrioritiesTest.Commands
             tasks = new TestTasks();
             addTask = new AddTask(print, read, tasks);
             // The AddTask command prompts the user for the name of the task to add
-            read.NextString = newTask;
+            read.SetNextString(newTask);
             addTask.Do();
             // Set up the task.TaskExists() method to claim that the task has been added
             tasks.taskExists_nextReturn = true;

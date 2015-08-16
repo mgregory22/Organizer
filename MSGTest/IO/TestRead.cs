@@ -473,16 +473,49 @@ namespace MSGTest.IO
             return key;
         }
 
-        public char NextKey
+        public char GetNextKey()
         {
-            get { return nextChar.GetValueOrDefault(); }
-            set { nextChar = value; }
+            return nextChar.GetValueOrDefault();
         }
 
-        public char[] NextKeys
+        public void SetNextKey(char value)
         {
-            get { return nextChars.ToArray(); }
-            set { nextChars = new List<char>(value); }
+            nextChar = value;
+        }
+
+        public char[] GetNextKeys()
+        {
+            return nextChars.ToArray();
+        }
+
+        public void SetNextKeys(char[] value)
+        {
+            nextChars = new List<char>(value);
+        }
+
+        public void SetNextKeys(string value)
+        {
+            nextChars = new List<char>(value);
+        }
+
+        public string GetNextString()
+        {
+            return nextString;
+        }
+
+        public void SetNextString(string value)
+        {
+            nextString = value;
+        }
+
+        public string[] GetNextStrings()
+        {
+            return nextStrings.ToArray();
+        }
+
+        public void SetNextStrings(string[] value)
+        {
+            nextStrings = new List<string>(value);
         }
 
         public override string String()
@@ -500,18 +533,6 @@ namespace MSGTest.IO
                 return s;
             }
             return "";
-        }
-
-        public string NextString
-        {
-            get { return nextString; }
-            set { nextString = value; }
-        }
-
-        public string[] NextStrings
-        {
-            get { return nextStrings.ToArray(); }
-            set { nextStrings = new List<string>(value); }
         }
 
         public TestRead(Print print)

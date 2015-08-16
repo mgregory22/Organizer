@@ -4,14 +4,16 @@ using NUnit.Framework;
 using System;
 using System.Diagnostics;
 using System.Text;
+using Buffer = MSG.IO.Editor.Buffer;
+using View = MSG.IO.Editor.View;
 
-namespace MSGTest.IO.EditorTests
+namespace MSGTest.IO.Editor
 {
     [TestFixture]
     public class ViewTests
     {
-        Editor.Buffer buffer;
-        Editor.View view;
+        Buffer buffer;
+        View view;
         TestPrint print;
         string prompt;
 
@@ -22,19 +24,19 @@ namespace MSGTest.IO.EditorTests
                 Debug.WriteLine(s.Substring(i, Math.Min(chunkLen, s.Length - i)));
         }
 
-        private void CursorLeft(int count, Editor.Buffer buffer, Editor.View view)
+        private void CursorLeft(int count, Buffer buffer, View view)
         {
             int point = view.CursorLeft(buffer.Point, count);
             buffer.MovePoint(point);
         }
 
-        private void CursorRight(int count, Editor.Buffer buffer, Editor.View view)
+        private void CursorRight(int count, Buffer buffer, View view)
         {
             int point = view.CursorRight(buffer.Point, count);
             buffer.MovePoint(point);
         }
 
-        private void InsertText(string text, Editor.Buffer buffer, Editor.View view)
+        private void InsertText(string text, Buffer buffer, View view)
         {
             foreach (char c in text)
             {
@@ -74,13 +76,13 @@ namespace MSGTest.IO.EditorTests
         [SetUp]
         public void SetUp()
         {
-            buffer = new Editor.Buffer();
+            buffer = new Buffer();
             print = new TestPrint();
             print.BufferWidth = 8;
             // Emulate a prompt that was printed before the editor was created.
             prompt = "> ";
             print.String(prompt);
-            view = new Editor.View(buffer, print);
+            view = new View(buffer, print);
         }
 
         [Test]

@@ -11,6 +11,19 @@ namespace MSG.IO
     /// </summary>
     public partial class Editor
     {
+        Buffer buffer;
+        Print print;
+        Read read;
+        View view;
+
+        public Editor(Print print, Read read)
+        {
+            this.print = print;
+            this.read = read;
+            this.buffer = new Buffer();
+            this.view = new View(buffer, print);
+        }
+
         /// <summary>
         ///   Gets one or more lines of input from the user.
         /// </summary>
@@ -20,10 +33,8 @@ namespace MSG.IO
         /// <param name="read">
         ///   Object used for raw reading
         /// </param>
-        public static string GetInput(Print print, Read read)
+        public string GetInput()
         {
-            Buffer buffer = new Buffer();
-            View view = new View(buffer, print);
             bool done = false;
 
             while (!done)
@@ -49,7 +60,7 @@ namespace MSG.IO
         /// <returns>
         ///   True if the user quit
         /// </returns>
-        public static bool ProcessKey(ConsoleKeyInfo keyInfo, Buffer buffer, View view)
+        public virtual bool ProcessKey(ConsoleKeyInfo keyInfo, Buffer buffer, View view)
         {
             bool done = false;
 

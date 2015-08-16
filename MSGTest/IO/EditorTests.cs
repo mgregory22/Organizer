@@ -6,12 +6,10 @@ using System.Diagnostics;
 
 namespace MSGTest.IO
 {
-    // I thought I'd try doing setup stuff exclusively in SetUp() methods
-    // (which leads to more test classes) and see how that goes.
-
     [TestFixture]
-    public class InsertOneCharTests
+    public class EditorTests
     {
+        MSG.IO.Editor editor;
         TestPrint print;
         TestRead read;
         string input;
@@ -22,75 +20,48 @@ namespace MSGTest.IO
             print = new TestPrint();
             print.BufferWidth = 10;
             read = new TestRead(null);
-            read.NextKeys = new char[] { 'a', '\r' };
-            input = Editor.GetInput(print, read);
+            editor = new MSG.IO.Editor(print, read);
         }
 
         [Test]
         public void TestCharWasInsertedIntoBuffer()
         {
+            read.SetNextKeys("a\r");
+            input = editor.GetInput();
             Assert.AreEqual("a", input);
         }
 
         [Test]
         public void TestCharWasEchoedOnScreen()
         {
+            read.SetNextKeys("a\r");
+            input = editor.GetInput();
             Assert.AreEqual("a<0^0\n"
                        , print.Output);
-        }
-    }
-
-    [TestFixture]
-    public class InsertWordTests
-    {
-        TestPrint print;
-        TestRead read;
-        string input;
-
-        [SetUp]
-        public void SetUp()
-        {
-            print = new TestPrint();
-            print.BufferWidth = 10;
-            read = new TestRead(null);
-            read.NextKeys = new char[] { 'W', 'o', 'r', 'd', '\r' };
-            input = Editor.GetInput(print, read);
         }
 
         [Test]
         public void TestCharsWereInsertedIntoBuffer()
         {
+            read.SetNextKeys("Word\r");
+            input = editor.GetInput();
             Assert.AreEqual("Word", input);
         }
 
         [Test]
         public void TestCharsWereEchoedOnScreen()
         {
+            read.SetNextKeys("Word\r");
+            input = editor.GetInput();
             string expected = "Word<0^0\n";
             Assert.AreEqual(expected, print.Output);
-        }
-    }
-
-    [TestFixture]
-    public class InsertWordAndBackspaceTests
-    {
-        TestPrint print;
-        TestRead read;
-        string input;
-
-        [SetUp]
-        public void SetUp()
-        {
-            print = new TestPrint();
-            print.BufferWidth = 10;
-            read = new TestRead(null);
-            read.NextKeys = new char[] { 'W', 'o', 'r', 'd', '\b', '\r' };
-            input = Editor.GetInput(print, read);
         }
 
         [Test]
         public void TestBackspace()
         {
+            read.SetNextKeys("Word\b\r");
+            input = editor.GetInput();
             string expected = "Word<3^0 <3^0<0^0\n";
             Assert.AreEqual(expected, print.Output);
         }

@@ -26,7 +26,7 @@ namespace MSGTest.Console
         [Test]
         public void TestGetsString()
         {
-            read.NextString = testString;
+            read.SetNextString(testString);
             string gotString = testPrompt.DoPrompt();
             Assert.AreEqual(testString, gotString);
         }

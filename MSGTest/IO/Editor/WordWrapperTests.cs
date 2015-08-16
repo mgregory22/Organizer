@@ -4,23 +4,25 @@ using MSG.Types.String;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
+using Buffer = MSG.IO.Editor.Buffer;
+using WordWrapper = MSG.IO.Editor.WordWrapper;
 
-namespace MSGTest.IO.EditorTests
+namespace MSGTest.IO.Editor
 {
     [TestFixture]
     public class WordWrapperTests
     {
-        Editor.Buffer buffer;
+        Buffer buffer;
         EndlessArray<int> lineWidths;
         string text;
-        Editor.WordWrapper wordWrapper;
+        WordWrapper wordWrapper;
 
-        private Editor.WordWrapper CreateWordWrapper(string text, params int[] lineWidths)
+        private WordWrapper CreateWordWrapper(string text, params int[] lineWidths)
         {
             this.text = text;
             this.lineWidths = new EndlessArray<int>(lineWidths);
-            this.buffer = new Editor.Buffer(text, text.Length);
-            return new Editor.WordWrapper(text, this.lineWidths);
+            this.buffer = new Buffer(text, text.Length);
+            return new WordWrapper(text, this.lineWidths);
         }
 
         [Test]

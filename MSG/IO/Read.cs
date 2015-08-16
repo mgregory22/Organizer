@@ -63,7 +63,8 @@ namespace MSG.IO
             // disable automatic printing in this read object.
             Print tempPrint = print;
             print = null;
-            string input = Editor.GetInput(tempPrint, this);
+            Editor editor = new Editor(tempPrint, this);
+            string input = editor.GetInput();
             print = tempPrint;
             return input;
         }

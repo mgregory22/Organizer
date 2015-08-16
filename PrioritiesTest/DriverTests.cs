@@ -24,7 +24,7 @@ namespace PrioritiesTest
         [Test]
         public void TestHelpDisplays()
         {
-            read.NextKeys = new[] { '?', 'q' };
+            read.SetNextKeys(new[] { '?', 'q' });
             driver.Run();
             Assert.AreEqual(
                 string.Format("{0}\n"
