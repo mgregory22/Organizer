@@ -30,7 +30,7 @@ namespace MSG.IO
         /// </param>
         virtual public void Char(char c)
         {
-            System.Console.Write(c);
+            if (c != '\0') System.Console.Write(c);
         }
 
         /// <summary>

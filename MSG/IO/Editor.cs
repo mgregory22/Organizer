@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSG.Console;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,10 +37,10 @@ namespace MSG.IO
         public string GetInput()
         {
             bool done = false;
-
+            ConsoleKeyInfo keyInfo;
             while (!done)
             {
-                ConsoleKeyInfo keyInfo = read.Key();
+                keyInfo = read.GetNextKey();
                 done = ProcessKey(keyInfo, buffer, view);
             }
             return buffer.ToString();
@@ -140,6 +141,10 @@ namespace MSG.IO
             {
                 buffer.WordForward();
                 view.RedrawEditor(buffer.Text, buffer.Point);
+            }
+            else if (IsPause(keyInfo))
+            {
+                done = true;
             }
             else
             {

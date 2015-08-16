@@ -1,4 +1,5 @@
-﻿using MSG.Types.Array;
+﻿using MSG.Console;
+using MSG.Types.Array;
 using MSG.Types.String;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,9 @@ namespace MSG.IO
             ///   modified within this class or the WordWrapper class.
             /// </param>
             /// <param name="print">
-            ///   All output is done through the print object
+            ///   All output is done through the print object.
+            ///   The prompt should be displayed before a View is
+            ///   constructed.
             /// </param>
             public View(Buffer buffer, Print print)
             {
@@ -96,6 +99,7 @@ namespace MSG.IO
                     this.consoleWidth - LineLeft(0, this.startCursorPos.left),
                     this.consoleWidth - LineLeft(1, this.startCursorPos.left)
                 );
+
                 this.wordWrapper = new WordWrapper(buffer.Text, lineWidths);
             }
 
@@ -284,7 +288,6 @@ namespace MSG.IO
                     , WordWrapper.BolPositionPreference.AfterBol
                     , UpdatePreferredCursorColumn.Update
                 );
-                preferredCursorColumn = cursorPos.left;
                 return point;
             }
 
@@ -329,7 +332,6 @@ namespace MSG.IO
                     , WordWrapper.BolPositionPreference.AfterBol
                     , UpdatePreferredCursorColumn.Update
                 );
-                preferredCursorColumn = cursorPos.left;
                 return point;
             }
 

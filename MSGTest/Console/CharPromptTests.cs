@@ -27,8 +27,8 @@ namespace MSGTest.Console
         public void TestCharPromptValidatesValidChar()
         {
             char validKey = 'a';
-            read.SetNextKey(validKey);
-            char gotKey = prompt.DoPrompt();
+            read.PushChar(validKey);
+            char gotKey = prompt.Loop();
             Assert.AreEqual(promptMsg + "\n", print.Output);
             Assert.AreEqual(validKey, gotKey);
             print.ClearOutput();
@@ -40,9 +40,10 @@ namespace MSGTest.Console
             char invalidKey = 'X';
             char validKey = 'a';
             // A valid key needs to be sent to terminate the prompt loop
-            read.SetNextKeys(new char[] { invalidKey, validKey });
-            char gotKey = prompt.DoPrompt();
-            Assert.AreEqual("> \nInvalid selection. Try again.\n> \n", print.Output);
+            read.PushChar(invalidKey);
+            read.PushChar(validKey);
+            char gotKey = prompt.Loop();
+            Assert.AreEqual("> \n" + CharPrompt.helpMsg + "\n> \n", print.Output);
             // Might as well test this again
             Assert.AreEqual(validKey, gotKey);
         }

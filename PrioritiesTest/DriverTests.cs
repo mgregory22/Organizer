@@ -9,23 +9,22 @@ namespace PrioritiesTest
     [TestFixture]
     public class DriverTests
     {
-        Driver driver;
         TestPrint print;
         TestRead read;
+        string promptMsg = "! ";
 
         [SetUp]
         public void SetUp()
         {
             print = new TestPrint();
             read = new TestRead(print);
-            driver = new Driver(print, read);
         }
 
         [Test]
         public void TestHelpDisplays()
         {
-            read.SetNextKeys(new[] { '?', 'q' });
-            driver.Run();
+            read.PushString("?q");
+            Driver.Run(print, "! ", read);
             Assert.AreEqual(
                 string.Format("{0}\n"
                         + "Main Menu\n---------\n"
@@ -38,7 +37,7 @@ namespace PrioritiesTest
                         + "[r] Rename Task\n"
                         + "[?] Help\n\n"
                         + "{0}\n\n"
-                    , Driver.promptMsg)
+                    , promptMsg)
                 , print.Output
             );
         }

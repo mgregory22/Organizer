@@ -118,6 +118,14 @@ namespace MSG.IO
         }
 
         /// <summary>
+        ///   I need a way to break out of the input loop without quitting the editor
+        /// </summary>
+        public static bool IsPause(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.Pause;
+        }
+
+        /// <summary>
         ///   Returns true if the keypress(es) result in a printable character.
         /// </summary>
         public static bool IsPrintable(ConsoleKeyInfo keyInfo)

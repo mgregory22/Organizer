@@ -11,17 +11,7 @@ namespace Priorities
 {
     public class Driver
     {
-        public static string promptMsg = "! ";
-        Print print;
-        Read read;
-
-        public Driver(Print print, Read read)
-	    {
-            this.print = print;
-            this.read = read;
-	    }
-
-        public void Run()
+        public static void Run(Print print, string promptMsg, Read read)
         {
             Tasks tasks = new Tasks();
             // Help is weird because of the circular dependency on the menu.
@@ -36,7 +26,8 @@ namespace Priorities
                     new MenuItem('r', new RenameTask(print, read, tasks), "Rename Task"),
                     new MenuItem('?', help, "Help")
                 };
-            Menu mainMenu = new Menu("Main Menu", menuItems, promptMsg, print, read);
+            CharPrompt prompt = new CharPrompt(print, promptMsg, read);
+            Menu mainMenu = new Menu("Main Menu", menuItems, prompt);
             help.SetTarget(mainMenu);
             mainMenu.Loop();
         }

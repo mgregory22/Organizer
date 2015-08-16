@@ -1,4 +1,5 @@
-﻿using MSG.IO;
+﻿using MSG.Console;
+using MSG.IO;
 using System;
 using System.Collections.Generic;
 
@@ -6,26 +7,12 @@ namespace MSGTest.IO
 {
     public class TestRead : Read
     {
-        char? nextChar;
-        List<char> nextChars;
-        string nextString;
-        List<string> nextStrings;
+        Queue<ConsoleKeyInfo> keyQueue;
 
-        public override char Char()
+        public TestRead(Print print)
+            : base(print)
         {
-            if (nextChar != null)
-            {
-                char c = nextChar.GetValueOrDefault();
-                nextChar = null;
-                return c;
-            }
-            else if (nextChars != null && nextChars.Count > 0)
-            {
-                char c = nextChars[0];
-                nextChars.RemoveAt(0);
-                return c;
-            }
-            return ' ';
+            keyQueue = new Queue<ConsoleKeyInfo>();
         }
 
         public ConsoleKeyInfo CharToConsoleKeyInfo(char c)
@@ -461,83 +448,99 @@ namespace MSGTest.IO
                 case ' ':
                     consoleKey = ConsoleKey.Spacebar;
                     break;
+                case '\0':
+                    consoleKey = ConsoleKey.Pause;
+                    break;
             }
             return new ConsoleKeyInfo(c, consoleKey, shift, alt, ctrl);
         }
 
-        public override ConsoleKeyInfo Key()
+        private ConsoleKeyInfo ConsoleKeyToConsoleKeyInfo(ConsoleKey key)
         {
-            char c = Char();
-            ConsoleKeyInfo key = CharToConsoleKeyInfo(c);
-            if (print != null) print.Char(key.KeyChar);
-            return key;
+            return new ConsoleKeyInfo('\0', key, false, false, false);
         }
 
-        public char GetNextKey()
+        public override char GetNextChar()
         {
-            return nextChar.GetValueOrDefault();
+            if (keyQueue.Count == 0) return '\0';
+            return keyQueue.Dequeue().KeyChar;
         }
 
-        public void SetNextKey(char value)
+        public override ConsoleKeyInfo GetNextKey()
         {
-            nextChar = value;
+            // Sending a pause key exits the input loop
+            if (keyQueue.Count == 0)
+                return new ConsoleKeyInfo('\0', ConsoleKey.Pause, false, false, false);
+            ConsoleKeyInfo keyInfo = keyQueue.Dequeue();
+            if (print != null) print.Char(keyInfo.KeyChar);
+            return keyInfo;
         }
 
-        public char[] GetNextKeys()
+        public override string GetNextString()
         {
-            return nextChars.ToArray();
-        }
-
-        public void SetNextKeys(char[] value)
-        {
-            nextChars = new List<char>(value);
-        }
-
-        public void SetNextKeys(string value)
-        {
-            nextChars = new List<char>(value);
-        }
-
-        public string GetNextString()
-        {
-            return nextString;
-        }
-
-        public void SetNextString(string value)
-        {
-            nextString = value;
-        }
-
-        public string[] GetNextStrings()
-        {
-            return nextStrings.ToArray();
-        }
-
-        public void SetNextStrings(string[] value)
-        {
-            nextStrings = new List<string>(value);
-        }
-
-        public override string String()
-        {
-            if (nextString != null)
+            string s = "";
+            while (keyQueue.Count > 0)
             {
-                string s = nextString;
-                nextString = null;
-                return s;
+                s += keyQueue.Dequeue().KeyChar;
             }
-            else if (nextStrings != null && nextStrings.Count > 0)
-            {
-                string s = nextStrings[0];
-                nextStrings.RemoveAt(0);
-                return s;
-            }
-            return "";
+            return s;
         }
 
-        public TestRead(Print print)
-            : base(print)
+        public void PushChar(char c)
         {
+            keyQueue.Enqueue(CharToConsoleKeyInfo(c));
+        }
+
+        public void PushDownArrow(int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.DownArrow));
+        }
+
+        public void PushEnd()
+        {
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.End));
+        }
+
+        public void PushEnter()
+        {
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Enter));
+        }
+
+        public void PushHome()
+        {
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Home));
+        }
+
+        public void PushLeftArrow(int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.LeftArrow));
+        }
+
+        public void PushRightArrow(int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.RightArrow));
+        }
+
+        public void PushUpArrow(int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.UpArrow));
+        }
+
+        public void PushKey(ConsoleKeyInfo keyInfo)
+        {
+            keyQueue.Enqueue(keyInfo);
+        }
+
+        public void PushString(string s)
+        {
+            foreach (char c in s)
+            {
+                keyQueue.Enqueue(CharToConsoleKeyInfo(c));
+            }
         }
     }
 }

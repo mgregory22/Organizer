@@ -21,6 +21,21 @@ namespace MSG.Console
         private string title;
 
         /// <summary>
+        ///   Initializes a new menu with the given array of menu items.  The items
+        ///   are displayed in the order given in the array.
+        /// </summary>
+        /// <param name="menuItems"></param>
+        public Menu(string title, MenuItem[] menuItems, CharPrompt prompt)
+        {
+            this.title = title;
+            this.menuItems = menuItems;
+            this.print = prompt.Print;
+            this.read = prompt.Read;
+            this.prompt = prompt;
+            this.prompt.ValidList = GetKeystrokeList();
+        }
+
+        /// <summary>
         ///   Find the menu item that matches the keystroke.
         /// </summary>
         /// <param name="keystroke"></param>
@@ -68,8 +83,8 @@ namespace MSG.Console
             {
                 // Seeing the menu every time is annoying
                 //print.String(this.ToString());
-                char k = prompt.DoPrompt();
-                MenuItem m = this.FindMatchingItem(k);
+                char c = prompt.Loop();
+                MenuItem m = this.FindMatchingItem(c);
                 try
                 {
                     m.Do(print, read);
@@ -97,21 +112,6 @@ namespace MSG.Console
                 }
                 print.Newline();
             }
-        }
-
-        /// <summary>
-        ///   Initializes a new menu with the given array of menu items.  The items
-        ///   are displayed in the order given in the array.
-        /// </summary>
-        /// <param name="menuItems"></param>
-        public Menu(string title, MenuItem[] menuItems, string promptMsg, Print print, Read read)
-        {
-            this.title = title;
-            this.menuItems = menuItems;
-            this.print = print;
-            this.read = read;
-            this.prompt = new CharPrompt(print, promptMsg, read);
-            this.prompt.ValidList = GetKeystrokeList();
         }
 
         /// <summary>

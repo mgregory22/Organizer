@@ -12,7 +12,7 @@ namespace PrioritiesTest.Commands
         TestPrint print;
         TestRead read;
         TestTasks tasks;
-        string newTask = "This is a task to be added";
+        string newTask = "This is a task to be added\r";
 
         [SetUp]
         public void Initialize()
@@ -22,7 +22,7 @@ namespace PrioritiesTest.Commands
             tasks = new TestTasks();
             addTask = new AddTask(print, read, tasks);
             // The AddTask command prompts the user for the name of the task to add
-            read.SetNextString(newTask);
+            read.PushString(newTask);
             addTask.Do();
             // Set up the task.TaskExists() method to claim that the task has been added
             tasks.taskExists_nextReturn = true;

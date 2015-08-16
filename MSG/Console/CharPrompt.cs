@@ -17,20 +17,17 @@ namespace MSG.Console
     public class CharPrompt : Prompt
     {
         private char[] validList;
+        public const string helpMsg = "Invalid selection. Try again. Press ? for help.";
 
         /// <summary>
-        ///   Displays the prompt and reads a character.
+        ///   Initialize a prompt with message, print and read objects.
         /// </summary>
-        /// <returns>The char entered by the user</returns>
-        public char DoPrompt()
+        /// <param name="print">Used to print the prompt</param>
+        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
+        /// <param name="read">Used to read the user input</param>
+        public CharPrompt(Print print, string promptMsg, Read read)
+            : base(print, promptMsg, read)
         {
-            char c;
-            do {
-                PrintPrompt();
-                c = Read.Char();
-                Print.Newline();
-            } while (CharIsInvalid(c));
-            return c;
         }
 
         /// <summary>
@@ -42,21 +39,26 @@ namespace MSG.Console
         {
             if (validList != null && !validList.Contains(c))
             {
-                Print.StringNL("Invalid selection. Try again.");
+                Print.StringNL(helpMsg);
                 return true;
             }
             return false;
         }
 
         /// <summary>
-        ///   Initialize a prompt with message, print and read objects.
+        ///   Displays the prompt and reads a character.
         /// </summary>
-        /// <param name="print">Used to print the prompt</param>
-        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
-        /// <param name="read">Used to read the user input</param>
-        public CharPrompt(Print print, string promptMsg, Read read)
-            : base(print, promptMsg, read)
+        /// <returns>The char entered by the user</returns>
+        public char Loop()
         {
+            char c;
+            do
+            {
+                PrintPrompt();
+                c = Read.GetNextChar();
+                Print.Newline();
+            } while (CharIsInvalid(c));
+            return c;
         }
 
         /// <summary>

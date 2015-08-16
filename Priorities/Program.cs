@@ -16,18 +16,8 @@ namespace Priorities
         {
             Print print = new Print();
             Read read = new Read(print);
-            Driver driver = new Driver(print, read);
-            driver.Run();
-            Pause();
-        }
-
-        /// <summary>
-        ///   Wait for key to keep the window open.
-        /// </summary>
-        public static void Pause()
-        {
-            Console.Write("Press a key");
-            Console.ReadKey(true);
+            Driver.Run(print, "! ", read);
+            Prompt.Pause();
         }
     }
 }

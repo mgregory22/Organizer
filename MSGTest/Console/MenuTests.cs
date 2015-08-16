@@ -41,7 +41,9 @@ namespace MSGTest.Console
                 new ToStringCountMenuItem('d', 4)
             };
             Print print = new Print();
-            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
+            Read read = new Read(print);
+            CharPrompt prompt = new CharPrompt(print, "", read);
+            menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]
         public void TestAllMenuItemsAreStored()
@@ -75,7 +77,9 @@ namespace MSGTest.Console
                 new ToStringCountMenuItem('d', 4)
             };
             Print print = new Print();
-            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
+            Read read = new Read(print);
+            CharPrompt prompt = new CharPrompt(print, "", read);
+            menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]
         public void TestMenuTitleDisplays()
@@ -122,7 +126,9 @@ namespace MSGTest.Console
                 new CommandCountMenuItem('3', new TestCommand(), "Item 3")
             };
             Print print = new Print();
-            menu = new Menu("Test Menu", menuItems, "", print, new Read(print));
+            Read read = new Read(print);
+            CharPrompt prompt = new CharPrompt(print, "", read);
+            menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()

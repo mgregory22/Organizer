@@ -26,8 +26,8 @@ namespace MSGTest.Console
         [Test]
         public void TestGetsString()
         {
-            read.SetNextString(testString);
-            string gotString = testPrompt.DoPrompt();
+            read.PushString(testString);
+            string gotString = testPrompt.Loop();
             Assert.AreEqual(testString, gotString);
         }
     }

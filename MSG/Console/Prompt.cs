@@ -14,6 +14,28 @@ namespace MSG.Console
         protected Read read;
 
         /// <summary>
+        ///   Initialize a prompt with message, print and read objects.
+        /// </summary>
+        /// <param name="print">Used to print the prompt</param>
+        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
+        /// <param name="read">Used to read the user input</param>
+        public Prompt(Print print, string promptMsg, Read read)
+        {
+            this.print = print;
+            this.promptMsg = promptMsg;
+            this.read = read;
+        }
+
+        /// <summary>
+        ///   Wait for key to keep the window open.
+        /// </summary>
+        public static void Pause()
+        {
+            System.Console.Write("Press a key");
+            System.Console.ReadKey(true);
+        }
+
+        /// <summary>
         ///   The object used to display information to the user.
         /// </summary>
         public Print Print
@@ -29,19 +51,6 @@ namespace MSG.Console
         {
             Print.String(promptMsg);
         }
-
-        /// <summary>
-        ///   Initialize a prompt with message, print and read objects.
-        /// </summary>
-        /// <param name="print">Used to print the prompt</param>
-        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
-        /// <param name="read">Used to read the user input</param>
-        public Prompt(Print print, string promptMsg, Read read)
-	    {
-            this.print = print;
-            this.promptMsg = promptMsg;
-            this.read = read;
-	    }
 
         /// <summary>
         ///   The text that prompts the user for input.

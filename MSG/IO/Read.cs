@@ -33,7 +33,7 @@ namespace MSG.IO
         ///   hitting enter).
         /// </summary>
         /// <returns>Key the user typed.</returns>
-        virtual public char Char()
+        virtual public char GetNextChar()
         {
             ConsoleKeyInfo key = System.Console.ReadKey(true);
             if (print != null) print.Char(key.KeyChar);
@@ -45,7 +45,7 @@ namespace MSG.IO
         ///   hitting enter).
         /// </summary>
         /// <returns>Key the user typed.</returns>
-        virtual public ConsoleKeyInfo Key()
+        virtual public ConsoleKeyInfo GetNextKey()
         {
             ConsoleKeyInfo key = System.Console.ReadKey(true);
             if (print != null) print.Char(key.KeyChar);
@@ -56,16 +56,13 @@ namespace MSG.IO
         ///   Reads a line of text from the console.
         /// </summary>
         /// <returns>String the user typed.</returns>
-        virtual public string String()
+        virtual public string GetNextString()
         {
             // The Editor object needs control of the printing, so let
             // the Editor own the print object during editing, and
             // disable automatic printing in this read object.
-            Print tempPrint = print;
-            print = null;
-            Editor editor = new Editor(tempPrint, this);
+            Editor editor = new Editor(print, this);
             string input = editor.GetInput();
-            print = tempPrint;
             return input;
         }
     }

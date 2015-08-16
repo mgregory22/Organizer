@@ -20,7 +20,7 @@ namespace Priorities.Commands
 
         public override void Do()
         {
-            taskName = prompt.DoPrompt();
+            taskName = prompt.Loop();
             if (taskName == "")
             {
                 print.StringNL("Add cancelled");

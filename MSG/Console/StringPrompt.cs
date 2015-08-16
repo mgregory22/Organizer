@@ -19,13 +19,13 @@ namespace MSG.Console
         ///   Displays the prompt and reads a string.
         /// </summary>
         /// <returns>The string entered by the user</returns>
-        public string DoPrompt()
+        public string Loop()
         {
             string s;
             do
             {
                 PrintPrompt();
-                s = Read.String();
+                s = Read.GetNextString();
             } while (StringIsInvalid(s));
             return s;
         }
