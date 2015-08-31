@@ -1,9 +1,13 @@
-﻿using MSG.IO;
+﻿//
+// MSGTest/IO/Editor/BufferTests.cs
+//
+
+using MSG.IO;
 using MSG.Types.String;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
-using Buffer = MSG.IO.Editor.Buffer;
+using Buffer = MSG.Console.Editor.Buffer;
 
 namespace MSGTest.IO
 {

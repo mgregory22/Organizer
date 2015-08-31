@@ -1,4 +1,7 @@
-﻿using MSG.IO;
+﻿//
+// Priorities/Commands/Quit.cs
+//
+
 using MSG.Patterns;
 using System;
 
@@ -12,7 +15,7 @@ namespace Priorities.Commands
         {
         }
 
-        public override void Do()
+        override public void Do()
         {
             throw new OperationCanceledException("User has quit");
         }

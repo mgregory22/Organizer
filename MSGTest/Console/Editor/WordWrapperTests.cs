@@ -1,11 +1,15 @@
-﻿using MSG.IO;
+﻿//
+// MSGTest/IO/Editor/WordWrapperTests.cs
+//
+
+using MSG.IO;
 using MSG.Types.Array;
 using MSG.Types.String;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
-using Buffer = MSG.IO.Editor.Buffer;
-using WordWrapper = MSG.IO.Editor.WordWrapper;
+using Buffer = MSG.Console.Editor.Buffer;
+using WordWrapper = MSG.Console.Editor.WordWrapper;
 
 namespace MSGTest.IO.Editor
 {

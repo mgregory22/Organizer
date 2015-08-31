@@ -1,8 +1,11 @@
-﻿using MSG.IO;
+﻿//
+// MSG/Console/Menu.cs
+//
+
+using MSG.IO;
 using MSG.Types.String;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MSG.Console
 {
@@ -83,7 +86,7 @@ namespace MSG.Console
             {
                 // Seeing the menu every time is annoying
                 //print.String(this.ToString());
-                char c = prompt.Loop();
+                char c = prompt.PromptAndInput();
                 MenuItem m = this.FindMatchingItem(c);
                 try
                 {
@@ -136,7 +139,7 @@ namespace MSG.Console
         ///   Returns a string of the entire menu.
         /// </summary>
         /// <returns>String representation of the menu</returns>
-        public override string ToString()
+        override public string ToString()
         {
             string s = Draw.UnderlinedText(title);
             foreach (MenuItem menuItem in menuItems)

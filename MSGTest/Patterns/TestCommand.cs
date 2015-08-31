@@ -1,5 +1,8 @@
-﻿using MSG.Patterns;
-using System;
+﻿//
+// MSGTest/Patterns/TestCommand.cs
+//
+
+using MSG.Patterns;
 
 namespace MSGTest.Patterns
 {
@@ -11,15 +14,15 @@ namespace MSGTest.Patterns
         public TestCommand()
         {
         }
-        public override void Do()
+        override public void Do()
         {
             doCount++;
         }
-        public override void Redo()
+        override public void Redo()
         {
             redoCount++;
         }
-        public override void Undo()
+        override public void Undo()
         {
             undoCount++;
         }

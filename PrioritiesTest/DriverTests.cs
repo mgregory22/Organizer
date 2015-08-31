@@ -1,8 +1,11 @@
-﻿using MSGTest.IO;
+﻿//
+// PrioritiesTest/DriverTests.cs
+//
+
+using MSG.Console;
+using MSGTest.IO;
 using NUnit.Framework;
 using Priorities;
-using Priorities.Commands;
-using System;
 
 namespace PrioritiesTest
 {
@@ -24,9 +27,10 @@ namespace PrioritiesTest
         public void TestHelpDisplays()
         {
             read.PushString("?q");
-            Driver.Run(print, "! ", read);
+            CharPrompt prompt = new CharPrompt(print, read, promptMsg);
+            Driver.Run(print, read, prompt);
             Assert.AreEqual(
-                string.Format("{0}\n"
+                string.Format("{0}?\n"
                         + "Main Menu\n---------\n"
                         + "[a] Add Task\n"
                         + "[d] Delete Task\n"
@@ -36,7 +40,7 @@ namespace PrioritiesTest
                         + "[q] Quit Program\n"
                         + "[r] Rename Task\n"
                         + "[?] Help\n\n"
-                        + "{0}\n\n"
+                        + "{0}q\n\n"
                     , promptMsg)
                 , print.Output
             );

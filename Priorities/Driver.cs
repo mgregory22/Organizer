@@ -1,17 +1,16 @@
-﻿using MSG.Console;
+﻿//
+// Priorities/Driver.cs
+//
+
+using MSG.Console;
 using MSG.IO;
 using Priorities.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Priorities
 {
     public class Driver
     {
-        public static void Run(Print print, string promptMsg, Read read)
+        public static void Run(Print print, Read read, CharPrompt prompt)
         {
             Tasks tasks = new Tasks();
             // Help is weird because of the circular dependency on the menu.
@@ -26,7 +25,6 @@ namespace Priorities
                     new MenuItem('r', new RenameTask(print, read, tasks), "Rename Task"),
                     new MenuItem('?', help, "Help")
                 };
-            CharPrompt prompt = new CharPrompt(print, promptMsg, read);
             Menu mainMenu = new Menu("Main Menu", menuItems, prompt);
             help.SetTarget(mainMenu);
             mainMenu.Loop();

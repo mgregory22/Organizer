@@ -1,4 +1,7 @@
-﻿using MSG.IO;
+﻿//
+// Priorities/Commands/TaskCommand.cs
+//
+
 using MSG.Patterns;
 using System;
 
@@ -13,17 +16,17 @@ namespace Priorities.Commands
             this.tasks = tasks;
         }
 
-        public override void Do()
+        override public void Do()
         {
             Console.WriteLine("Do Task Command");
         }
 
-        public override void Redo()
+        override public void Redo()
         {
             Console.WriteLine("Redo Task Command");
         }
 
-        public override void Undo()
+        override public void Undo()
         {
             Console.WriteLine("Undo Task Command");
         }

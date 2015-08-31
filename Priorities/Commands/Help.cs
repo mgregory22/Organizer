@@ -1,7 +1,9 @@
-﻿using MSG.Console;
+﻿//
+// Priorities/Commands/Help.cs
+//
+
 using MSG.IO;
 using MSG.Patterns;
-using System;
 
 namespace Priorities.Commands
 {
@@ -24,7 +26,7 @@ namespace Priorities.Commands
             this.target = target;
         }
 
-        public override void Do()
+        override public void Do()
         {
             print.String(target.ToString());
         }

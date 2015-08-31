@@ -1,9 +1,9 @@
-﻿using MSG.IO;
-using System;
-using System.Collections.Generic;
+﻿//
+// MSG/Console/CharPrompt.cs
+//
+
+using MSG.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSG.Console
 {
@@ -23,10 +23,10 @@ namespace MSG.Console
         ///   Initialize a prompt with message, print and read objects.
         /// </summary>
         /// <param name="print">Used to print the prompt</param>
-        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
         /// <param name="read">Used to read the user input</param>
-        public CharPrompt(Print print, string promptMsg, Read read)
-            : base(print, promptMsg, read)
+        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
+        public CharPrompt(Print print, Read read, string promptMsg)
+            : base(print, read, promptMsg)
         {
         }
 
@@ -46,10 +46,10 @@ namespace MSG.Console
         }
 
         /// <summary>
-        ///   Displays the prompt and reads a character.
+        ///   Displays the prompt and reads a valid character.
         /// </summary>
         /// <returns>The char entered by the user</returns>
-        public char Loop()
+        public char PromptAndInput()
         {
             char c;
             do

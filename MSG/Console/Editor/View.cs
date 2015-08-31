@@ -1,12 +1,15 @@
-﻿using MSG.Console;
+﻿//
+// MSG/Console/Editor/View.cs
+//
+
+using MSG.IO;
 using MSG.Types.Array;
 using MSG.Types.String;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
-namespace MSG.IO
+namespace MSG.Console
 {
     public partial class Editor
     {
@@ -66,7 +69,7 @@ namespace MSG.IO
             public readonly ConsolePos startCursorPos;
             /// <summary>
             ///   Calculates the positions of line breaks, cursor, etc.  This object
-            ///   acts as a mediator for the view's interactions with the model. 
+            ///   acts as a mediator for the view's interactions with the model.
             /// </summary>
             /// <remarks>
             ///   public for what reason?
@@ -414,7 +417,6 @@ namespace MSG.IO
                     {
                         if (newStr[i] != oldStr[i])
                         {
-                            
                             // Beginning of changed block: mark the start
                             changeStart = i;
                             inChangedBlock = true;

@@ -1,12 +1,11 @@
-﻿using MSG.IO;
+﻿//
+// MSG/Console/Editor/Buffer.cs
+//
+
 using MSG.Types.String;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MSG.IO
+namespace MSG.Console
 {
     public partial class Editor
     {
@@ -153,7 +152,7 @@ namespace MSG.IO
             /// <summary>
             ///   Returns the text being edited.
             /// </summary>
-            public override string ToString()
+            override public string ToString()
             {
                 return text;
             }

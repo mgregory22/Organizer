@@ -1,8 +1,10 @@
-﻿using MSG.IO;
+﻿//
+// MSGTest/Types/Array/EndlessArrayTests.cs
+//
+
 using MSG.Types.Array;
 using NUnit.Framework;
 using System;
-using System.Diagnostics;
 
 namespace MSGTest.Types.Array
 {

@@ -1,9 +1,8 @@
-﻿using MSG.Console;
+﻿//
+// MSG/IO/Read.cs
+//
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSG.IO
 {
@@ -32,11 +31,16 @@ namespace MSG.IO
         ///   Reads a character from the console (immediately, without the user
         ///   hitting enter).
         /// </summary>
-        /// <returns>Key the user typed.</returns>
-        virtual public char GetNextChar()
+        /// <param name="intercept">
+        ///   Suppresses output
+        /// </param>
+        /// <returns>
+        ///   Key the user typed
+        /// </returns>
+        virtual public char GetNextChar(bool intercept = false)
         {
             ConsoleKeyInfo key = System.Console.ReadKey(true);
-            if (print != null) print.Char(key.KeyChar);
+            if (!intercept && print != null) print.Char(key.KeyChar);
             return key.KeyChar;
         }
 
@@ -44,26 +48,17 @@ namespace MSG.IO
         ///   Reads a key from the console (immediately, without the user
         ///   hitting enter).
         /// </summary>
-        /// <returns>Key the user typed.</returns>
-        virtual public ConsoleKeyInfo GetNextKey()
+        /// <param name="intercept">
+        ///   Suppresses output
+        /// </param>
+        /// <returns>
+        ///   Key the user typed
+        /// </returns>
+        virtual public ConsoleKeyInfo GetNextKey(bool intercept = false)
         {
             ConsoleKeyInfo key = System.Console.ReadKey(true);
-            if (print != null) print.Char(key.KeyChar);
+            if (!intercept && print != null) print.Char(key.KeyChar);
             return key;
-        }
-
-        /// <summary>
-        ///   Reads a line of text from the console.
-        /// </summary>
-        /// <returns>String the user typed.</returns>
-        virtual public string GetNextString()
-        {
-            // The Editor object needs control of the printing, so let
-            // the Editor own the print object during editing, and
-            // disable automatic printing in this read object.
-            Editor editor = new Editor(print, this);
-            string input = editor.GetInput();
-            return input;
         }
     }
 }

@@ -53,14 +53,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Console\StringPromptTests.cs" />
     <Compile Include="Console\MenuItemTests.cs" />
     <Compile Include="Console\CharPromptTests.cs" />
-    <Compile Include="IO\Editor\BufferTests.cs" />
+    <Compile Include="Console\Editor\BufferTests.cs" />
+    <Compile Include="Console\IntEditorTests.cs" />
     <Compile Include="Types\Array\EndlessArrayTests.cs" />
     <Compile Include="Types\String\DrawTests.cs" />
-    <Compile Include="IO\EditorTests.cs" />
-    <Compile Include="IO\Editor\WordWrapperTests.cs" />
+    <Compile Include="Console\EditorTests.cs" />
+    <Compile Include="Console\Editor\WordWrapperTests.cs" />
     <Compile Include="IO\TestPrint.cs" />
     <Compile Include="IO\TestRead.cs" />
     <Compile Include="Patterns\TestCommand.cs" />
@@ -80,7 +80,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IO\Editor\Wordwrap example.txt" />
+    <Content Include="Console\Editor\Wordwrap example.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

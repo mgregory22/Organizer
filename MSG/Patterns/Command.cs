@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// MSG/Patterns/Command.cs
+//
+
+using System;
 
 namespace MSG.Patterns
 {

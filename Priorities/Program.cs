@@ -1,6 +1,9 @@
-﻿using MSG.Console;
+﻿//
+// Priorities/Program.cs
+//
+
+using MSG.Console;
 using MSG.IO;
-using System;
 
 namespace Priorities
 {
@@ -16,8 +19,10 @@ namespace Priorities
         {
             Print print = new Print();
             Read read = new Read(print);
-            Driver.Run(print, "! ", read);
-            Prompt.Pause();
+            string promptMsg = "! ";
+            CharPrompt prompt = new CharPrompt(print, read, promptMsg);
+            Driver.Run(print, read, prompt);
+            prompt.Pause();
         }
     }
 }

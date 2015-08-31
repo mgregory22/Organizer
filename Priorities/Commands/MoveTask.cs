@@ -1,6 +1,8 @@
-﻿using MSG.IO;
-using MSG.Patterns;
-using System;
+﻿//
+// Priorities/Commands/MoveTask.cs
+//
+
+using MSG.IO;
 
 namespace Priorities.Commands
 {

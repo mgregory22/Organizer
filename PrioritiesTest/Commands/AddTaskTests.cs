@@ -1,4 +1,8 @@
-﻿using MSGTest.IO;
+﻿//
+// PrioritiesTest/Commands/AddTaskTests.cs
+//
+
+using MSGTest.IO;
 using NUnit.Framework;
 using Priorities.Commands;
 using System;
@@ -12,7 +16,7 @@ namespace PrioritiesTest.Commands
         TestPrint print;
         TestRead read;
         TestTasks tasks;
-        string newTask = "This is a task to be added\r";
+        string newTask = "This is a task to be added";
 
         [SetUp]
         public void Initialize()
@@ -22,7 +26,7 @@ namespace PrioritiesTest.Commands
             tasks = new TestTasks();
             addTask = new AddTask(print, read, tasks);
             // The AddTask command prompts the user for the name of the task to add
-            read.PushString(newTask);
+            read.PushString(newTask + "\r");
             addTask.Do();
             // Set up the task.TaskExists() method to claim that the task has been added
             tasks.taskExists_nextReturn = true;
@@ -31,7 +35,7 @@ namespace PrioritiesTest.Commands
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual("Enter task name\n> ", print.Output);
+            Assert.AreEqual(addTask.promptMsg, print.Output.Substring(0, addTask.promptMsg.Length));
         }
 
         [Test]

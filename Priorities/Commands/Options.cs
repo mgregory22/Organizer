@@ -1,6 +1,9 @@
-﻿using MSG.IO;
+﻿//
+// Priorities/Commands/Options.cs
+//
+
+using MSG.IO;
 using MSG.Patterns;
-using System;
 
 namespace Priorities.Commands
 {
@@ -10,7 +13,7 @@ namespace Priorities.Commands
         {
         }
 
-        public override void Do()
+        override public void Do()
         {
         }
     }

@@ -1,26 +1,31 @@
-﻿using MSG.Console;
+﻿//
+// Priorities/Commands/AddTask.cs
+//
+
+using MSG.Console;
 using MSG.IO;
-using MSG.Patterns;
 using System;
 
 namespace Priorities.Commands
 {
     public class AddTask : TaskCommand
     {
-        StringPrompt prompt;
         protected string taskName;
         Print print;
+        Read read;
+        public string promptMsg = "Enter task name\n> ";
 
         public AddTask(Print print, Read read, Tasks tasks)
             : base(tasks)
         {
             this.print = print;
-            prompt = new StringPrompt(print, "Enter task name\n> ", read);
+            this.read = read;
         }
 
-        public override void Do()
+        override public void Do()
         {
-            taskName = prompt.Loop();
+            Editor editor = new Editor(print, read, promptMsg);
+            taskName = editor.PromptAndInput();
             if (taskName == "")
             {
                 print.StringNL("Add cancelled");
@@ -29,7 +34,7 @@ namespace Priorities.Commands
             Redo();
         }
 
-        public override void Redo()
+        override public void Redo()
         {
             if (taskName == null)
                 throw new InvalidOperationException("Adding a task must be done before it can be redone");
@@ -38,7 +43,7 @@ namespace Priorities.Commands
             tasks.Add(taskName);
         }
 
-        public override void Undo()
+        override public void Undo()
         {
             if (taskName == null)
                 throw new InvalidOperationException("Adding a task must be done before it can be undone");

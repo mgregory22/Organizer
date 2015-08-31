@@ -1,5 +1,8 @@
-﻿using MSG.IO;
-using MSG.Patterns;
+﻿//
+// Priorities/Commands/ListTasks.cs
+//
+
+using MSG.IO;
 using System;
 
 namespace Priorities.Commands
@@ -14,7 +17,7 @@ namespace Priorities.Commands
             this.print = print;
         }
 
-        public override void Do()
+        override public void Do()
         {
             int priority = 0;
             foreach (Task task in tasks)

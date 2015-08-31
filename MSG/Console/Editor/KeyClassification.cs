@@ -1,11 +1,10 @@
-﻿using MSG.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// MSG/Console/Editor/KeyClassification.cs
+//
 
-namespace MSG.IO
+using System;
+
+namespace MSG.Console
 {
     public partial class Editor
     {

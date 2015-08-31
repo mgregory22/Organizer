@@ -1,4 +1,8 @@
-﻿using System;
+﻿//
+// Priorities/Tasks.cs
+//
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -33,7 +37,7 @@ namespace Priorities
             this.tasks = new List<Task>();
         }
 
-        public virtual void Add(string name, int parent = 0, int priority = 1)
+        virtual public void Add(string name, int parent = 0, int priority = 1)
         {
             if (name == null)
                 throw new ArgumentNullException("Cannot add task without a name");
@@ -44,7 +48,7 @@ namespace Priorities
             tasks.Add(new Task(name, parent, priority));
         }
 
-        public virtual int Count
+        virtual public int Count
         {
             get { return tasks.Count; }
         }
@@ -54,7 +58,7 @@ namespace Priorities
             return tasks.GetEnumerator();
         }
 
-        public virtual void Remove(string name)
+        virtual public void Remove(string name)
         {
             if (name == null)
                 throw new ArgumentNullException("Cannot remove task without its name");
@@ -66,7 +70,7 @@ namespace Priorities
                 throw new ApplicationException("Task \"" + name + "\" could not be removed");
         }
 
-        public virtual bool TaskExists(string name)
+        virtual public bool TaskExists(string name)
         {
             return tasks.Find(task => task.Name == name) != null;
         }

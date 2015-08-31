@@ -1,7 +1,9 @@
-﻿using MSG.Console;
+﻿//
+// MSGTest/Types/String/DrawTests.cs
+//
+
 using MSG.Types.String;
 using NUnit.Framework;
-using System;
 
 namespace MSGTest.Types.String
 {

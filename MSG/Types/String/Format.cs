@@ -1,7 +1,7 @@
-﻿using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.IO;
+﻿//
+// MSG/Types/String/Format.cs
+//
+
 using System.Text;
 
 namespace MSG.Types.String
@@ -13,16 +13,6 @@ namespace MSG.Types.String
     {
         public static string ToLiteral(string input)
         {
-            /* damn thing is too smart
-            using (var writer = new StringWriter())
-            {
-                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
-                {
-                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
-                    return writer.ToString();
-                }
-            }
-            */
             var sb = new StringBuilder();
             foreach (var c in input)
             {

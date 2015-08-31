@@ -1,6 +1,9 @@
-﻿using System;
+﻿//
+// MSG/Types/Array/EndlessArray.cs
+//
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MSG.Types.Array
 {

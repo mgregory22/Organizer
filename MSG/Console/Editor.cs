@@ -1,28 +1,29 @@
-﻿using MSG.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// MSG/Console/Editor.cs
+//
 
-namespace MSG.IO
+using MSG.IO;
+using System;
+
+namespace MSG.Console
 {
     /// <summary>
-    ///   More featureful console input editor.  
+    ///   More featureful console input editor.
     /// </summary>
     public partial class Editor
     {
-        Buffer buffer;
-        Print print;
-        Read read;
-        View view;
+        protected Buffer buffer;
+        protected Print print;
+        protected string promptMsg;
+        protected Read read;
+        protected View view;
 
-        public Editor(Print print, Read read)
+        public Editor(Print print, Read read, string promptMsg)
         {
             this.print = print;
+            this.promptMsg = promptMsg;
             this.read = read;
             this.buffer = new Buffer();
-            this.view = new View(buffer, print);
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace MSG.IO
         /// <param name="read">
         ///   Object used for raw reading
         /// </param>
-        public string GetInput()
+        public string GetAndProcessKeys()
         {
             bool done = false;
             ConsoleKeyInfo keyInfo;
@@ -44,6 +45,55 @@ namespace MSG.IO
                 done = ProcessKey(keyInfo, buffer, view);
             }
             return buffer.ToString();
+        }
+
+        /// <summary>
+        ///   Override that allows heir to provide custom validation
+        ///   method for when the user presses enter
+        /// </summary>
+        /// <param name="input">
+        ///   Complete input the user entered in
+        /// </param>
+        virtual public bool InputIsValid(string input)
+        {
+            return true;
+        }
+
+        /// <summary>
+        ///   Override that allows heir to provide custom validation
+        ///   method for each keystroke
+        /// </summary>
+        /// <param name="keyInfo">
+        ///   Last keystroke entered by the user within the input loop
+        /// </param>
+        virtual public bool KeyIsValid(ConsoleKeyInfo keyInfo)
+        {
+            return true;
+        }
+
+        /// <summary>
+        ///   Displays the prompt and reads a string.
+        /// </summary>
+        /// <returns>
+        ///   The string entered by the user
+        /// </returns>
+        public string PromptAndInput()
+        {
+            string s;
+            do
+            {
+                PrintPrompt();
+                s = GetAndProcessKeys();
+            } while (!InputIsValid(s));
+            return s;
+        }
+
+        virtual public void PrintPrompt()
+        {
+            print.String(promptMsg);
+            // The view has an internal startCursorPos property
+            // that needs to be set after the prompt is printed.
+            this.view = new View(buffer, print);
         }
 
         /// <summary>
@@ -61,15 +111,18 @@ namespace MSG.IO
         /// <returns>
         ///   True if the user quit
         /// </returns>
-        public virtual bool ProcessKey(ConsoleKeyInfo keyInfo, Buffer buffer, View view)
+        virtual public bool ProcessKey(ConsoleKeyInfo keyInfo, Buffer buffer, View view)
         {
             bool done = false;
 
             if (IsPrintable(keyInfo))
             {
-                // insert any of the printable keys
-                buffer.Insert(keyInfo.KeyChar);
-                view.RedrawEditor(buffer.Text, buffer.Point);
+                if (KeyIsValid(keyInfo))
+                {
+                    // insert any of the printable keys
+                    buffer.Insert(keyInfo.KeyChar);
+                    view.RedrawEditor(buffer.Text, buffer.Point);
+                }
             }
             else if (IsShiftEnter(keyInfo))
             {

@@ -1,9 +1,8 @@
-﻿using MSG.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// MSG/Console/Prompt.cs
+//
+
+using MSG.IO;
 
 namespace MSG.Console
 {
@@ -19,20 +18,20 @@ namespace MSG.Console
         /// <param name="print">Used to print the prompt</param>
         /// <param name="promptMsg">The prompt string to use when requesting user input</param>
         /// <param name="read">Used to read the user input</param>
-        public Prompt(Print print, string promptMsg, Read read)
+        public Prompt(Print print, Read read, string promptMsg)
         {
             this.print = print;
-            this.promptMsg = promptMsg;
             this.read = read;
+            this.promptMsg = promptMsg;
         }
 
         /// <summary>
         ///   Wait for key to keep the window open.
         /// </summary>
-        public static void Pause()
+        public void Pause()
         {
-            System.Console.Write("Press a key");
-            System.Console.ReadKey(true);
+            print.String("Press a key");
+            read.GetNextChar(true);
         }
 
         /// <summary>

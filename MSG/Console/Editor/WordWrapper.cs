@@ -1,15 +1,14 @@
 ﻿//
-// Wordwrapper.cs
+// MSG/Console/Editor/Wordwrapper.cs
 //
 
+using MSG.IO;
 using MSG.Types.Array;
 using MSG.Types.String;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
-namespace MSG.IO
+namespace MSG.Console
 {
     public partial class Editor
     {
@@ -171,8 +170,8 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Returns the break position of the line given by 
-            ///   _lineIndex_, which is one past the last character 
+            ///   Returns the break position of the line given by
+            ///   _lineIndex_, which is one past the last character
             ///   on the line.
             /// </summary>
             public int GetLineBreak(int wrappedLineIndex)
@@ -189,12 +188,12 @@ namespace MSG.IO
             }
 
             /// <summary>
-            ///   Returns the position of the start of the line 
+            ///   Returns the position of the start of the line
             ///   given by _lineIndex_.
             /// </summary>
             public int GetLineStart(int wrappedLineIndex)
             {
-                // The start of the first line is zero.  The start of 
+                // The start of the first line is zero.  The start of
                 // any other line is the previous break.
                 return wrappedLineIndex == 0 ? 0 : lineBreaks[wrappedLineIndex - 1];
             }
@@ -245,8 +244,8 @@ namespace MSG.IO
             {
                 // Shortcuts
                 int textLen = text.Length;
-                // Set dewrap flag at the end of this method if the user deleted 
-                // enough characters to reduce the number of lines (ie the lost 
+                // Set dewrap flag at the end of this method if the user deleted
+                // enough characters to reduce the number of lines (ie the lost
                 // line needs to be erased).
                 int previousLineCnt = lineBreaks.Count;
                 // Clear previous calculations

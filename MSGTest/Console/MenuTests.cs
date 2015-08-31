@@ -1,16 +1,18 @@
-﻿using NUnit.Framework;
+﻿//
+// MSGTest/Console/MenuTests.cs
+//
+
 using MSG.Console;
 using MSG.IO;
 using MSGTest.Patterns;
-using System;
-using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace MSGTest.Console
 {
     class ToStringCountMenuItem : MenuItem
     {
         private int toStringCount = 0;
-        public override string ToString(int index = 0)
+        override public string ToString(int index = 0)
         {
             toStringCount++;
             return "";
@@ -42,7 +44,7 @@ namespace MSGTest.Console
             };
             Print print = new Print();
             Read read = new Read(print);
-            CharPrompt prompt = new CharPrompt(print, "", read);
+            CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]
@@ -78,7 +80,7 @@ namespace MSGTest.Console
             };
             Print print = new Print();
             Read read = new Read(print);
-            CharPrompt prompt = new CharPrompt(print, "", read);
+            CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]
@@ -127,7 +129,7 @@ namespace MSGTest.Console
             };
             Print print = new Print();
             Read read = new Read(print);
-            CharPrompt prompt = new CharPrompt(print, "", read);
+            CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
         [Test]

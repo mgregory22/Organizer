@@ -1,8 +1,9 @@
-﻿using MSG.IO;
+﻿//
+// MSGTest/Types/String/FormatTests.cs
+//
+
 using MSG.Types.String;
 using NUnit.Framework;
-using System;
-using System.Diagnostics;
 
 namespace MSGTest.Types.String
 {

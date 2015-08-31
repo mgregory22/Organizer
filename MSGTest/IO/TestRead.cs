@@ -1,4 +1,7 @@
-﻿using MSG.Console;
+﻿//
+// MSGTest/IO/TestRead.cs
+//
+
 using MSG.IO;
 using System;
 using System.Collections.Generic;
@@ -460,30 +463,22 @@ namespace MSGTest.IO
             return new ConsoleKeyInfo('\0', key, false, false, false);
         }
 
-        public override char GetNextChar()
+        override public char GetNextChar(bool intercept = false)
         {
             if (keyQueue.Count == 0) return '\0';
-            return keyQueue.Dequeue().KeyChar;
+            ConsoleKeyInfo keyInfo = keyQueue.Dequeue();
+            if (!intercept && print != null) print.Char(keyInfo.KeyChar);
+            return keyInfo.KeyChar;
         }
 
-        public override ConsoleKeyInfo GetNextKey()
+        override public ConsoleKeyInfo GetNextKey(bool intercept = false)
         {
             // Sending a pause key exits the input loop
             if (keyQueue.Count == 0)
                 return new ConsoleKeyInfo('\0', ConsoleKey.Pause, false, false, false);
             ConsoleKeyInfo keyInfo = keyQueue.Dequeue();
-            if (print != null) print.Char(keyInfo.KeyChar);
+            if (!intercept && print != null) print.Char(keyInfo.KeyChar);
             return keyInfo;
-        }
-
-        public override string GetNextString()
-        {
-            string s = "";
-            while (keyQueue.Count > 0)
-            {
-                s += keyQueue.Dequeue().KeyChar;
-            }
-            return s;
         }
 
         public void PushChar(char c)

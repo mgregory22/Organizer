@@ -1,4 +1,7 @@
-﻿using System;
+﻿//
+// MSG/Types/String/Draw.cs
+//
+
 using System.Text;
 
 namespace MSG.Types.String

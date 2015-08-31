@@ -1,7 +1,10 @@
-﻿using NUnit.Framework;
+﻿//
+// MSGTest/Console/MenuItemTests.cs
+//
+
 using MSG.Console;
-using MSG.IO;
 using MSGTest.Patterns;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 

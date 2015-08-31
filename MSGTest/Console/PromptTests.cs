@@ -1,16 +1,18 @@
-﻿using NUnit.Framework;
+﻿//
+// MSGTest/Console/PromptTests.cs
+//
+
 using MSG.Console;
-using MSG.IO;
 using MSGTest.IO;
-using System;
+using NUnit.Framework;
 
 namespace MSGTest.Console
 {
     [TestFixture]
     public class PromptTests
     {
-        Prompt testPrompt;
-        string testPromptMsg = "> ";
+        Prompt prompt;
+        string promptMsg = "> ";
         TestPrint print;
         TestRead read;
         [SetUp]
@@ -18,22 +20,22 @@ namespace MSGTest.Console
         {
             print = new TestPrint();
             read = new TestRead(print);
-            testPrompt = new CharPrompt(print, testPromptMsg, read);
+            prompt = new CharPrompt(print, read, promptMsg);
         }
         [Test]
         public void TestKeyPromptStoresPrint()
         {
-            Assert.AreEqual(print, testPrompt.Print);
+            Assert.AreEqual(print, prompt.Print);
         }
         [Test]
         public void TestKeyPromptStoresPrompt()
         {
-            Assert.AreEqual(testPromptMsg, testPrompt.PromptMsg);
+            Assert.AreEqual(promptMsg, prompt.PromptMsg);
         }
         [Test]
         public void TestKeyPromptStoresRead()
         {
-            Assert.AreEqual(read, testPrompt.Read);
+            Assert.AreEqual(read, prompt.Read);
         }
     }
 }

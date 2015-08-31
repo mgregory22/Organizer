@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// MSG/IO/ConsolePos.cs
+//
 
 namespace MSG.IO
 {
@@ -22,7 +20,7 @@ namespace MSG.IO
             this.top = top;
         }
 
-        public override string ToString()
+        override public string ToString()
         {
             return string.Format("({0},{1})", this.left, this.top);
         }
