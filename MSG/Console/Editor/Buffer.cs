@@ -174,7 +174,7 @@ namespace MSG.Console
             /// </summary>
             public void WordForward()
             {
-                while (point < text.Length - 1)
+                while (point < text.Length)
                 {
                     point++;
                     if (Scan.IsPointOnWordBeginning(text, point)) break;

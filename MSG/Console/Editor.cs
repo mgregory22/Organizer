@@ -135,22 +135,22 @@ namespace MSG.Console
                 buffer.Delete();
                 view.RedrawEditor(buffer.Text, buffer.Point);
             }
-            else if (IsCursorDown(keyInfo))
+            else if (IsDown(keyInfo))
             {
                 int point = view.CursorDown(buffer.Point);
                 buffer.MovePoint(point);
             }
-            else if (IsCursorLeft(keyInfo))
+            else if (IsLeft(keyInfo))
             {
                 int point = view.CursorLeft(buffer.Point);
                 buffer.MovePoint(point);
             }
-            else if (IsCursorRight(keyInfo))
+            else if (IsRight(keyInfo))
             {
                 int point = view.CursorRight(buffer.Point);
                 buffer.MovePoint(point);
             }
-            else if (IsCursorUp(keyInfo))
+            else if (IsUp(keyInfo))
             {
                 int point = view.CursorUp(buffer.Point);
                 buffer.MovePoint(point);
@@ -185,12 +185,12 @@ namespace MSG.Console
                 int point = view.CursorHome();
                 buffer.MovePoint(point);
             }
-            else if (IsWordLeft(keyInfo))
+            else if (IsCtrlLeft(keyInfo))
             {
                 buffer.WordBack();
                 view.RedrawEditor(buffer.Text, buffer.Point);
             }
-            else if (IsWordRight(keyInfo))
+            else if (IsCtrlRight(keyInfo))
             {
                 buffer.WordForward();
                 view.RedrawEditor(buffer.Text, buffer.Point);

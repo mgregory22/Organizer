@@ -458,9 +458,15 @@ namespace MSGTest.IO
             return new ConsoleKeyInfo(c, consoleKey, shift, alt, ctrl);
         }
 
-        private ConsoleKeyInfo ConsoleKeyToConsoleKeyInfo(ConsoleKey key)
+        private ConsoleKeyInfo ConsoleKeyToConsoleKeyInfo(ConsoleKey key, ConsoleModifiers mods = 0)
         {
-            return new ConsoleKeyInfo('\0', key, false, false, false);
+            return new ConsoleKeyInfo(
+                '\0'
+              , key
+              , mods.HasFlag(ConsoleModifiers.Shift)
+              , mods.HasFlag(ConsoleModifiers.Alt)
+              , mods.HasFlag(ConsoleModifiers.Control)
+            );
         }
 
         override public char GetNextChar(bool intercept = false)
@@ -486,43 +492,43 @@ namespace MSGTest.IO
             keyQueue.Enqueue(CharToConsoleKeyInfo(c));
         }
 
-        public void PushDownArrow(int count = 1)
+        public void PushDownArrow(int count = 1, ConsoleModifiers mods = 0)
         {
             for (int i = 0; i < count; i++)
-                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.DownArrow));
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.DownArrow, mods));
         }
 
-        public void PushEnd()
+        public void PushEnd(ConsoleModifiers mods = 0)
         {
-            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.End));
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.End, mods));
         }
 
-        public void PushEnter()
+        public void PushEnter(ConsoleModifiers mods = 0)
         {
-            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Enter));
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Enter, mods));
         }
 
-        public void PushHome()
+        public void PushHome(ConsoleModifiers mods = 0)
         {
-            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Home));
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Home, mods));
         }
 
-        public void PushLeftArrow(int count = 1)
-        {
-            for (int i = 0; i < count; i++)
-                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.LeftArrow));
-        }
-
-        public void PushRightArrow(int count = 1)
+        public void PushLeftArrow(int count = 1, ConsoleModifiers mods = 0)
         {
             for (int i = 0; i < count; i++)
-                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.RightArrow));
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.LeftArrow, mods));
         }
 
-        public void PushUpArrow(int count = 1)
+        public void PushRightArrow(int count = 1, ConsoleModifiers mods = 0)
         {
             for (int i = 0; i < count; i++)
-                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.UpArrow));
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.RightArrow, mods));
+        }
+
+        public void PushUpArrow(int count = 1, ConsoleModifiers mods = 0)
+        {
+            for (int i = 0; i < count; i++)
+                PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.UpArrow, mods));
         }
 
         public void PushKey(ConsoleKeyInfo keyInfo)

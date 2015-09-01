@@ -495,6 +495,97 @@ namespace MSGTest.Console
         }
 
         [Test]
+        public void TestCursorWordLeftAtBeginningOfInputHasNoEffect()
+        {
+            // Setup
+            //             01234567
+            read.PushString("23 45");
+            read.PushLeftArrow(5);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushLeftArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual(String.Empty, print.Output);
+        }
+
+        [Test]
+        public void TestCursorWordLeftToBeginningOfInputMovesCursorOneWordLeft()
+        {
+            // Setup
+            //             01234567
+            read.PushString("23 45");
+            read.PushLeftArrow(1);
+            read.PushLeftArrow(1, ConsoleModifiers.Control);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushLeftArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<2^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorWordLeftToMiddleOfLineMovesCursorOneWordLeft()
+        {
+            // Setup
+            //             012345601234567
+            read.PushString("23 45 12 23 3");
+            read.PushLeftArrow(1);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushLeftArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<4^1", print.Output);
+        }
+
+        [Test]
+        public void TestCursorWordRightAtBeginningOfInputMovesCursorOneWordRight()
+        {
+            // Setup
+            //             01234567
+            read.PushString("23 45");
+            read.PushLeftArrow(5);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushRightArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<5^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorWordRightOnLastWordMovesCursorToEndOfLine()
+        {
+            // Setup
+            //             01234567
+            read.PushString("23 45");
+            read.PushLeftArrow(2);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushRightArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<7^0", print.Output);
+        }
+
+        [Test]
+        public void TestCursorWordRightToMiddleOfLineMovesCursorOneWordRight()
+        {
+            // Setup
+            //             012345601234567
+            read.PushString("23 45 12 23 3");
+            read.PushLeftArrow(7);
+            editor.PromptAndInput();
+            print.ClearOutput();
+            // Test
+            read.PushRightArrow(1, ConsoleModifiers.Control);
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<4^1", print.Output);
+        }
+
+        [Test]
         public void TestExitEditorOnLinesOtherThanTheLastPutsCursorAfterAllTheEnteredLines()
         {
             // Setup

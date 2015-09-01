@@ -44,9 +44,25 @@ namespace MSG.Console
         }
 
         /// <summary>
+        ///   Returns true if the keypress moves the cursor one word left.
+        /// </summary>
+        public static bool IsCtrlLeft(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.LeftArrow && IsCtrled(keyInfo);
+        }
+
+        /// <summary>
+        ///   Returns true if the keypress moves the cursor one word right.
+        /// </summary>
+        public static bool IsCtrlRight(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key == ConsoleKey.RightArrow && IsCtrled(keyInfo);
+        }
+
+        /// <summary>
         ///   Returns true if the keypress moves the cursor one line down.
         /// </summary>
-        public static bool IsCursorDown(ConsoleKeyInfo keyInfo)
+        public static bool IsDown(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Key == ConsoleKey.DownArrow && !AnyModifiers(keyInfo);
         }
@@ -54,7 +70,7 @@ namespace MSG.Console
         /// <summary>
         ///   Returns true if the keypress moves the cursor one char left.
         /// </summary>
-        public static bool IsCursorLeft(ConsoleKeyInfo keyInfo)
+        public static bool IsLeft(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Key == ConsoleKey.LeftArrow && !AnyModifiers(keyInfo);
         }
@@ -62,7 +78,7 @@ namespace MSG.Console
         /// <summary>
         ///   Returns true if the keypress moves the cursor one char right.
         /// </summary>
-        public static bool IsCursorRight(ConsoleKeyInfo keyInfo)
+        public static bool IsRight(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Key == ConsoleKey.RightArrow && !AnyModifiers(keyInfo);
         }
@@ -70,7 +86,7 @@ namespace MSG.Console
         /// <summary>
         ///   Returns true if the keypress moves the cursor one line up.
         /// </summary>
-        public static bool IsCursorUp(ConsoleKeyInfo keyInfo)
+        public static bool IsUp(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Key == ConsoleKey.UpArrow && !AnyModifiers(keyInfo);
         }
@@ -214,22 +230,6 @@ namespace MSG.Console
         public static bool IsShifted(ConsoleKeyInfo keyInfo)
         {
             return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Shift);
-        }
-
-        /// <summary>
-        ///   Returns true if the keypress moves the cursor one word left.
-        /// </summary>
-        public static bool IsWordLeft(ConsoleKeyInfo keyInfo)
-        {
-            return keyInfo.Key == ConsoleKey.LeftArrow && IsCtrled(keyInfo);
-        }
-
-        /// <summary>
-        ///   Returns true if the keypress moves the cursor one word right.
-        /// </summary>
-        public static bool IsWordRight(ConsoleKeyInfo keyInfo)
-        {
-            return keyInfo.Key == ConsoleKey.RightArrow && IsCtrled(keyInfo);
         }
     }
 }
