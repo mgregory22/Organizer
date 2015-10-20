@@ -13,7 +13,7 @@ namespace MSGTest.Console
         TestPrint print;
         string promptMsg = "> ";
         TestRead read;
-        string input;
+        int input;
 
         [SetUp]
         public void SetUp()
@@ -29,7 +29,7 @@ namespace MSGTest.Console
         {
             read.PushString("0\r");
             input = editor.PromptAndInput();
-            Assert.AreEqual("0", input);
+            Assert.AreEqual(0, input);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace MSGTest.Console
         {
             read.PushString("a0b\r");
             input = editor.PromptAndInput();
-            Assert.AreEqual("0", input);
+            Assert.AreEqual(0, input);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace MSGTest.Console
         {
             read.PushString("-0");
             input = editor.PromptAndInput();
-            Assert.AreEqual("-0", input);
+            Assert.AreEqual(0, input);
         }
 
         [Test]
@@ -54,8 +54,8 @@ namespace MSGTest.Console
             read.PushString("1-\r");
             // Hack so this test won't get stuck
             editor.PrintPrompt();
-            input = editor.GetAndProcessKeys();
-            Assert.IsFalse(editor.InputIsValid(input));
+            string strInput = editor.GetAndProcessKeys();
+            Assert.IsFalse(editor.InputIsValid(strInput));
         }
     }
 }

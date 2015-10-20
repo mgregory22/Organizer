@@ -33,5 +33,11 @@ namespace MSG.Console
             return (keyInfo.Key >= ConsoleKey.D0 && keyInfo.Key <= ConsoleKey.D9)
                 || keyInfo.Key == ConsoleKey.OemMinus;
         }
+
+        new public int PromptAndInput()
+        {
+            string input = base.PromptAndInput();
+            return Convert.ToInt32(input);
+        }
     }
 }

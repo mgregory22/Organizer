@@ -10,7 +10,7 @@ namespace Priorities
     public sealed class Program
     {
         /// <summary>
-        ///   Program entry point.
+        ///   Program entry point.  This should be the only class that's not tested.
         /// </summary>
         /// <param name="args">
         ///   None.

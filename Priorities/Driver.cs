@@ -8,6 +8,9 @@ using Priorities.Commands;
 
 namespace Priorities
 {
+    /// <summary>
+    ///   This is the heart of the program.  Testing starts with this class.
+    /// </summary>
     public class Driver
     {
         public static void Run(Print print, Read read, CharPrompt prompt)

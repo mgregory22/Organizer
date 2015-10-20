@@ -216,6 +216,15 @@ namespace MSG.Console
             }
 
             /// <summary>
+            ///   Returns true if the given line index refers to an existent
+            ///   line.
+            /// </summary>
+            public bool IsValidLine(int wrappedLineIndex)
+            {
+                return wrappedLineIndex >= 0 && wrappedLineIndex < lineBreaks.Count;
+            }
+
+            /// <summary>
             ///   Returns true if the length of the wrapped line text is equal
             ///   to the width of the window.
             /// </summary>

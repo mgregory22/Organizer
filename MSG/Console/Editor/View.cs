@@ -183,7 +183,7 @@ namespace MSG.Console
             }
 
             /// <summary>
-            ///   Moves the cursor down one line.
+            ///   Moves the cursor down one or more lines.
             /// </summary>
             /// <param name="point">
             ///   The position of the current point, which is returned if
@@ -196,25 +196,27 @@ namespace MSG.Console
             ///   The buffer point in the next line at the same
             ///   horizontal position (if possible)
             /// </returns>
-            public int CursorDown(int point, int count = 1 /* TODO */)
+            public int CursorDown(int point, int count = 1)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
                 int column = preferredCursorColumn;
-                // find current line index
-                int line = editorPos.top;
-                // if moving down is possible
-                if (!wordWrapper.IsLastLine(line))
+                // find destination line index
+                while (!wordWrapper.IsValidLine(editorPos.top + count))
                 {
-                    // move down one
-                    int nextLine = line + 1;
+                    count--;
+                }
+                // if moving down is possible
+                if (count > 0)
+                {
+                    int destLine = editorPos.top + count;
                     // find start of next line
-                    int startPointOfNextLine = wordWrapper.GetLineStart(nextLine);
+                    int startPointOfDestLine = wordWrapper.GetLineStart(destLine);
                     // try to set the same column number, but the new line
                     // could be too short
-                    int endPointOfNextLine = wordWrapper.GetLineBreak(nextLine);
-                    int newPoint = Math.Min(startPointOfNextLine + column, endPointOfNextLine);
-                    int lineLen = endPointOfNextLine - startPointOfNextLine;
+                    int endPointOfDestLine = wordWrapper.GetLineBreak(destLine);
+                    int newPoint = Math.Min(startPointOfDestLine + column, endPointOfDestLine);
+                    int lineLen = endPointOfDestLine - startPointOfDestLine;
                     WordWrapper.BolPositionPreference bpp = preferredCursorColumn < lineLen
                             ? WordWrapper.BolPositionPreference.AfterBol
                             : WordWrapper.BolPositionPreference.BeforeBol;
@@ -339,7 +341,7 @@ namespace MSG.Console
             }
 
             /// <summary>
-            ///   Moves the cursor up one line.
+            ///   Moves the cursor up one or more lines.
             /// </summary>
             /// <param name="point">
             ///   The position of the current point, which is returned if
@@ -353,26 +355,28 @@ namespace MSG.Console
             ///   the same horizontal position.  Otherwise, the current
             ///   point.
             /// </returns>
-            public int CursorUp(int point, int count = 1 /* TODO */)
+            public int CursorUp(int point, int count = 1)
             {
                 ConsolePos editorPos = CursorPosToEditorPos(cursorPos);
                 // find current column
                 int column = preferredCursorColumn;
-                // find current line index
-                int line = editorPos.top;
-                // if moving up is possible
-                if (!wordWrapper.IsFirstLine(line))
+                // find index of the destination line
+                while (!wordWrapper.IsValidLine(editorPos.top - count))
                 {
-                    // move up one
-                    int prevLine = line - 1;
-                    // find start in buffer of previous line
-                    int startPointOfPrevLine = wordWrapper.GetLineStart(prevLine);
+                    count--;
+                }
+                // if moving up is possible
+                if (count > 0)
+                {
+                    int destLine = editorPos.top - count;
+                    // find start in buffer of new line
+                    int startPointOfDestLine = wordWrapper.GetLineStart(destLine);
                     // try to set the same column number
-                    int newColumn = Math.Max(startPointOfPrevLine + column - LineLeft(prevLine, startCursorPos.left), 0);
+                    int newColumn = Math.Max(startPointOfDestLine + column - LineLeft(destLine, startCursorPos.left), 0);
                     // the new line could be too short
-                    int endPointOfPrevLine = wordWrapper.GetLineBreak(prevLine) - 1;
-                    int newPoint = Math.Min(newColumn, endPointOfPrevLine);
-                    int lineLen = endPointOfPrevLine - startPointOfPrevLine;
+                    int endPointOfDestLine = wordWrapper.GetLineBreak(destLine) - 1;
+                    int newPoint = Math.Min(newColumn, endPointOfDestLine);
+                    int lineLen = endPointOfDestLine - startPointOfDestLine;
                     WordWrapper.BolPositionPreference bpp = preferredCursorColumn < lineLen
                             ? WordWrapper.BolPositionPreference.AfterBol
                             : WordWrapper.BolPositionPreference.BeforeBol;

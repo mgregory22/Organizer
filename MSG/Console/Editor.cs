@@ -77,7 +77,7 @@ namespace MSG.Console
         /// <returns>
         ///   The string entered by the user
         /// </returns>
-        public string PromptAndInput()
+        virtual public string PromptAndInput()
         {
             string s;
             do
@@ -88,7 +88,7 @@ namespace MSG.Console
             return s;
         }
 
-        virtual public void PrintPrompt()
+        public void PrintPrompt()
         {
             print.String(promptMsg);
             // The view has an internal startCursorPos property
