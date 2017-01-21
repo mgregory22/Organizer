@@ -18,11 +18,6 @@ namespace MSG.Console
         protected View view;
         protected string lastPrompt;
 
-        public string LastPrompt
-        {
-            get { return this.lastPrompt; }
-        }
-
         /// <param name="print">
         ///   Object used for printing
         /// </param>
@@ -48,7 +43,7 @@ namespace MSG.Console
                 keyInfo = read.GetNextKey();
                 done = ProcessKey(keyInfo, buffer, view);
             }
-            return buffer.ToString();
+            return buffer == null ? null : buffer.ToString();
         }
 
         /// <summary>
@@ -73,6 +68,14 @@ namespace MSG.Console
         virtual public bool KeyIsValid(ConsoleKeyInfo keyInfo)
         {
             return true;
+        }
+
+        /// <summary>
+        ///   Returns the last prompt that was printed on the screen (mostly for testing).
+        /// </summary>
+        public string LastPrompt
+        {
+            get { return this.lastPrompt; }
         }
 
         /// <summary>

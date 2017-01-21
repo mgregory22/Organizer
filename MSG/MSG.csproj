@@ -52,7 +52,7 @@
     <Compile Include="Console\Editor\KeyClassification.cs" />
     <Compile Include="Console\Editor\View.cs" />
     <Compile Include="IO\Print.cs" />
-    <Compile Include="Console\Prompt.cs" />
+    <Compile Include="Console\InputPrompt.cs" />
     <Compile Include="IO\Read.cs" />
     <Compile Include="Patterns\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

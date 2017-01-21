@@ -1,28 +1,37 @@
 ﻿//
-// MSG/Console/Prompt.cs
+// MSG/Console/InputPrompt.cs
 //
 
 using MSG.IO;
 
 namespace MSG.Console
 {
-    public class Prompt
+    public class InputPrompt
     {
         protected Print print;
-        protected string promptMsg;
+        protected string prompt;
         protected Read read;
+        protected string lastPrompt;
 
         /// <summary>
         ///   Initialize a prompt with message, print and read objects.
         /// </summary>
         /// <param name="print">Used to print the prompt</param>
-        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
         /// <param name="read">Used to read the user input</param>
-        public Prompt(Print print, Read read, string promptMsg)
+        /// <param name="prompt">The prompt string to use when requesting user input</param>
+        public InputPrompt(Print print, Read read, string prompt = "> ")
         {
             this.print = print;
             this.read = read;
-            this.promptMsg = promptMsg;
+            this.prompt = prompt;
+        }
+
+        /// <summary>
+        ///   Returns the last prompt that was printed on the screen (mostly for testing).
+        /// </summary>
+        public string LastPrompt
+        {
+            get { return lastPrompt; }
         }
 
         /// <summary>
@@ -48,16 +57,17 @@ namespace MSG.Console
         /// </summary>
         public void PrintPrompt()
         {
-            Print.String(promptMsg);
+            Print.String(prompt);
+            this.lastPrompt = prompt;
         }
 
         /// <summary>
         ///   The text that prompts the user for input.
         /// </summary>
-        public string PromptMsg
+        public string Prompt
         {
-            get { return promptMsg; }
-            set { promptMsg = value; }
+            get { return prompt; }
+            set { prompt = value; }
         }
 
         /// <summary>

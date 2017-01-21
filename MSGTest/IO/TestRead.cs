@@ -454,6 +454,9 @@ namespace MSGTest.IO
                 case '\0':
                     consoleKey = ConsoleKey.Pause;
                     break;
+                case '\x1B':
+                    consoleKey = ConsoleKey.Escape;
+                    break;
             }
             return new ConsoleKeyInfo(c, consoleKey, shift, alt, ctrl);
         }
@@ -506,6 +509,11 @@ namespace MSGTest.IO
         public void PushEnter(ConsoleModifiers mods = 0)
         {
             PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Enter, mods));
+        }
+
+        public void PushEscape(ConsoleModifiers mods = 0)
+        {
+            PushKey(ConsoleKeyToConsoleKeyInfo(ConsoleKey.Escape, mods));
         }
 
         public void PushHome(ConsoleModifiers mods = 0)

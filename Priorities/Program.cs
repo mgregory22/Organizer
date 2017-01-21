@@ -19,8 +19,7 @@ namespace Priorities
         {
             Print print = new Print();
             Read read = new Read(print);
-            string promptMsg = "! ";
-            CharPrompt prompt = new CharPrompt(print, read, promptMsg);
+            CharPrompt prompt = new CharPrompt(print, read);
             Driver.Run(print, read, prompt);
             prompt.Pause();
         }

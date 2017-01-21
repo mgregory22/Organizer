@@ -13,7 +13,6 @@ namespace MSGTest.Console
     public class CharPromptTests
     {
         CharPrompt prompt;
-        string promptMsg = "> ";
         TestPrint print;
         TestRead read;
 
@@ -22,8 +21,8 @@ namespace MSGTest.Console
         {
             print = new TestPrint();
             read = new TestRead(print);
-            prompt = new CharPrompt(print, read, promptMsg);
-            prompt.ValidList = new char[] { 'a', 'b' };
+            prompt = new CharPrompt(print, read);
+            prompt.ValidList = new char[] { 'a', 'b', '\x1B' };
         }
 
         [Test]
@@ -34,8 +33,9 @@ namespace MSGTest.Console
             // A valid key needs to be sent to terminate the prompt loop
             read.PushChar(invalidKey);
             read.PushChar(validKey);
-            char gotKey = prompt.PromptAndInput();
-            Assert.AreEqual("> X\n" + CharPrompt.helpMsg + "\n> a\n", print.Output);
+            char? gotKey = prompt.PromptAndInput();
+            Assert.IsNotNull(gotKey);
+            Assert.AreEqual(prompt.LastPrompt + "X\n" + CharPrompt.helpMsg + "\n" + prompt.LastPrompt + "a\n", print.Output);
             // Might as well test this again
             Assert.AreEqual(validKey, gotKey);
         }
@@ -45,10 +45,20 @@ namespace MSGTest.Console
         {
             char validKey = 'a';
             read.PushChar(validKey);
-            char gotKey = prompt.PromptAndInput();
-            Assert.AreEqual(promptMsg + "a\n", print.Output);
+            char? gotKey = prompt.PromptAndInput();
+            Assert.IsNotNull(gotKey);
+            Assert.AreEqual(prompt.LastPrompt + "a\n", print.Output);
             Assert.AreEqual(validKey, gotKey);
             print.ClearOutput();
+        }
+
+        [Test]
+        public void TestCharPromptHandlesEscape()
+        {
+            char escapeKey = '\x1B';
+            read.PushChar(escapeKey);
+            char? gotKey = prompt.PromptAndInput();
+            Assert.IsNull(gotKey);
         }
     }
 }

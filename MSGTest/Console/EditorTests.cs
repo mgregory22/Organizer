@@ -571,6 +571,29 @@ namespace MSGTest.Console
         }
 
         [Test]
+        public void TestEscapeEditorReturnsNullBuffer()
+        {
+            read.PushString("234\x1B");
+            string buffer = editor.StringPrompt();
+            editor.GetAndProcessKeys();
+            Assert.IsNull(buffer);
+        }
+
+        [Test]
+        public void TestEscapeEditorOnLinesOtherThanTheLastPutsCursorAfterAllTheEnteredLines()
+        {
+            // Setup
+            read.PushString("2345 70 23456701 34 67012 456");
+            read.PushLeftArrow(19);
+            editor.StringPrompt();
+            print.ClearOutput();
+            // Test
+            read.PushEscape();
+            editor.GetAndProcessKeys();
+            Assert.AreEqual("<0^5\n", print.Output);
+        }
+
+        [Test]
         public void TestExitEditorOnLinesOtherThanTheLastPutsCursorAfterAllTheEnteredLines()
         {
             // Setup

@@ -86,32 +86,39 @@ namespace MSG.Console
             {
                 // Seeing the menu every time is annoying
                 //print.String(this.ToString());
-                char c = prompt.PromptAndInput();
-                MenuItem m = this.FindMatchingItem(c);
-                try
+                char? c = prompt.PromptAndInput();
+                if (c == null)
                 {
-                    m.Do(print, read);
-                }
-                catch (OperationCanceledException)
-                {
-                    // user has quit
                     done = true;
                 }
-                catch (InvalidOperationException ex)
+                else
                 {
-                    // Non-fatal error
-                    print.StringNL(ex.Message);
-                }
-                catch (ArgumentException ex)
-                {
-                    // Non-fatal error
-                    print.StringNL(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    // Presumably fatal error
-                    print.StringNL(ex.Message);
-                    done = true;
+                    MenuItem m = this.FindMatchingItem(c.Value);
+                    try
+                    {
+                        m.Do(print, read);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // user has quit
+                        done = true;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        // Non-fatal error
+                        print.StringNL(ex.Message);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        // Non-fatal error
+                        print.StringNL(ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Presumably fatal error
+                        print.StringNL(ex.Message);
+                        done = true;
+                    }
                 }
                 print.Newline();
             }
@@ -120,10 +127,10 @@ namespace MSG.Console
         /// <summary>
         ///   String to use as the prompt.
         /// </summary>
-        public string PromptMsg
+        public string Prompt
         {
-            get { return prompt.PromptMsg; }
-            set { prompt.PromptMsg = value; }
+            get { return prompt.Prompt; }
+            set { prompt.Prompt = value; }
         }
 
         /// <summary>

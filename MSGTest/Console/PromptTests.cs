@@ -11,7 +11,7 @@ namespace MSGTest.Console
     [TestFixture]
     public class PromptTests
     {
-        Prompt prompt;
+        InputPrompt prompt;
         string promptMsg = "> ";
         TestPrint print;
         TestRead read;
@@ -30,7 +30,7 @@ namespace MSGTest.Console
         [Test]
         public void TestKeyPromptStoresPrompt()
         {
-            Assert.AreEqual(promptMsg, prompt.PromptMsg);
+            Assert.AreEqual(promptMsg, prompt.Prompt);
         }
         [Test]
         public void TestKeyPromptStoresRead()

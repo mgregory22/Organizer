@@ -39,7 +39,7 @@ namespace MSG.Console
         /// <summary>
         ///   Prints a prompt and gets an int from the user
         /// </summary>
-        /// <param name="promptMsg">The prompt</param>
+        /// <param name="prompt">The prompt string</param>
         public int IntPrompt(string prompt = "# ")
         {
             string input = base.StringPrompt(prompt);
