@@ -18,7 +18,7 @@ namespace PrioritiesTest
         public int add_parent;
         public int add_priority;
 
-        public override void Add(string name, int parent = 0, int priority = 1)
+        public override void Add(string name, int parent = 0, int priority = 0)
         {
             addCnt++;
             // Save the last parameters Add() was called with, so they can be checked

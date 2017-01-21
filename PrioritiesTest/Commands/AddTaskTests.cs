@@ -47,8 +47,8 @@ namespace PrioritiesTest.Commands
             Assert.AreEqual(newTask, tasks.add_name);
             // 0 (default) should be the parent parameter
             Assert.AreEqual(0, tasks.add_parent);
-            // 1 (default) should be the priority parameter
-            Assert.AreEqual(1, tasks.add_priority);
+            // 0 (default) should be the priority parameter
+            Assert.AreEqual(0, tasks.add_priority);
         }
 
         [Test]
