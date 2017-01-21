@@ -3,19 +3,16 @@
 //
 
 using MSG.Console;
-using MSG.IO;
-using MSG.Types.String;
 using MSGTest.IO;
 using NUnit.Framework;
 using System;
-using System.Diagnostics;
 
 namespace MSGTest.Console
 {
     [TestFixture]
     public partial class EditorTests
     {
-        MSG.Console.Editor editor;
+        Editor editor;
         TestPrint print;
         TestRead read;
         string input;
@@ -26,7 +23,7 @@ namespace MSGTest.Console
             print = new TestPrint();
             print.BufferWidth = 8;
             read = new TestRead(null);
-            editor = new MSG.Console.Editor(print, read);
+            editor = new Editor(print, read);
         }
 
         [Test]
@@ -58,8 +55,7 @@ namespace MSGTest.Console
         {
             read.PushString("Word");
             input = editor.StringPrompt();
-            string expected = editor.LastPrompt + "Word";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual(editor.LastPrompt + "Word", print.Output);
         }
 
         [Test]
@@ -67,8 +63,7 @@ namespace MSGTest.Console
         {
             read.PushString("Word\b");
             input = editor.StringPrompt();
-            string expected = editor.LastPrompt + "Word<5^0 <5^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual(editor.LastPrompt + "Word<5^0 <5^0", print.Output);
         }
 
         [Test]
@@ -81,8 +76,7 @@ namespace MSGTest.Console
             // Test
             read.PushString("\b");
             editor.GetAndProcessKeys();
-            string expected = "<6^0 <6^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<6^0 <6^0", print.Output);
         }
 
         [Test]
@@ -96,8 +90,7 @@ namespace MSGTest.Console
             // Test
             read.PushString("\b");
             editor.GetAndProcessKeys();
-            string expected = "<6^0w   <7^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<6^0w   <7^0", print.Output);
         }
 
         [Test]
@@ -273,8 +266,7 @@ namespace MSGTest.Console
             // Test
             read.PushLeftArrow();
             editor.GetAndProcessKeys();
-            string expected = "<6^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<6^0", print.Output);
         }
 
         [Test]
@@ -295,8 +287,7 @@ namespace MSGTest.Console
             // Test
             read.PushLeftArrow(3);
             editor.GetAndProcessKeys();
-            string expected = "<5^0<4^0<3^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<5^0<4^0<3^0", print.Output);
         }
 
         [Test]
@@ -310,8 +301,7 @@ namespace MSGTest.Console
             // Test
             read.PushLeftArrow();
             editor.GetAndProcessKeys();
-            string expected = "<6^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<6^0", print.Output);
         }
 
         [Test]
@@ -324,8 +314,7 @@ namespace MSGTest.Console
             // Test
             read.PushLeftArrow();
             editor.GetAndProcessKeys();
-            string expected = "<4^1";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<4^1", print.Output);
         }
 
         [Test]
@@ -338,8 +327,7 @@ namespace MSGTest.Console
             // Test
             read.PushLeftArrow();
             editor.GetAndProcessKeys();
-            string expected = "<3^1";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<3^1", print.Output);
         }
 
         [Test]
@@ -353,8 +341,7 @@ namespace MSGTest.Console
             // Test
             read.PushRightArrow();
             editor.GetAndProcessKeys();
-            string expected = "<4^0";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<4^0", print.Output);
         }
 
         [Test]
@@ -368,8 +355,7 @@ namespace MSGTest.Console
             // Test
             read.PushRightArrow();
             editor.GetAndProcessKeys();
-            string expected = "<0^1";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual("<0^1", print.Output);
         }
 
         [Test]
@@ -599,17 +585,6 @@ namespace MSGTest.Console
         }
 
         [Test]
-        public void TestInsertDoesNotScrollWindowUnnecessarilyWhenClearingToEol()
-        {
-            read.PushString("A");
-            editor.StringPrompt();
-            int cursorMotionLen = 4;
-            // I have no idea what this is doing
-            int nonInputTextOutputLen = editor.LastPrompt.Length + cursorMotionLen * 3;
-            Assert.Less(print.Output.Length - nonInputTextOutputLen, print.BufferWidth - editor.LastPrompt.Length);
-        }
-
-        [Test]
         public void TestInsertDoesNotThrowExceptionWhenTextWraps()
         {
             Assert.DoesNotThrow(() => read.PushString("2345 1234"), editor.StringPrompt());
@@ -620,8 +595,7 @@ namespace MSGTest.Console
         {
             read.PushString("War wrap");
             editor.StringPrompt();
-            string expected = editor.LastPrompt + "War <5^0 w<6^0  wrap";
-            Assert.AreEqual(expected, print.Output);
+            Assert.AreEqual(editor.LastPrompt + "War <5^0 w<6^0  wrap", print.Output);
         }
 
         [Test]
