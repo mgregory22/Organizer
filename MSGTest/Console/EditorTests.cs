@@ -17,7 +17,6 @@ namespace MSGTest.Console
     {
         MSG.Console.Editor editor;
         TestPrint print;
-        string promptMsg = "> ";
         TestRead read;
         string input;
 
@@ -27,14 +26,14 @@ namespace MSGTest.Console
             print = new TestPrint();
             print.BufferWidth = 8;
             read = new TestRead(null);
-            editor = new MSG.Console.Editor(print, read, promptMsg);
+            editor = new MSG.Console.Editor(print, read);
         }
 
         [Test]
         public void TestCharWasInsertedIntoBuffer()
         {
             read.PushString("a\r");
-            input = editor.PromptAndInput();
+            input = editor.StringPrompt();
             Assert.AreEqual("a", input);
         }
 
@@ -42,15 +41,15 @@ namespace MSGTest.Console
         public void TestCharWasEchoedOnScreen()
         {
             read.PushString("a");
-            input = editor.PromptAndInput();
-            Assert.AreEqual(promptMsg + "a", print.Output);
+            input = editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt + "a", print.Output);
         }
 
         [Test]
         public void TestCharsWereInsertedIntoBuffer()
         {
             read.PushString("Word\r");
-            input = editor.PromptAndInput();
+            input = editor.StringPrompt();
             Assert.AreEqual("Word", input);
         }
 
@@ -58,8 +57,8 @@ namespace MSGTest.Console
         public void TestCharsWereEchoedOnScreen()
         {
             read.PushString("Word");
-            input = editor.PromptAndInput();
-            string expected = "> Word";
+            input = editor.StringPrompt();
+            string expected = editor.LastPrompt + "Word";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -67,8 +66,8 @@ namespace MSGTest.Console
         public void TestBackspace()
         {
             read.PushString("Word\b");
-            input = editor.PromptAndInput();
-            string expected = "> Word<5^0 <5^0";
+            input = editor.StringPrompt();
+            string expected = editor.LastPrompt + "Word<5^0 <5^0";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -77,7 +76,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("23456");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushString("\b");
@@ -92,7 +91,7 @@ namespace MSGTest.Console
             // Setup
             //             01234567
             read.PushString("Wor wr");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushString("\b");
@@ -106,7 +105,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -120,7 +119,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345");
             read.PushLeftArrow(2);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -134,7 +133,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 0123456");
             read.PushLeftArrow(9);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -148,7 +147,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 012345601234");
             read.PushLeftArrow(9);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -163,8 +162,8 @@ namespace MSGTest.Console
             print.ClearOutput();  // clear prompt output
             // Test
             read.PushDownArrow();
-            editor.PromptAndInput();
-            Assert.AreEqual(promptMsg, print.Output);
+            editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt, print.Output);
         }
 
         [Test]
@@ -173,7 +172,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345");
             read.PushLeftArrow(3);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushEnd();
@@ -187,7 +186,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 70123");
             read.PushLeftArrow(3);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushEnd();
@@ -201,7 +200,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 012345");
             read.PushLeftArrow(9);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushEnd();
@@ -215,7 +214,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("234 012345");
             read.PushLeftArrow(3);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushEnd();
@@ -228,7 +227,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushHome();
@@ -241,7 +240,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345 70123");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushHome();
@@ -255,7 +254,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 70123");
             read.PushLeftArrow(6);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushHome();
@@ -269,7 +268,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 70");
             read.PushLeftArrow(2);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow();
@@ -282,8 +281,8 @@ namespace MSGTest.Console
         public void TestCursorLeftCannotMoveCursorBeforeBeginning()
         {
             read.PushRightArrow();
-            editor.PromptAndInput();
-            Assert.AreEqual(promptMsg.Length, print.CursorLeft);
+            editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt.Length, print.CursorLeft);
         }
 
         [Test]
@@ -291,7 +290,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow(3);
@@ -306,7 +305,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("23456 ");
             read.PushLeftArrow();
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow();
@@ -320,7 +319,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345\n01234");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow();
@@ -334,7 +333,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345 7012");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow();
@@ -349,7 +348,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345");
             read.PushLeftArrow(3);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow();
@@ -364,7 +363,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345601234");
             read.PushLeftArrow(6);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow();
@@ -377,8 +376,8 @@ namespace MSGTest.Console
         public void TestCursorRightCannotMoveCursorPastEndOfEmptyBuffer()
         {
             read.PushRightArrow();
-            editor.PromptAndInput();
-            Assert.AreEqual(promptMsg.Length, print.CursorLeft);
+            editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt.Length, print.CursorLeft);
         }
 
         [Test]
@@ -386,7 +385,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("2345601234");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow();
@@ -400,7 +399,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 0123456");
             read.PushLeftArrow(4);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushUpArrow();
@@ -413,7 +412,7 @@ namespace MSGTest.Console
         {
             // Setup
             read.PushString("234 0123 56");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushUpArrow();
@@ -427,7 +426,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 012345601234");
             read.PushLeftArrow(2);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushUpArrow();
@@ -443,7 +442,7 @@ namespace MSGTest.Console
             read.PushLeftArrow(1);
             read.PushUpArrow(2);
             read.PushDownArrow();
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -458,7 +457,7 @@ namespace MSGTest.Console
             read.PushString("2345 01234 012345 0123456");
             read.PushUpArrow(2);
             read.PushDownArrow();
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushDownArrow();
@@ -472,7 +471,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("23 012345");
             read.PushLeftArrow(1);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushUpArrow();
@@ -486,7 +485,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 70123456");
             read.PushLeftArrow(2);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushUpArrow();
@@ -501,7 +500,7 @@ namespace MSGTest.Console
             //             01234567
             read.PushString("23 45");
             read.PushLeftArrow(5);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow(1, ConsoleModifiers.Control);
@@ -517,7 +516,7 @@ namespace MSGTest.Console
             read.PushString("23 45");
             read.PushLeftArrow(1);
             read.PushLeftArrow(1, ConsoleModifiers.Control);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow(1, ConsoleModifiers.Control);
@@ -532,7 +531,7 @@ namespace MSGTest.Console
             //             012345601234567
             read.PushString("23 45 12 23 3");
             read.PushLeftArrow(1);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushLeftArrow(1, ConsoleModifiers.Control);
@@ -547,7 +546,7 @@ namespace MSGTest.Console
             //             01234567
             read.PushString("23 45");
             read.PushLeftArrow(5);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow(1, ConsoleModifiers.Control);
@@ -562,7 +561,7 @@ namespace MSGTest.Console
             //             01234567
             read.PushString("23 45");
             read.PushLeftArrow(2);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow(1, ConsoleModifiers.Control);
@@ -577,7 +576,7 @@ namespace MSGTest.Console
             //             012345601234567
             read.PushString("23 45 12 23 3");
             read.PushLeftArrow(7);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushRightArrow(1, ConsoleModifiers.Control);
@@ -591,7 +590,7 @@ namespace MSGTest.Console
             // Setup
             read.PushString("2345 70 23456701 34 67012 456");
             read.PushLeftArrow(19);
-            editor.PromptAndInput();
+            editor.StringPrompt();
             print.ClearOutput();
             // Test
             read.PushEnter();
@@ -603,25 +602,25 @@ namespace MSGTest.Console
         public void TestInsertDoesNotScrollWindowUnnecessarilyWhenClearingToEol()
         {
             read.PushString("A");
-            editor.PromptAndInput();
+            editor.StringPrompt();
             int cursorMotionLen = 4;
             // I have no idea what this is doing
-            int nonInputTextOutputLen = promptMsg.Length + cursorMotionLen * 3;
-            Assert.Less(print.Output.Length - nonInputTextOutputLen, print.BufferWidth - promptMsg.Length);
+            int nonInputTextOutputLen = editor.LastPrompt.Length + cursorMotionLen * 3;
+            Assert.Less(print.Output.Length - nonInputTextOutputLen, print.BufferWidth - editor.LastPrompt.Length);
         }
 
         [Test]
         public void TestInsertDoesNotThrowExceptionWhenTextWraps()
         {
-            Assert.DoesNotThrow(() => read.PushString("2345 1234"), editor.PromptAndInput());
+            Assert.DoesNotThrow(() => read.PushString("2345 1234"), editor.StringPrompt());
         }
 
         [Test]
         public void TestInsertLineThatNeedsToBeWrapped()
         {
             read.PushString("War wrap");
-            editor.PromptAndInput();
-            string expected = "> War <5^0 w<6^0  wrap";
+            editor.StringPrompt();
+            string expected = editor.LastPrompt + "War <5^0 w<6^0  wrap";
             Assert.AreEqual(expected, print.Output);
         }
 
@@ -629,16 +628,16 @@ namespace MSGTest.Console
         public void TestInsertOnce()
         {
             read.PushString("a");
-            editor.PromptAndInput();
-            Assert.AreEqual("> a", print.Output);
+            editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt + "a", print.Output);
         }
 
         [Test]
         public void TestInsertTwice()
         {
             read.PushString("ab");
-            editor.PromptAndInput();
-            Assert.AreEqual("> ab", print.Output);
+            editor.StringPrompt();
+            Assert.AreEqual(editor.LastPrompt + "ab", print.Output);
         }
     }
 }

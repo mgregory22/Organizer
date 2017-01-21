@@ -4,9 +4,9 @@
 
 using MSGTest.IO;
 using NUnit.Framework;
-using Priorities;
-using Priorities.Commands;
 using System.Collections.Generic;
+using Priorities.Commands;
+using Priorities.Types;
 
 namespace PrioritiesTest.Commands
 {
@@ -19,9 +19,9 @@ namespace PrioritiesTest.Commands
         TestTasks tasks;
 
         List<Task> testTasks = new List<Task> {
-            new Task("Test task 1", 0, 1),
-            new Task("Test task 2", 0, 1),
-            new Task("Test task 3", 0, 1)
+            new Task("Test task 1", 0),
+            new Task("Test task 2", 0),
+            new Task("Test task 3", 0)
         };
 
         [SetUp]

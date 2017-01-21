@@ -67,7 +67,7 @@ namespace MSGTest.IO
         [Test]
         public void TestDeleteHasNoEffectOnEmptyBuffer()
         {
-            buffer.Delete();
+            buffer.DeleteChar();
             Assert.AreEqual("", buffer.Text);
             Assert.AreEqual(0, buffer.Point);
         }
@@ -75,7 +75,7 @@ namespace MSGTest.IO
         [Test]
         public void TestInsertCharIntoEmptyBuffer()
         {
-            buffer.Insert('z');
+            buffer.InsertChar('z');
             Assert.AreEqual("z", buffer.Text);
         }
 
@@ -163,7 +163,7 @@ namespace MSGTest.IO
         public void TestCursorLeftAndInsert()
         {
             buffer.RetreatPoint();
-            buffer.Insert('x');
+            buffer.InsertChar('x');
             Assert.AreEqual("abcxd", buffer.Text);
         }
 
@@ -171,7 +171,7 @@ namespace MSGTest.IO
         public void TestCursorLeftAndInsertRestoresCursorPosition()
         {
             buffer.RetreatPoint();
-            buffer.Insert('x');
+            buffer.InsertChar('x');
             Assert.AreEqual(4, buffer.Point);
         }
 
@@ -206,21 +206,21 @@ namespace MSGTest.IO
         [Test]
         public void TestDeleteAtEndDoesntMoveCursor()
         {
-            buffer.Delete();
+            buffer.DeleteChar();
             Assert.AreEqual(4, buffer.Point);
         }
 
         [Test]
         public void TestDeleteAtEndDoesntRemoveChar()
         {
-            buffer.Delete();
+            buffer.DeleteChar();
             Assert.AreEqual("abcd", buffer.Text);
         }
 
         [Test]
         public void TestInsertCharAtEnd()
         {
-            buffer.Insert('x');
+            buffer.InsertChar('x');
             Assert.AreEqual("abcdx", buffer.Text);
         }
 

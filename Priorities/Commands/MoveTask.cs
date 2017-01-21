@@ -3,6 +3,7 @@
 //
 
 using MSG.IO;
+using Priorities.Types;
 
 namespace Priorities.Commands
 {

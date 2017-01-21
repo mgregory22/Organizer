@@ -3,8 +3,7 @@
 //
 
 using NUnit.Framework;
-using Priorities;
-using System;
+using Priorities.Types;
 
 namespace PrioritiesTest
 {

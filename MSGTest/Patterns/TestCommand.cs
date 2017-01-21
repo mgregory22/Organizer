@@ -14,15 +14,15 @@ namespace MSGTest.Patterns
         public TestCommand()
         {
         }
-        override public void Do()
+        public override void Do()
         {
             doCount++;
         }
-        override public void Redo()
+        public override void Redo()
         {
             redoCount++;
         }
-        override public void Undo()
+        public override void Undo()
         {
             undoCount++;
         }

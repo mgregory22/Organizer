@@ -4,6 +4,7 @@
 
 using MSG.IO;
 using System;
+using Priorities.Types;
 
 namespace Priorities.Commands
 {
@@ -17,7 +18,7 @@ namespace Priorities.Commands
             this.print = print;
         }
 
-        override public void Do()
+        public override void Do()
         {
             int priority = 0;
             foreach (Task task in tasks)

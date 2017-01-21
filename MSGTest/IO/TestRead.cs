@@ -469,7 +469,7 @@ namespace MSGTest.IO
             );
         }
 
-        override public char GetNextChar(bool intercept = false)
+        public override char GetNextChar(bool intercept = false)
         {
             if (keyQueue.Count == 0) return '\0';
             ConsoleKeyInfo keyInfo = keyQueue.Dequeue();
@@ -477,7 +477,7 @@ namespace MSGTest.IO
             return keyInfo.KeyChar;
         }
 
-        override public ConsoleKeyInfo GetNextKey(bool intercept = false)
+        public override ConsoleKeyInfo GetNextKey(bool intercept = false)
         {
             // Sending a pause key exits the input loop
             if (keyQueue.Count == 0)

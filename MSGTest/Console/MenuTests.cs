@@ -12,7 +12,7 @@ namespace MSGTest.Console
     class ToStringCountMenuItem : MenuItem
     {
         private int toStringCount = 0;
-        override public string ToString(int index = 0)
+        public override string ToString(int index = 0)
         {
             toStringCount++;
             return "";

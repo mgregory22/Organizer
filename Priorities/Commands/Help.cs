@@ -26,7 +26,7 @@ namespace Priorities.Commands
             this.target = target;
         }
 
-        override public void Do()
+        public override void Do()
         {
             print.String(target.ToString());
         }

@@ -11,7 +11,6 @@ namespace MSGTest.Console
     {
         MSG.Console.IntEditor editor;
         TestPrint print;
-        string promptMsg = "> ";
         TestRead read;
         int input;
 
@@ -21,14 +20,14 @@ namespace MSGTest.Console
             print = new TestPrint();
             print.BufferWidth = 8;
             read = new TestRead(null);
-            editor = new MSG.Console.IntEditor(print, read, promptMsg);
+            editor = new MSG.Console.IntEditor(print, read);
         }
 
         [Test]
         public void TestDigitCanBeInsertedIntoBuffer()
         {
             read.PushString("0\r");
-            input = editor.PromptAndInput();
+            input = editor.IntPrompt();
             Assert.AreEqual(0, input);
         }
 
@@ -36,7 +35,7 @@ namespace MSGTest.Console
         public void TestLetterCannotBeInsertedIntoBuffer()
         {
             read.PushString("a0b\r");
-            input = editor.PromptAndInput();
+            input = editor.IntPrompt();
             Assert.AreEqual(0, input);
         }
 
@@ -44,7 +43,7 @@ namespace MSGTest.Console
         public void TestMinusCanBeInsertedIntoBeginningOfBuffer()
         {
             read.PushString("-0");
-            input = editor.PromptAndInput();
+            input = editor.IntPrompt();
             Assert.AreEqual(0, input);
         }
 
@@ -53,7 +52,7 @@ namespace MSGTest.Console
         {
             read.PushString("1-\r");
             // Hack so this test won't get stuck
-            editor.PrintPrompt();
+            editor.PrintPrompt("");
             string strInput = editor.GetAndProcessKeys();
             Assert.IsFalse(editor.InputIsValid(strInput));
         }

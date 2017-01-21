@@ -18,13 +18,13 @@ namespace MSGTest.IO
             pos = new ConsolePos(0, 0);
         }
 
-        override public int BufferWidth
+        public override int BufferWidth
         {
             get { return bufferWidth; }
             set { bufferWidth = value; }
         }
 
-        override public void Char(char c)
+        public override void Char(char c)
         {
             output += c;
             pos.left++;
@@ -35,7 +35,7 @@ namespace MSGTest.IO
             }
         }
 
-        override public void CharNL(char c)
+        public override void CharNL(char c)
         {
             Char(c);
             Newline();
@@ -46,31 +46,31 @@ namespace MSGTest.IO
             output = "";
         }
 
-        override public int CursorLeft
+        public override int CursorLeft
         {
             get { return pos.left; }
             set { /*output += "◄" + pos.left.ToString();*/ pos.left = value; output += "<" + value.ToString(); }
         }
 
-        override public ConsolePos CursorPos
+        public override ConsolePos CursorPos
         {
             get { return pos; }
             set { SetCursorPos(value.left, value.top); }
         }
 
-        override public int CursorTop
+        public override int CursorTop
         {
             get { return pos.top; }
             set { /*output += "▲" + pos.top.ToString();*/ pos.top = value; output += "^" + value.ToString(); }
         }
 
-        override public bool IsCursorVisible
+        public override bool IsCursorVisible
         {
             get { return isCursorVisible; }
             set { isCursorVisible = value; }
         }
 
-        override public void Newline(int n = 1)
+        public override void Newline(int n = 1)
         {
             for (int i = 0; i < n; i++)
             {
@@ -87,13 +87,13 @@ namespace MSGTest.IO
             set { output = value; }
         }
 
-        override public void SetCursorPos(int left, int top)
+        public override void SetCursorPos(int left, int top)
         {
             CursorLeft = left;
             CursorTop = top;
         }
 
-        override public void String(string s)
+        public override void String(string s)
         {
             output += s;
             // Mimic the cursor motion
@@ -105,7 +105,7 @@ namespace MSGTest.IO
             }
         }
 
-        override public void StringNL(string s)
+        public override void StringNL(string s)
         {
             String(s);
             Newline();

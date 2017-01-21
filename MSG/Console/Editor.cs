@@ -14,14 +14,24 @@ namespace MSG.Console
     {
         protected Buffer buffer;
         protected Print print;
-        protected string promptMsg;
         protected Read read;
         protected View view;
+        protected string lastPrompt;
 
-        public Editor(Print print, Read read, string promptMsg)
+        public string LastPrompt
+        {
+            get { return this.lastPrompt; }
+        }
+
+        /// <param name="print">
+        ///   Object used for printing
+        /// </param>
+        /// <param name="read">
+        ///   Object used for reading
+        /// </param>
+        public Editor(Print print, Read read)
         {
             this.print = print;
-            this.promptMsg = promptMsg;
             this.read = read;
             this.buffer = new Buffer();
         }
@@ -29,12 +39,6 @@ namespace MSG.Console
         /// <summary>
         ///   Gets one or more lines of input from the user.
         /// </summary>
-        /// <param name="print">
-        ///   Object used for raw printing
-        /// </param>
-        /// <param name="read">
-        ///   Object used for raw reading
-        /// </param>
         public string GetAndProcessKeys()
         {
             bool done = false;
@@ -77,23 +81,25 @@ namespace MSG.Console
         /// <returns>
         ///   The string entered by the user
         /// </returns>
-        virtual public string PromptAndInput()
+        virtual public string StringPrompt(string prompt = "$ ")
         {
             string s;
             do
             {
-                PrintPrompt();
+                PrintPrompt(prompt);
                 s = GetAndProcessKeys();
             } while (!InputIsValid(s));
             return s;
         }
 
-        public void PrintPrompt()
+        public void PrintPrompt(string prompt)
         {
-            print.String(promptMsg);
+            print.String(prompt);
             // The view has an internal startCursorPos property
             // that needs to be set after the prompt is printed.
             this.view = new View(buffer, print);
+            // For testing
+            this.lastPrompt = prompt;
         }
 
         /// <summary>
@@ -120,19 +126,19 @@ namespace MSG.Console
                 if (KeyIsValid(keyInfo))
                 {
                     // insert any of the printable keys
-                    buffer.Insert(keyInfo.KeyChar);
+                    buffer.InsertChar(keyInfo.KeyChar);
                     view.RedrawEditor(buffer.Text, buffer.Point);
                 }
             }
             else if (IsShiftEnter(keyInfo))
             {
-                buffer.Insert('\n');
+                buffer.InsertChar('\n');
                 view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsBackspace(keyInfo))
             {
                 buffer.RetreatPoint();
-                buffer.Delete();
+                buffer.DeleteChar();
                 view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsDown(keyInfo))
@@ -157,7 +163,7 @@ namespace MSG.Console
             }
             else if (IsDelete(keyInfo))
             {
-                buffer.Delete();
+                buffer.DeleteChar();
                 view.RedrawEditor(buffer.Text, buffer.Point);
             }
             else if (IsEnd(keyInfo))
@@ -176,7 +182,7 @@ namespace MSG.Console
             }
             else if (IsEscape(keyInfo))
             {
-                buffer.Clear();
+                buffer.Delete();
                 view.ExitEditor();
                 done = true;
             }

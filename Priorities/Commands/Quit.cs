@@ -15,7 +15,7 @@ namespace Priorities.Commands
         {
         }
 
-        override public void Do()
+        public override void Do()
         {
             throw new OperationCanceledException("User has quit");
         }

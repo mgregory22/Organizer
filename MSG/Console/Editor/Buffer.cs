@@ -70,9 +70,17 @@ namespace MSG.Console
             }
 
             /// <summary>
-            ///   Deletes the character at the point.
+            ///   Obliterates the buffer to signify a cancel operation.
             /// </summary>
             public void Delete()
+            {
+                text = null;
+            }
+
+            /// <summary>
+            ///   Deletes the character at the point.
+            /// </summary>
+            public void DeleteChar()
             {
                 if (point < text.Length)
                 {
@@ -91,7 +99,7 @@ namespace MSG.Console
             /// <param name="c">
             ///   Character to insert
             /// </param>
-            public void Insert(char c)
+            public void InsertChar(char c)
             {
                 text = text.Insert(point++, c.ToString());
             }
@@ -152,7 +160,7 @@ namespace MSG.Console
             /// <summary>
             ///   Returns the text being edited.
             /// </summary>
-            override public string ToString()
+            public override string ToString()
             {
                 return text;
             }

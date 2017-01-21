@@ -13,7 +13,7 @@ namespace Priorities.Commands
         {
         }
 
-        override public void Do()
+        public override void Do()
         {
         }
     }

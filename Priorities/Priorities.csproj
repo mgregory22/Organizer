@@ -54,7 +54,8 @@
     <Compile Include="Driver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks.cs" />
+    <Compile Include="Types\Task.cs" />
+    <Compile Include="Types\Tasks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

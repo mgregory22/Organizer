@@ -139,7 +139,7 @@ namespace MSG.Console
         ///   Returns a string of the entire menu.
         /// </summary>
         /// <returns>String representation of the menu</returns>
-        override public string ToString()
+        public override string ToString()
         {
             string s = Draw.UnderlinedText(title);
             foreach (MenuItem menuItem in menuItems)

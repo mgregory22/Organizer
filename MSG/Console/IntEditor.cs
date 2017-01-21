@@ -13,30 +13,36 @@ namespace MSG.Console
         protected static Regex intRe = new Regex(@"^\s*-?[0-9]+$");
 
         /// <summary>
-        ///   Initialize a prompt with message, print and read objects.
+        ///   Initialize print and read objects.
         /// </summary>
         /// <param name="print">Used to print the prompt</param>
-        /// <param name="promptMsg">The prompt string to use when requesting user input</param>
         /// <param name="read">Used to read the user input</param>
-        public IntEditor(Print print, Read read, string promptMsg)
-            : base(print, read, promptMsg)
+        public IntEditor(Print print, Read read)
+            : base(print, read)
         {
         }
 
-        override public bool InputIsValid(string input)
+        /// <summary>
+        ///   True if input is an integer.
+        /// </summary>
+        public override bool InputIsValid(string input)
         {
             return intRe.IsMatch(input);
         }
 
-        override public bool KeyIsValid(ConsoleKeyInfo keyInfo)
+        public override bool KeyIsValid(ConsoleKeyInfo keyInfo)
         {
             return (keyInfo.Key >= ConsoleKey.D0 && keyInfo.Key <= ConsoleKey.D9)
                 || keyInfo.Key == ConsoleKey.OemMinus;
         }
 
-        new public int PromptAndInput()
+        /// <summary>
+        ///   Prints a prompt and gets an int from the user
+        /// </summary>
+        /// <param name="promptMsg">The prompt</param>
+        public int IntPrompt(string prompt = "# ")
         {
-            string input = base.PromptAndInput();
+            string input = base.StringPrompt(prompt);
             return Convert.ToInt32(input);
         }
     }

@@ -2,10 +2,9 @@
 // PrioritiesTest/TestTasks.cs
 //
 
-using Priorities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Priorities.Types;
 
 namespace PrioritiesTest
 {
@@ -19,7 +18,7 @@ namespace PrioritiesTest
         public int add_parent;
         public int add_priority;
 
-        override public void Add(string name, int parent = 0, int priority = 1)
+        public override void Add(string name, int parent = 0, int priority = 1)
         {
             addCnt++;
             // Save the last parameters Add() was called with, so they can be checked
@@ -30,7 +29,7 @@ namespace PrioritiesTest
 
         /*
         public int count;
-        override public int Count
+        public override int Count
         {
             get { return count; }
         }
@@ -45,7 +44,7 @@ namespace PrioritiesTest
         public int removeCnt;
         public string remove_name;
 
-        override public void Remove(string name)
+        public override void Remove(string name)
         {
             removeCnt++;
             // Save the last parameters Remove() was called with, so they can be checked
@@ -58,7 +57,7 @@ namespace PrioritiesTest
         public string taskExists_name;
         public bool taskExists_nextReturn;
 
-        override public bool TaskExists(string name)
+        public override bool TaskExists(string name)
         {
             taskExists_name = name;
             return taskExists_nextReturn;

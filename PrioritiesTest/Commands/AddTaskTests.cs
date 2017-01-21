@@ -35,7 +35,7 @@ namespace PrioritiesTest.Commands
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual(addTask.promptMsg, print.Output.Substring(0, addTask.promptMsg.Length));
+            Assert.AreEqual(addTask.LastPrompt, print.Output.Substring(0, addTask.LastPrompt.Length));
         }
 
         [Test]
