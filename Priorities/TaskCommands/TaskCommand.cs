@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Commands/TaskCommand.cs
+// Priorities/TaskCommands/TaskCommand.cs
 //
 
 using MSG.Patterns;
 using System;
 using Priorities.Types;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class TaskCommand : Command
     {

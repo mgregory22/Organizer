@@ -1,11 +1,11 @@
 ﻿//
-// Priorities/Commands/Help.cs
+// Priorities/TaskCommands/Help.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     /// <summary>
     ///   The Help object just prints the ToString() output of

@@ -4,7 +4,7 @@
 
 using MSG.Console;
 using MSG.IO;
-using Priorities.Commands;
+using Priorities.TaskCommands;
 using Priorities.Types;
 
 namespace Priorities
@@ -21,7 +21,7 @@ namespace Priorities
             Help help = new Help(print);
             MenuItem[] menuItems = {
                     new MenuItem('a', new AddTask(print, read, tasks), "Add Task"),
-                    new MenuItem('d', new DeleteTask(0, print, read, tasks), "Delete Task"),
+                    new MenuItem('d', new DeleteTask(print, read, tasks), "Delete Task"),
                     new MenuItem('l', new ListTasks(print, tasks), "List Tasks"),
                     new MenuItem('m', new MoveTask(print, read, tasks), "Move Task/Change Priority"),
                     new MenuItem('o', new Options(print, read), "Options Menu"),

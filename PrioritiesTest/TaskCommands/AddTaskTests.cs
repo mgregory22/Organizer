@@ -1,13 +1,13 @@
 ﻿//
-// PrioritiesTest/Commands/AddTaskTests.cs
+// PrioritiesTest/TaskCommands/AddTaskTests.cs
 //
 
 using MSGTest.IO;
 using NUnit.Framework;
-using Priorities.Commands;
+using Priorities.TaskCommands;
 using System;
 
-namespace PrioritiesTest.Commands
+namespace PrioritiesTest.TaskCommands
 {
     [TestFixture]
     public class AddTaskTests
@@ -45,8 +45,6 @@ namespace PrioritiesTest.Commands
             Assert.AreEqual(1, tasks.addCnt);
             // newTask should passed in the name parameter to the tasks.Add() method
             Assert.AreEqual(newTask, tasks.add_name);
-            // 0 (default) should be the parent parameter
-            Assert.AreEqual(0, tasks.add_parent);
             // 0 (default) should be the priority parameter
             Assert.AreEqual(0, tasks.add_priority);
         }

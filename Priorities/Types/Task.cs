@@ -9,7 +9,6 @@ namespace Priorities.Types
     public class Task : IEquatable<Task>
     {
         string name;
-        int parent;
 
         public string Name
         {
@@ -17,16 +16,9 @@ namespace Priorities.Types
             set { name = value; }
         }
 
-        public int Parent
-        {
-            get { return parent; }
-            set { parent = value; }
-        }
-
-        public Task(string name, int parent)
+        public Task(string name)
         {
             this.name = name;
-            this.parent = parent;
         }
 
         public bool Equals(Task other)
@@ -36,7 +28,7 @@ namespace Priorities.Types
 
         public override int GetHashCode()
         {
-            return name.GetHashCode() ^ parent.GetHashCode();
+            return name.GetHashCode();
         }
     }
 

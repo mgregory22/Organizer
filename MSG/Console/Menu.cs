@@ -18,7 +18,7 @@ namespace MSG.Console
     public class Menu
     {
         private MenuItem[] menuItems;
-        private CharPrompt prompt;
+        private CharPrompt charPrompt;
         private Print print;
         private Read read;
         private string title;
@@ -34,8 +34,8 @@ namespace MSG.Console
             this.menuItems = menuItems;
             this.print = prompt.Print;
             this.read = prompt.Read;
-            this.prompt = prompt;
-            this.prompt.ValidList = GetKeystrokeList();
+            this.charPrompt = prompt;
+            this.charPrompt.ValidList = GetKeystrokeList();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace MSG.Console
             {
                 // Seeing the menu every time is annoying
                 //print.String(this.ToString());
-                char? c = prompt.PromptAndInput();
+                char? c = charPrompt.PromptAndInput();
                 if (c == null)
                 {
                     done = true;
@@ -129,8 +129,8 @@ namespace MSG.Console
         /// </summary>
         public string Prompt
         {
-            get { return prompt.Prompt; }
-            set { prompt.Prompt = value; }
+            get { return charPrompt.Prompt; }
+            set { charPrompt.Prompt = value; }
         }
 
         /// <summary>

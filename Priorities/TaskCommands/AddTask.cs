@@ -1,5 +1,5 @@
 ﻿//
-// Priorities/Commands/AddTask.cs
+// Priorities/TaskCommands/AddTask.cs
 //
 
 using MSG.Console;
@@ -7,11 +7,11 @@ using MSG.IO;
 using System;
 using Priorities.Types;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class AddTask : TaskCommand
     {
-        protected string taskName;
+        protected Task task;
         Print print;
         Read read;
         protected string lastPrompt;
@@ -31,32 +31,35 @@ namespace Priorities.Commands
         public override void Do()
         {
             Editor editor = new Editor(print, read);
-            taskName = editor.StringPrompt();
-            if (taskName == "")
+            string name = editor.StringPrompt();
+            if (name == null || name == "")
             {
                 print.StringNL("Add cancelled");
                 return;
             }
+            this.task = new Types.Task(name);
             Redo();
             this.lastPrompt = editor.LastPrompt;
         }
 
         public override void Redo()
         {
-            if (taskName == null)
+            string name = this.task.Name;
+            if (name == null)
                 throw new InvalidOperationException("Adding a task must be done before it can be redone");
-            if (tasks.TaskExists(taskName))
+            if (this.tasks.TaskExists(name))
                 throw new InvalidOperationException("Adding a task cannot be redone before it is undone");
-            tasks.Add(taskName);
+            this.tasks.Add(name);
         }
 
         public override void Undo()
         {
-            if (taskName == null)
+            string name = this.task.Name;
+            if (name == null)
                 throw new InvalidOperationException("Adding a task must be done before it can be undone");
-            if (!tasks.TaskExists(taskName))
+            if (!this.tasks.TaskExists(name))
                 throw new InvalidOperationException("Adding a task cannot be undone twice");
-            tasks.Remove(taskName);
+            this.tasks.Remove(name);
         }
     }
 }

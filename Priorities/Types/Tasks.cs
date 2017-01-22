@@ -36,9 +36,8 @@ namespace Priorities.Types
         ///     to be inserted.  1 is first, 2 is second, etc.  0 is last.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent"></param>
         /// <param name="priority"></param>
-        virtual public void Add(string name, int parent = 0, int priority = 0)
+        virtual public void Add(string name, int priority = 0)
         {
             if (name == null)
                 throw new ArgumentNullException("Cannot add task without a name");
@@ -47,7 +46,7 @@ namespace Priorities.Types
             if (TaskExists(name))
                 throw new InvalidOperationException("Cannot add duplicate task");
 
-            Task newTask = new Task(name, parent);
+            Task newTask = new Task(name);
             // priority = 0 means last priority
             if (priority == 0)
             {

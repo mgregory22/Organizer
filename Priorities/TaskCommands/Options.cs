@@ -1,11 +1,11 @@
 ﻿//
-// Priorities/Commands/Options.cs
+// Priorities/TaskCommands/Options.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class Options : Command
     {

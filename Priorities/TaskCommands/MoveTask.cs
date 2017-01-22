@@ -1,11 +1,11 @@
 ﻿//
-// Priorities/Commands/MoveTask.cs
+// Priorities/TaskCommands/MoveTask.cs
 //
 
 using MSG.IO;
 using Priorities.Types;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class MoveTask : TaskCommand
     {

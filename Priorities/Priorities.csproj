@@ -42,15 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddTask.cs" />
-    <Compile Include="Commands\DeleteTask.cs" />
-    <Compile Include="Commands\Help.cs" />
-    <Compile Include="Commands\ListTasks.cs" />
-    <Compile Include="Commands\MoveTask.cs" />
-    <Compile Include="Commands\Options.cs" />
-    <Compile Include="Commands\Quit.cs" />
-    <Compile Include="Commands\RenameTask.cs" />
-    <Compile Include="Commands\TaskCommand.cs" />
+    <Compile Include="TaskCommands\AddTask.cs" />
+    <Compile Include="TaskCommands\DeleteTask.cs" />
+    <Compile Include="TaskCommands\Help.cs" />
+    <Compile Include="TaskCommands\ListTasks.cs" />
+    <Compile Include="TaskCommands\MoveTask.cs" />
+    <Compile Include="TaskCommands\Options.cs" />
+    <Compile Include="TaskCommands\Quit.cs" />
+    <Compile Include="TaskCommands\RenameTask.cs" />
+    <Compile Include="TaskCommands\TaskCommand.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

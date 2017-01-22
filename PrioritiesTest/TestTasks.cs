@@ -15,15 +15,13 @@ namespace PrioritiesTest
     {
         public int addCnt;
         public string add_name;
-        public int add_parent;
         public int add_priority;
 
-        public override void Add(string name, int parent = 0, int priority = 0)
+        public override void Add(string name, int priority = 0)
         {
             addCnt++;
             // Save the last parameters Add() was called with, so they can be checked
             add_name = name;
-            add_parent = parent;
             add_priority = priority;
         }
 

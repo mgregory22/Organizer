@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Commands/ListTasks.cs
+// Priorities/TaskCommands/ListTasks.cs
 //
 
 using MSG.IO;
 using System;
 using Priorities.Types;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class ListTasks : TaskCommand
     {

@@ -1,5 +1,5 @@
 ﻿//
-// Priorities/Commands/DeleteTask.cs
+// Priorities/TaskCommands/DeleteTask.cs
 //
 
 using MSG.Console;
@@ -7,20 +7,18 @@ using MSG.IO;
 using System;
 using Priorities.Types;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     class DeleteTask : TaskCommand
     {
-        protected int parent;
         protected int? priority;
         protected Task deletedTask;
         Print print;
         Read read;
 
-        public DeleteTask(int parent, Print print, Read read, Tasks tasks)
+        public DeleteTask(Print print, Read read, Tasks tasks)
             : base(tasks)
         {
-            this.parent = parent;
             this.print = print;
             this.read = read;
         }
@@ -51,7 +49,7 @@ namespace Priorities.Commands
         {
             if (deletedTask == null)
                 throw new InvalidOperationException("Deleting a task must be done before it can be undone");
-            tasks.Add(deletedTask.Name, deletedTask.Parent, priority.Value);
+            tasks.Add(deletedTask.Name, priority.Value);
         }
     }
 }

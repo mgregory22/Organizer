@@ -1,11 +1,11 @@
 ﻿//
-// Priorities/Commands/Quit.cs
+// Priorities/TaskCommands/Quit.cs
 //
 
 using MSG.Patterns;
 using System;
 
-namespace Priorities.Commands
+namespace Priorities.TaskCommands
 {
     public class Quit : Command
     {

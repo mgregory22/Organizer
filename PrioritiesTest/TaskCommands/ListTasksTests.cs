@@ -1,14 +1,14 @@
 ﻿//
-// PrioritiesTest/Commands/ListTasksTests.cs
+// PrioritiesTest/TaskCommands/ListTasksTests.cs
 //
 
 using MSGTest.IO;
 using NUnit.Framework;
 using System.Collections.Generic;
-using Priorities.Commands;
+using Priorities.TaskCommands;
 using Priorities.Types;
 
-namespace PrioritiesTest.Commands
+namespace PrioritiesTest.TaskCommands
 {
     [TestFixture]
     public class ListTasksTests
@@ -19,9 +19,9 @@ namespace PrioritiesTest.Commands
         TestTasks tasks;
 
         List<Task> testTasks = new List<Task> {
-            new Task("Test task 1", 0),
-            new Task("Test task 2", 0),
-            new Task("Test task 3", 0)
+            new Task("Test task 1"),
+            new Task("Test task 2"),
+            new Task("Test task 3")
         };
 
         [SetUp]
