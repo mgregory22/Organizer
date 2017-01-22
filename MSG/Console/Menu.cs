@@ -96,7 +96,7 @@ namespace MSG.Console
                     MenuItem m = this.FindMatchingItem(c.Value);
                     try
                     {
-                        m.Do(print, read);
+                        m.Do();
                     }
                     catch (OperationCanceledException)
                     {

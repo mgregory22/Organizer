@@ -50,7 +50,7 @@ namespace MSG.Console
         /// <summary>
         ///   Performs the action associated with the menu item.
         /// </summary>
-        public void Do(Print print, Read read)
+        public void Do()
         {
             this.command.Do();
         }

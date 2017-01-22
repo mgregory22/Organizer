@@ -136,7 +136,7 @@ namespace MSGTest.Console
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()
         {
             MenuItem m = menu.FindMatchingItem('1');
-            m.Do(null, null);
+            m.Do();
             Assert.AreEqual(1, menuItems[1].Command.doCount);
             // Might as well check that ONLY the correct command was executed
             Assert.AreEqual(0, menuItems[0].Command.doCount);

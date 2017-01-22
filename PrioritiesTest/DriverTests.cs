@@ -14,7 +14,6 @@ namespace PrioritiesTest
     {
         TestPrint print;
         TestRead read;
-        string promptMsg = "! ";
 
         [SetUp]
         public void SetUp()
@@ -27,7 +26,7 @@ namespace PrioritiesTest
         public void TestHelpDisplays()
         {
             read.PushString("?q");
-            CharPrompt prompt = new CharPrompt(print, read, promptMsg);
+            CharPrompt prompt = new CharPrompt(print, read);
             Driver.Run(print, read, prompt);
             Assert.AreEqual(
                 string.Format("{0}?\n"
@@ -41,7 +40,7 @@ namespace PrioritiesTest
                         + "[r] Rename Task\n"
                         + "[?] Help\n\n"
                         + "{0}q\n\n"
-                    , promptMsg)
+                    , prompt.LastPrompt)
                 , print.Output
             );
         }

@@ -44,22 +44,20 @@ namespace Priorities.TaskCommands
 
         public override void Redo()
         {
-            string name = this.task.Name;
-            if (name == null)
-                throw new InvalidOperationException("Adding a task must be done before it can be redone");
-            if (this.tasks.TaskExists(name))
-                throw new InvalidOperationException("Adding a task cannot be redone before it is undone");
-            this.tasks.Add(name);
+            if (this.task == null || this.task.Name == null)
+                throw new InvalidOperationException("Nothing to redo");
+            if (this.tasks.TaskExists(this.task.Name))
+                throw new InvalidOperationException("Already redone");
+            this.tasks.Add(this.task.Name);
         }
 
         public override void Undo()
         {
-            string name = this.task.Name;
-            if (name == null)
-                throw new InvalidOperationException("Adding a task must be done before it can be undone");
-            if (!this.tasks.TaskExists(name))
-                throw new InvalidOperationException("Adding a task cannot be undone twice");
-            this.tasks.Remove(name);
+            if (this.task == null || this.task.Name == null)
+                throw new InvalidOperationException("Nothing to undo");
+            if (!this.tasks.TaskExists(this.task.Name))
+                throw new InvalidOperationException("Already undone");
+            this.tasks.Remove(this.task.Name);
         }
     }
 }
