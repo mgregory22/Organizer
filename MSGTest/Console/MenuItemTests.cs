@@ -3,6 +3,8 @@
 //
 
 using MSG.Console;
+using MSG.IO;
+using MSG.Patterns;
 using MSGTest.Patterns;
 using NUnit.Framework;
 using System;
@@ -16,17 +18,24 @@ namespace MSGTest.Console
         /*
          * Member variables
          */
+        Print print;
+        Read read;
+        UndoManager undoManager;
+
         MenuItem menuItem;
         string testDesc = "Test";
         char testKey = 't';
         int testMaxWidth = 40;
-        TestCommand testCommand;
+        TestDialogCommand testDialogCommand;
 
         [SetUp]
         public void Initialize()
         {
-            testCommand = new TestCommand();
-            menuItem = new MenuItem(testKey, testCommand, testDesc);
+            print = new Print();
+            read = new Read(print);
+            undoManager = new UndoManager();
+            testDialogCommand = new TestDialogCommand(print, read, undoManager);
+            menuItem = new MenuItem(testKey, testDesc, testDialogCommand);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -59,7 +68,7 @@ namespace MSGTest.Console
         {
             if (menuItem.DoesMatch(testKey))
                 menuItem.Do();
-            Assert.AreEqual(1, testCommand.doCount);
+            Assert.AreEqual(1, testDialogCommand.doCount);
         }
 
         [Test]
@@ -80,7 +89,7 @@ namespace MSGTest.Console
                 }
             }
             // Assert Execute() was never executed
-            Assert.AreEqual(0, testCommand.doCount);
+            Assert.AreEqual(0, testDialogCommand.doCount);
         }
 
         [Test]
@@ -102,6 +111,9 @@ namespace MSGTest.Console
     [TestFixture]
     public class LongMenuItemTests
     {
+        Print print;
+        Read read;
+        UndoManager undoManager;
         MenuItem menuItem;
         string testDesc = "Test of a very long description to test wrapping";
         char testKey = 't';
@@ -115,7 +127,11 @@ namespace MSGTest.Console
         [SetUp]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, new TestCommand(), testDesc);
+            print = new Print();
+            read = new Read(print);
+            undoManager = new UndoManager();
+            TestDialogCommand testDialogCommand = new TestDialogCommand(print, read, undoManager);
+            menuItem = new MenuItem(testKey, testDesc, testDialogCommand);
             menuItem.MaxWidth = testMaxWidth;
         }
 
@@ -143,6 +159,9 @@ namespace MSGTest.Console
     [TestFixture]
     public class VeryLongMenuItemTests
     {
+        Print print;
+        Read read;
+        UndoManager undoManager;
         MenuItem menuItem;
         string testDescLine1 = "Test of a very long test string that";
         string testDescLine2 = "will be wrapped into three lines that";
@@ -164,7 +183,11 @@ namespace MSGTest.Console
         [SetUp]
         public void Initialize()
         {
-            menuItem = new MenuItem(testKey, new TestCommand(), testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4);
+            print = new Print();
+            read = new Read(print);
+            undoManager = new UndoManager();
+            TestDialogCommand testDialogCommand = new TestDialogCommand(print, read, undoManager);
+            menuItem = new MenuItem(testKey, testDescLine1 + " " + testDescLine2 + " " + testDescLine3 + " " + testDescLine4, testDialogCommand);
             menuItem.MaxWidth = testMaxWidth;
         }
 

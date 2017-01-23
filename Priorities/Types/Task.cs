@@ -10,20 +10,20 @@ namespace Priorities.Types
     {
         string name;
 
+        public Task(string name)
+        {
+            this.name = name;
+        }
+
         public string Name
         {
             get { return name; }
             set { name = value; }
         }
 
-        public Task(string name)
-        {
-            this.name = name;
-        }
-
         public bool Equals(Task other)
         {
-            return this.name.Equals(other.name);
+            return name.Equals(other.name);
         }
 
         public override int GetHashCode()

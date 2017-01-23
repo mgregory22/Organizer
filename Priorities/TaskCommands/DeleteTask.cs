@@ -2,54 +2,51 @@
 // Priorities/TaskCommands/DeleteTask.cs
 //
 
+using System;
 using MSG.Console;
 using MSG.IO;
-using System;
 using Priorities.Types;
 
 namespace Priorities.TaskCommands
 {
     class DeleteTask : TaskCommand
     {
-        protected int? priority;
-        protected Task deletedTask;
-        Print print;
-        Read read;
+        /// <summary>
+        ///   The position in the list where the task was deleted
+        /// </summary>
+        protected int position;
 
-        public DeleteTask(Print print, Read read, Tasks tasks)
+        /// <summary>
+        ///   The task that was removed from the list
+        /// </summary>
+        protected Task deletedTask;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tasks">
+        ///   The list of tasks to manipulate
+        /// </param>
+        /// <param name="position">
+        ///   The list position of the task to delete
+        /// </param>
+        public DeleteTask(Tasks tasks, int position)
             : base(tasks)
         {
-            this.print = print;
-            this.read = read;
+            if (!tasks.TaskExists(position))
+                throw new ArgumentOutOfRangeException("position", "position must be nonnegative and less than tasks.Count");
+            this.position = position;
         }
 
         public override void Do()
         {
-            IntEditor editor = new IntEditor(print, read);
-            priority = editor.IntPrompt();
-            if (priority == 0)
-            {
-                print.StringNL("Add cancelled");
-                return;
-            }
-            Redo();
-        }
-
-        public override void Redo()
-        {
-            if (priority == null)
-                throw new InvalidOperationException("Deleting a task must be done before it can be redone");
-            if (tasks.TaskExists(priority.Value))
-                throw new InvalidOperationException("Deleting a task cannot be redone before it is undone");
-            deletedTask = tasks[priority.Value];
-            tasks.Remove(priority.Value);
+            deletedTask = tasks[position];
+            tasks.Remove(position);
         }
 
         public override void Undo()
         {
-            if (deletedTask == null)
-                throw new InvalidOperationException("Deleting a task must be done before it can be undone");
-            tasks.Add(deletedTask.Name, priority.Value);
+            tasks.Add(deletedTask, position);
         }
     }
 }

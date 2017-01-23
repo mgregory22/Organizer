@@ -17,17 +17,17 @@ namespace Priorities.Types
             this.tasks = new List<Task>();
         }
 
-        public Task this[int priority]
+        public virtual Task this[int position]
         {
-            // Get task by priority
+            // Get task by position
             get
             {
-                return tasks[priority - 1];
+                return tasks[position];
             }
             // Replace task with given priority
             set
             {
-                tasks[priority - 1] = value;
+                tasks[position] = value;
             }
         }
 
@@ -35,30 +35,25 @@ namespace Priorities.Types
         ///     Adds a new task to the list.  The priority determines where it is
         ///     to be inserted.  1 is first, 2 is second, etc.  0 is last.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="priority"></param>
-        virtual public void Add(string name, int priority = 0)
+        /// <param name="task">
+        ///   Task to add.
+        /// </param>
+        /// <param name="position">
+        ///   1-based position in the list to add.  0 = the end.
+        /// </param>
+        public virtual void Add(Task task, int position = -1)
         {
-            if (name == null)
-                throw new ArgumentNullException("Cannot add task without a name");
-            if (name == "")
-                throw new ArgumentException("Cannot add task without a name");
-            if (TaskExists(name))
-                throw new InvalidOperationException("Cannot add duplicate task");
+            if (TaskExists(task))
+                throw new InvalidOperationException("Cannot add same task twice");
 
-            Task newTask = new Task(name);
-            // priority = 0 means last priority
-            if (priority == 0)
-            {
-                tasks.Add(newTask);
-            }
+            // Position -1 = add to end of list
+            if (position == -1)
+                tasks.Add(task);
             else
-            {
-                tasks.Insert(priority - 1, newTask);
-            }
+                tasks.Insert(position, task);
         }
 
-        virtual public int Count
+        public int Count
         {
             get { return tasks.Count; }
         }
@@ -68,33 +63,53 @@ namespace Priorities.Types
             return tasks.GetEnumerator();
         }
 
-        virtual public void Remove(string name)
+        public virtual void Move(int srcPosition, int destPosition)
+        {
+            Task task = tasks[srcPosition];
+            tasks.RemoveAt(srcPosition);
+            tasks.Insert(destPosition, task);
+        }
+
+        public virtual void Remove(Task task)
+        {
+            if (task == null)
+                throw new NullReferenceException("<task> cannot be null in call to Remove(Task)");
+            if (tasks.Remove(tasks.Find(t => t == task)) == false)
+                throw new ApplicationException("Task \"" + task.Name + "\" could not be removed");
+        }
+
+        public virtual void Remove(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("Cannot remove task without its name");
+                throw new ArgumentNullException("<name> cannot be null in call to Remove(string)");
             if (name == "")
-                throw new ArgumentException("Cannot remove task without its name");
+                throw new ArgumentException("<name> cannot be empty string in call to Remove(string)");
             if (!TaskExists(name))
-                throw new InvalidOperationException("Cannot remove nonexistent task");
+                throw new InvalidOperationException("Task \"" + name + "\" does not exist");
             if (tasks.Remove(tasks.Find(task => task.Name == name)) == false)
                 throw new ApplicationException("Task \"" + name + "\" could not be removed");
         }
 
-        virtual public void Remove(int priority)
+         public virtual void Remove(int position)
         {
-            if (!TaskExists(priority))
+            if (!TaskExists(position))
                 throw new InvalidOperationException("Cannot remove nonexistent task");
-            tasks.RemoveAt(priority - 1);
+            tasks.RemoveAt(position);
         }
 
-        virtual public bool TaskExists(string name)
+        public virtual bool TaskExists(Task task)
+        {
+            return tasks.IndexOf(task) > -1;
+        }
+
+        public virtual bool TaskExists(string name)
         {
             return tasks.Find(task => task.Name == name) != null;
         }
 
-        virtual public bool TaskExists(int priority)
+        public virtual bool TaskExists(int position)
         {
-            return priority >= 1 && priority <= tasks.Count;
+            return position >= 0 && position < tasks.Count;
         }
     }
 }

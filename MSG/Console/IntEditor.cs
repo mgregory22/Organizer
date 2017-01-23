@@ -10,7 +10,7 @@ namespace MSG.Console
 {
     public class IntEditor : Editor
     {
-        protected static Regex intRe = new Regex(@"^\s*-?[0-9]+$");
+        protected static Regex intRe = new Regex(@"^-?[0-9]+$");
 
         /// <summary>
         ///   Initialize print and read objects.
@@ -40,10 +40,24 @@ namespace MSG.Console
         ///   Prints a prompt and gets an int from the user
         /// </summary>
         /// <param name="prompt">The prompt string</param>
-        public int IntPrompt(string prompt = "# ")
+        public int? IntPrompt(string prompt = "# ")
         {
             string input = base.StringPrompt(prompt);
+            if (input == null) return null;
             return Convert.ToInt32(input);
+        }
+
+        public int? RangePrompt(int min, int max, string prompt = "# ")
+        {
+            int? input;
+            do
+            {
+                input = IntPrompt(prompt);
+                if (input == null) return null;
+                if (input < min || input > max)
+                    print.StringNL(String.Format("Enter a number between {0} and {1} (Esc to quit)", min, max));
+            } while (input < min || input > max);
+            return input;
         }
     }
 }

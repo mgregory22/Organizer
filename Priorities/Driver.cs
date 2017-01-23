@@ -2,8 +2,11 @@
 // Priorities/Driver.cs
 //
 
+using System.Collections.Generic;
 using MSG.Console;
 using MSG.IO;
+using MSG.Patterns;
+using Priorities.DialogCommands;
 using Priorities.TaskCommands;
 using Priorities.Types;
 
@@ -14,23 +17,34 @@ namespace Priorities
     /// </summary>
     public class Driver
     {
-        public static void Run(Print print, Read read, CharPrompt prompt)
+        /// <summary>
+        ///   Sets up and starts the main loop of the program.
+        /// </summary>
+        /// <param name="prompt">
+        ///   
+        /// </param>
+        public static void Run(CharPrompt prompt)
         {
+            Print print = prompt.Print;
+            Read read = prompt.Read;
             Tasks tasks = new Tasks();
-            // Construction of Help is weird because of the circular dependency on the menu.
-            Help help = new Help(print);
+            UndoManager undoManager = new UndoManager();
             MenuItem[] menuItems = {
-                    new MenuItem('a', new AddTask(print, read, tasks), "Add Task"),
-                    new MenuItem('d', new DeleteTask(print, read, tasks), "Delete Task"),
-                    new MenuItem('l', new ListTasks(print, tasks), "List Tasks"),
-                    new MenuItem('m', new MoveTask(print, read, tasks), "Move Task/Change Priority"),
-                    new MenuItem('o', new Options(print, read), "Options Menu"),
-                    new MenuItem('q', new Quit(), "Quit Program"),
-                    new MenuItem('r', new RenameTask(print, read, tasks), "Rename Task"),
-                    new MenuItem('?', help, "Help")
+                    new MenuItem('a', "Add Task", new AddTaskDialog(print, read, undoManager, tasks)),
+                    new MenuItem('d', "Delete Task", new DeleteTaskDialog(print, read, undoManager, tasks)),
+                    new MenuItem('l', "List Tasks", new ListTasksDialog(print, tasks)),
+                    new MenuItem('m', "Move Task/Change Priority", new MoveTaskDialog(print, read, undoManager, tasks)),
+                    new MenuItem('o', "Options Menu", new OptionsDialog(print, read)),
+                    new MenuItem('q', "Quit Program", new QuitDialog(print, read)),
+                    new MenuItem('r', "Rename Task", new RenameTaskDialog(print, read, undoManager, tasks)),
+                    new MenuItem('z', "Undo Last Action", new UndoDialog(print, read, undoManager, tasks)),
+                    new MenuItem('Z', "Redo Next Action", new RedoDialog(print, read, undoManager, tasks))
                 };
             Menu mainMenu = new Menu("Main Menu", menuItems, prompt);
-            help.SetTarget(mainMenu);
+
+            // The help item is a special case
+            HelpDialog help = new HelpDialog(print, mainMenu);
+            mainMenu.AddMenuItem(new MenuItem('?', "Help", help));
             mainMenu.Loop();
         }
     }

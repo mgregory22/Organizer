@@ -2,16 +2,18 @@
 // MSGTest/Patterns/TestCommand.cs
 //
 
+using MSG.IO;
 using MSG.Patterns;
 
 namespace MSGTest.Patterns
 {
-    public class TestCommand : Command
+    public class TestDialogCommand : DialogCommand
     {
         public int doCount;
         public int undoCount;
 
-        public TestCommand()
+        public TestDialogCommand(Print print, Read read, UndoManager undoManager)
+            : base(print, read, undoManager)
         {
         }
 
@@ -23,6 +25,11 @@ namespace MSGTest.Patterns
         public override void Undo()
         {
             undoCount++;
+        }
+
+        public override bool IsEnabled()
+        {
+            return true;
         }
     }
 }

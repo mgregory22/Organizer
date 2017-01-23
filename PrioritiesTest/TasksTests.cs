@@ -26,7 +26,7 @@ namespace PrioritiesTest
         public void TestTaskCanBeAdded()
         {
             int cnt = tasks.Count;
-            tasks.Add(testTask);
+            tasks.Add(new Task(testTask));
             Assert.AreEqual(cnt + 1, tasks.Count);
             Assert.AreEqual(true, tasks.TaskExists(testTask));
         }

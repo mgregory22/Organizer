@@ -4,6 +4,7 @@
 
 using MSG.Console;
 using MSG.IO;
+using MSG.Patterns;
 using MSGTest.Patterns;
 using NUnit.Framework;
 
@@ -12,18 +13,21 @@ namespace MSGTest.Console
     class ToStringCountMenuItem : MenuItem
     {
         private int toStringCount = 0;
+
         public override string ToString(int index = 0)
         {
             toStringCount++;
             return "";
         }
+
         public int ToStringCount
         {
             get { return toStringCount; }
             set { toStringCount = value; }
         }
-        public ToStringCountMenuItem(char k, int n)
-            : base(k, new TestCommand(), "")
+
+        public ToStringCountMenuItem(char k, int n, Print print, Read read, UndoManager undoManager)
+            : base(k, "", new TestDialogCommand(print, read, undoManager))
         {
         }
     }
@@ -33,25 +37,29 @@ namespace MSGTest.Console
     {
         Menu menu;
         ToStringCountMenuItem[] menuItems;
+
         [SetUp]
         public void Initialize()
         {
-            menuItems = new ToStringCountMenuItem[] {
-                new ToStringCountMenuItem('a', 1),
-                new ToStringCountMenuItem('b', 2),
-                new ToStringCountMenuItem('c', 3),
-                new ToStringCountMenuItem('d', 4)
-            };
             Print print = new Print();
             Read read = new Read(print);
+            UndoManager undoManager = new UndoManager();
+            menuItems = new ToStringCountMenuItem[] {
+                new ToStringCountMenuItem('a', 1, print, read, undoManager),
+                new ToStringCountMenuItem('b', 2, print, read, undoManager),
+                new ToStringCountMenuItem('c', 3, print, read, undoManager),
+                new ToStringCountMenuItem('d', 4, print, read, undoManager)
+            };
             CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
+
         [Test]
         public void TestAllMenuItemsAreStored()
         {
             Assert.AreEqual(menuItems.Length, menu.ItemCount);
         }
+
         [Test]
         public void TestValidKeyListIsCorrect()
         {
@@ -69,25 +77,29 @@ namespace MSGTest.Console
     {
         Menu menu;
         ToStringCountMenuItem[] menuItems;
+
         [SetUp]
         public void Initialize()
         {
-            menuItems = new ToStringCountMenuItem[] {
-                new ToStringCountMenuItem('a', 1),
-                new ToStringCountMenuItem('b', 2),
-                new ToStringCountMenuItem('c', 3),
-                new ToStringCountMenuItem('d', 4)
-            };
             Print print = new Print();
             Read read = new Read(print);
+            UndoManager undoManager = new UndoManager();
+            menuItems = new ToStringCountMenuItem[] {
+                new ToStringCountMenuItem('a', 1, print, read, undoManager),
+                new ToStringCountMenuItem('b', 2, print, read, undoManager),
+                new ToStringCountMenuItem('c', 3, print, read, undoManager),
+                new ToStringCountMenuItem('d', 4, print, read, undoManager)
+            };
             CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
+
         [Test]
         public void TestMenuTitleDisplays()
         {
             Assert.IsTrue(menu.ToString().StartsWith("Test Menu\n---------\n"));
         }
+
         [Test]
         public void TestToStringCallsAllMenuItemToStrings()
         {
@@ -102,47 +114,77 @@ namespace MSGTest.Console
     [TestFixture]
     public class MenuCommandTests
     {
-        class CommandCountMenuItem : MenuItem
+        public class CommandCountMenuItem : MenuItem
         {
-            TestCommand command;
-            public new TestCommand Command
+            protected TestDialogCommand testDialogCommand;
+
+            public CommandCountMenuItem(char keystroke, TestDialogCommand testDialogCommand, string description)
+                : base(keystroke, description, testDialogCommand)
             {
-                get { return command; }
-                set { command = value; }
+                this.testDialogCommand = testDialogCommand;
             }
-            public CommandCountMenuItem(char keystroke, TestCommand command, string description)
-                : base(keystroke, command, description)
+
+            public virtual TestDialogCommand TestDialogCommand
             {
-                this.command = command;
+                get { return testDialogCommand; }
+                set { testDialogCommand = value; }
+            }
+
+            /// <summary>
+            ///   Performs the action associated with the menu item.
+            /// </summary>
+            public override void Do()
+            {
+                this.dialogCommand.Do();
+            }
+
+            /// <summary>
+            ///   Returns the string representation of the menu item.  If the
+            ///   description is long enough to be wrapped, an index less than
+            ///   LineCount can be given to retrieve the associated line of text.
+            /// </summary>
+            /// <param name="index"></param>
+            /// <returns></returns>
+            public override string ToString(int index = 0)
+            {
+                return testDialogCommand.IsEnabled() ? lines[index] : "";
             }
         }
+
+        Print print;
+        Read read;
+        UndoManager undoManager;
         Menu menu;
         CommandCountMenuItem[] menuItems;
+
         [SetUp]
         public void Initialize()
         {
+            print = new Print();
+            read = new Read(print);
+            undoManager = new UndoManager();
             menuItems = new CommandCountMenuItem[] {
-                new CommandCountMenuItem('0', new TestCommand(), "Item 0"),
-                new CommandCountMenuItem('1', new TestCommand(), "Item 1"),
-                new CommandCountMenuItem('2', new TestCommand(), "Item 2"),
-                new CommandCountMenuItem('3', new TestCommand(), "Item 3")
+                new CommandCountMenuItem('0', new TestDialogCommand(print, read, undoManager), "Item 0"),
+                new CommandCountMenuItem('1', new TestDialogCommand(print, read, undoManager), "Item 1"),
+                new CommandCountMenuItem('2', new TestDialogCommand(print, read, undoManager), "Item 2"),
+                new CommandCountMenuItem('3', new TestDialogCommand(print, read, undoManager), "Item 3")
             };
-            Print print = new Print();
-            Read read = new Read(print);
             CharPrompt prompt = new CharPrompt(print, read, "");
             menu = new Menu("Test Menu", menuItems, prompt);
         }
+
         [Test]
         public void TestCorrectMenuItemIsExecutedWhenKeystrokeIsSent()
         {
             MenuItem m = menu.FindMatchingItem('1');
             m.Do();
-            Assert.AreEqual(1, menuItems[1].Command.doCount);
+            Assert.AreEqual(1, menuItems[1].TestDialogCommand.doCount);
             // Might as well check that ONLY the correct command was executed
-            Assert.AreEqual(0, menuItems[0].Command.doCount);
-            Assert.AreEqual(0, menuItems[2].Command.doCount);
-            Assert.AreEqual(0, menuItems[3].Command.doCount);
+            Assert.AreEqual(0, menuItems[0].TestDialogCommand.doCount);
+            Assert.AreEqual(0, menuItems[2].TestDialogCommand.doCount);
+            Assert.AreEqual(0, menuItems[3].TestDialogCommand.doCount);
         }
+
         [Test]
         public void TestFindReturnsMatchingMenuItem()
         {

@@ -28,7 +28,6 @@ namespace MSG.Console
         {
             this.print = print;
             this.read = read;
-            this.buffer = new Buffer();
         }
 
         /// <summary>
@@ -87,6 +86,7 @@ namespace MSG.Console
         virtual public string StringPrompt(string prompt = "$ ")
         {
             string s;
+            this.buffer = new Buffer();
             do
             {
                 PrintPrompt(prompt);

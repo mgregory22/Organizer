@@ -14,15 +14,15 @@ namespace PrioritiesTest
     class TestTasks : Tasks, IEnumerable
     {
         public int addCnt;
-        public string add_name;
-        public int add_priority;
+        public Task add_task;
+        public int add_position;
 
-        public override void Add(string name, int priority = 0)
+        public override void Add(Task task, int position = -1)
         {
             addCnt++;
             // Save the last parameters Add() was called with, so they can be checked
-            add_name = name;
-            add_priority = priority;
+            add_task = task;
+            add_position = position;
         }
 
         /*
@@ -40,7 +40,14 @@ namespace PrioritiesTest
         }
 
         public int removeCnt;
+        public Task remove_task;
         public string remove_name;
+
+        public override void Remove(Task task)
+        {
+            removeCnt++;
+            remove_task = task;
+        }
 
         public override void Remove(string name)
         {

@@ -19,25 +19,51 @@ namespace MSG.Console
     /// </summary>
     public class MenuItem
     {
-        Command command;
-        string description;
-        char keystroke;
-        List<string> lines;
-        int maxWidth;
+        protected char keystroke;
+        protected string description;
+        protected DialogCommand dialogCommand;
+        protected int maxWidth;
+        protected List<string> lines;
 
         /// <summary>
-        ///   An object that encapsulates the action to perform when the menu item is selected.
+        ///   Initializes a menu item object.
         /// </summary>
-        virtual public Command Command
+        /// <param name="keystroke">
+        ///   Keystroke to activate command.
+        /// </param>
+        /// <param name="description">
+        ///   Description of the command.
+        /// </param>
+        /// <param name="dialogCommand">
+        ///   Command to be performed by the Do() call.
+        /// </param>
+        /// <param name="enabler">
+        ///   Functoid to determine whether to enable the menu item.
+        /// </param>
+        public MenuItem(char keystroke, string description, DialogCommand dialogCommand)
         {
-            get { return command; }
-            set { command = value; }
+            this.keystroke = keystroke;
+            this.description = description;
+            this.dialogCommand = dialogCommand;
+            this.maxWidth = 80;
+            this.lines = new List<string>();
+            UpdateLines();
+        }
+
+        /// <summary>
+        ///   An object that encapsulates the action to perform when the menu item 
+        ///   is selected.
+        /// </summary>
+        public virtual DialogCommand DialogCommand
+        {
+            get { return dialogCommand; }
+            set { dialogCommand = value; }
         }
 
         /// <summary>
         ///   Name or short description of the menu item.
         /// </summary>
-        virtual public string Description
+        public virtual string Description
         {
             get { return description; }
             set
@@ -50,9 +76,9 @@ namespace MSG.Console
         /// <summary>
         ///   Performs the action associated with the menu item.
         /// </summary>
-        public void Do()
+        public virtual void Do()
         {
-            this.command.Do();
+            this.dialogCommand.Do();
         }
 
         /// <summary>
@@ -71,7 +97,7 @@ namespace MSG.Console
         /// <summary>
         ///   The keystroke to activate the menu item.
         /// </summary>
-        virtual public char Keystroke
+        public virtual char Keystroke
         {
             get { return keystroke; }
             set
@@ -85,7 +111,7 @@ namespace MSG.Console
         ///   The number of lines in the description when it's word
         ///   wrapped according to the MaxWidth property.
         /// </summary>
-        virtual public int LineCount
+        public virtual int LineCount
         {
             get { return lines.Count; }
         }
@@ -94,7 +120,7 @@ namespace MSG.Console
         ///   The amount of horizontal space available to print the
         ///   description.
         /// </summary>
-        virtual public int MaxWidth
+        public virtual int MaxWidth
         {
             get { return maxWidth; }
             set
@@ -105,46 +131,22 @@ namespace MSG.Console
         }
 
         /// <summary>
-        ///   Initializes a menu item object.
-        /// </summary>
-        /// <param name="keystroke"></param>
-        /// <param name="action"></param>
-        /// <param name="description"></param>
-        /// <param name="flags"></param>
-        /// <param name="maxWidth"></param>
-        public MenuItem(char keystroke, Command command, string description, int maxWidth = 80)
-        {
-            this.command = command;
-            this.description = description;
-            this.keystroke = keystroke;
-            this.maxWidth = maxWidth;
-            this.lines = new List<string>();
-            UpdateLines();
-        }
-
-        /// <summary>
         ///   Returns the string representation of the menu item.  If the
         ///   description is long enough to be wrapped, an index less than
         ///   LineCount can be given to retrieve the associated line of text.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        virtual public string ToString(int index = 0)
+        public virtual string ToString(int index = 0)
         {
-            return lines[index];
+            return dialogCommand.IsEnabled() ? lines[index] + "\n" : "";
         }
 
         /// <summary>
-        ///   Calculates the line breaks of the display.
+        ///   Creates the display text of the menu item.  Takes bracketed keystroke
+        ///   and description, calculates line breaks and indents, and stores result
+        ///   in lines[].
         /// </summary>
-        /// <remarks>
-        ///   I could have called this just once in ToString(), but then it
-        ///   would calculating all the lines for every line printed and that
-        ///   seemed like a waste.  So to work around that, I would have to
-        ///   create a dirty flag and update the flag every place I currently
-        ///   call UpdateLines(), so the winner is calling UpdateLines() 
-        ///   every place a change happens.
-        /// </remarks>
         private void UpdateLines()
         {
             lines.Clear();
@@ -153,6 +155,7 @@ namespace MSG.Console
             string p = new String(' ', k.Length);
             int maxDescWidth = maxWidth - p.Length;
             string d = String.Format("{0}", description);
+
             if (d.Length <= maxDescWidth)
             {
                 lines.Add(k + d);
@@ -181,7 +184,7 @@ namespace MSG.Console
         ///   This method has nothing to do with menu items per se and should
         ///   probably be moved to a more general lib.
         /// </remarks>
-        virtual public void WrapSplit(string s, int maxWidth, List<string> lines)
+        public virtual void WrapSplit(string s, int maxWidth, List<string> lines)
         {
             while (s.Length > maxWidth)
             {

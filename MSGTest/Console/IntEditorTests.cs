@@ -12,7 +12,7 @@ namespace MSGTest.Console
         MSG.Console.IntEditor editor;
         TestPrint print;
         TestRead read;
-        int input;
+        int? input;
 
         [SetUp]
         public void SetUp()
@@ -45,16 +45,6 @@ namespace MSGTest.Console
             read.PushString("-0");
             input = editor.IntPrompt();
             Assert.AreEqual(0, input);
-        }
-
-        [Test]
-        public void TestMinusInsertedIntoMiddleOfBufferIsNotValid()
-        {
-            read.PushString("1-\r");
-            // Hack so this test won't get stuck
-            editor.PrintPrompt("");
-            string strInput = editor.GetAndProcessKeys();
-            Assert.IsFalse(editor.InputIsValid(strInput));
         }
     }
 }

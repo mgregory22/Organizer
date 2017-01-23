@@ -8,7 +8,7 @@ using Priorities.Types;
 
 namespace Priorities.TaskCommands
 {
-    public class TaskCommand : Command
+    public abstract class TaskCommand : Command
     {
         protected Tasks tasks;
 
@@ -17,19 +17,5 @@ namespace Priorities.TaskCommands
             this.tasks = tasks;
         }
 
-        public override void Do()
-        {
-            Console.WriteLine("Do Task Command");
-        }
-
-        public override void Redo()
-        {
-            Console.WriteLine("Redo Task Command");
-        }
-
-        public override void Undo()
-        {
-            Console.WriteLine("Undo Task Command");
-        }
     }
 }

@@ -17,7 +17,7 @@ namespace MSG.Console
     /// </summary>
     public class Menu
     {
-        private MenuItem[] menuItems;
+        private List<MenuItem> menuItems;
         private CharPrompt charPrompt;
         private Print print;
         private Read read;
@@ -28,14 +28,18 @@ namespace MSG.Console
         ///   are displayed in the order given in the array.
         /// </summary>
         /// <param name="menuItems"></param>
-        public Menu(string title, MenuItem[] menuItems, CharPrompt prompt)
+        public Menu(string title, MenuItem[] menuItems, CharPrompt charPrompt)
         {
             this.title = title;
-            this.menuItems = menuItems;
-            this.print = prompt.Print;
-            this.read = prompt.Read;
-            this.charPrompt = prompt;
-            this.charPrompt.ValidList = GetKeystrokeList();
+            this.menuItems = new List<MenuItem>(menuItems);
+            this.charPrompt = charPrompt;
+            this.print = charPrompt.Print;
+            this.read = charPrompt.Read;
+        }
+
+        public void AddMenuItem(MenuItem menuItem)
+        {
+            this.menuItems.Add(menuItem);
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace MSG.Console
         /// </summary>
         public int ItemCount
         {
-            get { return menuItems.Length; }
+            get { return menuItems.Count; }
         }
 
         /// <summary>
@@ -82,6 +86,7 @@ namespace MSG.Console
         public void Loop()
         {
             bool done = false;
+            charPrompt.ValidList = GetKeystrokeList();
             while (!done)
             {
                 // Seeing the menu every time is annoying
@@ -153,7 +158,7 @@ namespace MSG.Console
             {
                 for (int i = 0; i < menuItem.LineCount; i++)
                 {
-                    s += menuItem.ToString(i) + "\n";
+                    s += menuItem.ToString(i);
                 }
             }
             return s;
@@ -167,8 +172,8 @@ namespace MSG.Console
         {
             get
             {
-                char[] validKeys = new char[menuItems.Length];
-                for (int i = 0; i < menuItems.Length; i++)
+                char[] validKeys = new char[menuItems.Count];
+                for (int i = 0; i < menuItems.Count; i++)
                 {
                     validKeys[i] = menuItems[i].Keystroke;
                 }

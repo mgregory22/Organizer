@@ -27,7 +27,7 @@ namespace PrioritiesTest
         {
             read.PushString("?q");
             CharPrompt prompt = new CharPrompt(print, read);
-            Driver.Run(print, read, prompt);
+            Driver.Run(prompt);
             Assert.AreEqual(
                 string.Format("{0}?\n"
                         + "Main Menu\n---------\n"
@@ -38,6 +38,8 @@ namespace PrioritiesTest
                         + "[o] Options Menu\n"
                         + "[q] Quit Program\n"
                         + "[r] Rename Task\n"
+                        + "[z] Undo Task\n"
+                        + "[Z] Redo Task\n"
                         + "[?] Help\n\n"
                         + "{0}q\n\n"
                     , prompt.LastPrompt)

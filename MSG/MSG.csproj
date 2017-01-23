@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console\IntEditor.cs" />
+    <Compile Include="Patterns\DialogCommand.cs" />
+    <Compile Include="Patterns\UndoManager.cs" />
     <Compile Include="Types\Array\EndlessArray.cs" />
     <Compile Include="Types\String\Draw.cs" />
     <Compile Include="IO\ConsolePos.cs" />

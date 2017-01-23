@@ -66,10 +66,10 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="TaskCommands\ListTasksTests.cs" />
+    <Compile Include="DialogCommands\ListTasksDialogTests.cs" />
     <Compile Include="DriverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskCommands\AddTaskTests.cs" />
+    <Compile Include="DialogCommands\AddTaskDialogTests.cs" />
     <Compile Include="TasksTests.cs" />
     <Compile Include="TestTasks.cs" />
   </ItemGroup>
@@ -89,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TaskCommands\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

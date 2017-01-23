@@ -1,33 +1,36 @@
 ﻿//
-// PrioritiesTest/TaskCommands/AddTaskTests.cs
+// PrioritiesTest/DialogCommands/AddTaskDialogTests.cs
 //
 
-using MSGTest.IO;
 using NUnit.Framework;
-using Priorities.TaskCommands;
 using System;
+using MSGTest.IO;
+using MSG.Patterns;
+using Priorities.DialogCommands;
 
-namespace PrioritiesTest.TaskCommands
+namespace PrioritiesTest.DialogCommands
 {
     [TestFixture]
-    public class AddTaskTests
+    public class AddTaskDialogTests
     {
-        AddTask addTask;
+        AddTaskDialog addTaskDialog;
         TestPrint print;
         TestRead read;
         TestTasks tasks;
-        string newTask = "This is a task to be added";
+        UndoManager undoManager;
+        string newTask = "Add me";
 
         [SetUp]
         public void Initialize()
         {
             print = new TestPrint();
             read = new TestRead(print);
+            undoManager = new UndoManager();
             tasks = new TestTasks();
-            addTask = new AddTask(print, read, tasks);
-            // The AddTask command prompts the user for the name of the task to add
+            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
+            // The AddTaskDialog command prompts the user for the name of the task to add
             read.PushString(newTask + "\r");
-            addTask.Do();
+            addTaskDialog.Do();
             // Set up the task.TaskExists() method to claim that the task has been added
             tasks.taskExists_nextReturn = true;
         }
@@ -35,7 +38,7 @@ namespace PrioritiesTest.TaskCommands
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual(addTask.LastPrompt, print.Output.Substring(0, addTask.LastPrompt.Length));
+            Assert.AreEqual(addTaskDialog.LastPrompt, print.Output.Substring(0, addTaskDialog.LastPrompt.Length));
         }
 
         [Test]
@@ -44,44 +47,38 @@ namespace PrioritiesTest.TaskCommands
             // The tasks.Add() method should be called once
             Assert.AreEqual(1, tasks.addCnt);
             // newTask should passed in the name parameter to the tasks.Add() method
-            Assert.AreEqual(newTask, tasks.add_name);
-            // 0 (default) should be the priority parameter
-            Assert.AreEqual(0, tasks.add_priority);
+            Assert.AreEqual(newTask, tasks.add_task.Name);
+            // 0 (default) should be the position parameter
+            Assert.AreEqual(-1, tasks.add_position);
         }
 
         [Test]
         public void TestUndoCallsTasksRemove()
         {
-            addTask.Undo();
+            undoManager.Undo();
             // Assert the task was removed
             Assert.AreEqual(1, tasks.removeCnt);
         }
 
         [Test]
-        public void TestRedoSomethingNotUndoneThrowsUp()
-        {
-            // Try to redo without undoing first
-            Assert.Catch<InvalidOperationException>(() => addTask.Redo());
-        }
-
-        [Test]
         public void TestRedoCallsTasksAdd()
         {
-            addTask.Undo();
+            undoManager.Undo();
             // Set up the task.TaskExists() method to claim that the adding of the task has been undone
             tasks.taskExists_nextReturn = false;
-            addTask.Redo();
+            undoManager.Redo();
             // Assert the task was added twice
             Assert.AreEqual(2, tasks.addCnt);
         }
     }
     [TestFixture]
-    public class NoAddTaskTests
+    public class NoAddTaskDialogTests
     {
-        AddTask addTask;
+        AddTaskDialog addTaskDialog;
         TestPrint print;
         TestRead read;
         TestTasks tasks;
+        UndoManager undoManager;
 
         [SetUp]
         public void Initialize()
@@ -89,7 +86,8 @@ namespace PrioritiesTest.TaskCommands
             print = new TestPrint();
             read = new TestRead(print);
             tasks = new TestTasks();
-            addTask = new AddTask(print, read, tasks);
+            undoManager = new UndoManager();
+            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
             // Set up the task.TaskExists() method to claim that the task doesn't exist
             tasks.taskExists_nextReturn = false;
         }
@@ -97,13 +95,7 @@ namespace PrioritiesTest.TaskCommands
         [Test]
         public void TestUndoSomethingNotDoneThrowsUp()
         {
-            Assert.Catch<InvalidOperationException>(() => addTask.Undo());
-        }
-
-        [Test]
-        public void TestRedoSomethingNotDoneThrowsUp()
-        {
-            Assert.Catch<InvalidOperationException>(() => addTask.Redo());
+            Assert.Catch<InvalidOperationException>(() => undoManager.Undo());
         }
     }
 }

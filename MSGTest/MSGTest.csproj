@@ -70,6 +70,8 @@
     <Compile Include="Console\CharPromptTests.cs" />
     <Compile Include="Console\Editor\BufferTests.cs" />
     <Compile Include="Console\IntEditorTests.cs" />
+    <Compile Include="Patterns\TestDialogCommand.cs" />
+    <Compile Include="Patterns\TestUndoManager.cs" />
     <Compile Include="Types\Array\EndlessArrayTests.cs" />
     <Compile Include="Types\String\DrawTests.cs" />
     <Compile Include="Console\EditorTests.cs" />

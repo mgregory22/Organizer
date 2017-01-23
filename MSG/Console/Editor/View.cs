@@ -23,6 +23,7 @@ namespace MSG.Console
                 Update,
                 Keep
             }
+
             class OutputDiff
             {
                 public int point;
@@ -99,8 +100,8 @@ namespace MSG.Console
                 this.preferredCursorColumn = print.CursorPos.left;
                 this.startCursorPos = print.CursorPos;
                 this.lineWidths = new EndlessArray<int>(
-                    this.consoleWidth - LineLeft(0, this.startCursorPos.left),
-                    this.consoleWidth - LineLeft(1, this.startCursorPos.left)
+                    consoleWidth - LineLeft(0, startCursorPos.left),
+                    consoleWidth - LineLeft(1, startCursorPos.left)
                 );
 
                 this.wordWrapper = new WordWrapper(buffer.Text, lineWidths);
