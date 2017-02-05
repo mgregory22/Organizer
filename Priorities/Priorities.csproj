@@ -69,12 +69,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MSG\MSG.csproj">
+    <ProjectReference Include="..\..\Lib\MSG\MSG\MSG.csproj">
       <Project>{3acd9886-1905-4f80-9495-c6970c2b93f2}</Project>
       <Name>MSG</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

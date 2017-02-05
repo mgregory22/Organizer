@@ -1,9 +1,8 @@
 # Priorities
 
-Primarily an exploraton in C#, program design and TDD.
+A command-line hierarchical task list and priority organizer.
 
-This is going to be a command-line hierarchical task list and priority organizer.
+Nothing serious.  Primarily an exploraton in C#, program design and TDD.
 
-A large part of this is the console library I'm writing, which has no name, but
-I'm calling it MSG (my initials) for now.
+Requires my MSG library (https://github.com/mgregory22/MSG.git)
 

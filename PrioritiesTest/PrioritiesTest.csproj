@@ -74,11 +74,11 @@
     <Compile Include="TestTasks.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MSGTest\MSGTest.csproj">
+    <ProjectReference Include="..\..\Lib\MSG\MSGTest\MSGTest.csproj">
       <Project>{974c560c-3db5-4950-95d9-fccd744dd659}</Project>
       <Name>MSGTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MSG\MSG.csproj">
+    <ProjectReference Include="..\..\Lib\MSG\MSG\MSG.csproj">
       <Project>{3acd9886-1905-4f80-9495-c6970c2b93f2}</Project>
       <Name>MSG</Name>
     </ProjectReference>

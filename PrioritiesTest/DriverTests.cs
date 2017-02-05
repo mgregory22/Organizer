@@ -38,8 +38,6 @@ namespace PrioritiesTest
                         + "[o] Options Menu\n"
                         + "[q] Quit Program\n"
                         + "[r] Rename Task\n"
-                        + "[z] Undo Task\n"
-                        + "[Z] Redo Task\n"
                         + "[?] Help\n\n"
                         + "{0}q\n\n"
                     , prompt.LastPrompt)
