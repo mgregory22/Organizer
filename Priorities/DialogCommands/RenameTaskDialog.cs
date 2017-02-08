@@ -27,13 +27,16 @@ namespace Priorities.DialogCommands
             int? srcPriority;
             string name;
 
-            srcPriority = intEditor.RangePrompt(1, tasks.Count, "Enter priority of item to rename # ");
+            srcPriority = intEditor.RangePrompt(1, tasks.Count, "Enter priority of item to rename\n# ");
             if (srcPriority == null)
+            {
                 return null;
+            }
             name = editor.StringPrompt("Enter new name $ ");
             if (name == null)
+            {
                 return null;
-
+            }
             return new RenameTask(tasks, srcPriority.Value - 1, name);
         }
 

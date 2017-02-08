@@ -25,12 +25,5 @@ namespace Priorities.DialogCommands
         {
             return new RedoTask(undoManager, tasks);
         }
-
-
-        public override bool IsEnabled()
-        {
-            return undoManager.CanRedo();
-        }
-
     }
 }

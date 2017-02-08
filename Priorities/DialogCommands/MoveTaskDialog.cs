@@ -27,13 +27,16 @@ namespace Priorities.DialogCommands
             int? srcPriority;
             int? destPriority;
 
-            srcPriority = intEditor.RangePrompt(1, tasks.Count, "Enter priority of item to change # ");
+            srcPriority = intEditor.RangePrompt(1, tasks.Count, "Enter priority of item to change\n# ");
             if (srcPriority == null)
+            {
                 return null;
+            }
             destPriority = intEditor.RangePrompt(1, tasks.Count, "Enter new priority # ");
             if (destPriority == null)
+            {
                 return null;
-
+            }
             return new MoveTask(tasks, srcPriority.Value - 1, destPriority.Value - 1);
         }
     }

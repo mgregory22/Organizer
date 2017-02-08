@@ -20,14 +20,16 @@ namespace Priorities.TaskCommands
             this.destPosition = destPosition;
         }
 
-        public override void Do()
+        public override Result Do()
         {
             tasks.Move(srcPosition, destPosition);
+            return new Ok();
         }
 
-        public override void Undo()
+        public override Result Undo()
         {
             tasks.Move(destPosition, srcPosition);
+            return new Ok();
         }
     }
 }

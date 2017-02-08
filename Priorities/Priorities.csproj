@@ -42,11 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conditions\CanRedo.cs" />
+    <Compile Include="Conditions\CanUndo.cs" />
     <Compile Include="DialogCommands\AddTaskDialog.cs" />
     <Compile Include="DialogCommands\DeleteTaskDialog.cs" />
     <Compile Include="DialogCommands\MoveTaskDialog.cs" />
     <Compile Include="DialogCommands\RedoDialog.cs" />
     <Compile Include="DialogCommands\UndoDialog.cs" />
+    <Compile Include="Conditions\IsTasksMoreThanOne.cs" />
+    <Compile Include="Conditions\IsTasksNonEmpty.cs" />
     <Compile Include="TaskCommands\RedoTask.cs" />
     <Compile Include="TaskCommands\UndoTask.cs" />
     <Compile Include="TaskCommands\AddTask.cs" />

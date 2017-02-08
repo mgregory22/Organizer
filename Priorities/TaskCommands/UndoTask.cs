@@ -18,16 +18,16 @@ namespace Priorities.TaskCommands
             this.undoManager = undoManager;
         }
 
-        public override void Do()
+        public override Result Do()
         {
             // Do the undo!
-            undoManager.Undo();
+            return undoManager.Undo();
         }
 
-        public override void Undo()
+        public override Result Undo()
         {
             // Undo the undo = Redo!
-            undoManager.Redo();
+            return undoManager.Redo();
         }
     }
 }

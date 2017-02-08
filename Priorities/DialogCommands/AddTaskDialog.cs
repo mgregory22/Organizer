@@ -32,7 +32,7 @@ namespace Priorities.DialogCommands
 
         public override Command Create()
         {
-            string name = editor.StringPrompt();
+            string name = editor.StringPrompt("Enter task name/description\n$ ");
             if (String.IsNullOrEmpty(name))
             {
                 print.StringNL("Add cancelled");

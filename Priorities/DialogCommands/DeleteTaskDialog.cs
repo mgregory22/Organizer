@@ -33,12 +33,14 @@ namespace Priorities.DialogCommands
                 while (priority == null)
                 {
                     // Ask user for priority of task to delete
-                    priority = editor.RangePrompt(1, tasks.Count);
+                    priority = editor.RangePrompt(1, tasks.Count, "Enter priority of item to delete\n# ");
                     // Only for testing
                     this.lastPrompt = editor.LastPrompt;
                     // If escape was pressed, abort
                     if (priority == null)
+                    {
                         return null;
+                    }
                 }
             }
             return new DeleteTask(tasks, priority.Value - 1);

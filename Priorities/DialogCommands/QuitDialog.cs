@@ -17,8 +17,7 @@ namespace Priorities.DialogCommands
 
         public override Command Create()
         {
-            // throwing an exception for a usual occurrence is admittedly pretty lame
-            throw new OperationCanceledException("User has quit");
+            return new MSG.Patterns.Quit();
         }
     }
 }

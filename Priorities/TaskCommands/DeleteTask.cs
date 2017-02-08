@@ -38,15 +38,17 @@ namespace Priorities.TaskCommands
             this.position = position;
         }
 
-        public override void Do()
+        public override Result Do()
         {
             deletedTask = tasks[position];
             tasks.Remove(position);
+            return new Ok();
         }
 
-        public override void Undo()
+        public override Result Undo()
         {
             tasks.Add(deletedTask, position);
+            return new Ok();
         }
     }
 }

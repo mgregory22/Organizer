@@ -95,7 +95,7 @@ namespace PrioritiesTest.DialogCommands
         [Test]
         public void TestUndoSomethingNotDoneThrowsUp()
         {
-            Assert.Catch<InvalidOperationException>(() => undoManager.Undo());
+            Assert.IsInstanceOf<Command.NothingToUndo>(undoManager.Undo());
         }
     }
 }

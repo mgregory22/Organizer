@@ -29,17 +29,19 @@ namespace PrioritiesTest
             CharPrompt prompt = new CharPrompt(print, read);
             Driver.Run(prompt);
             Assert.AreEqual(
-                string.Format("{0}?\n"
-                        + "Main Menu\n---------\n"
+                string.Format("Main Menu\n"
+                        + "{0}?\n"
                         + "[a] Add Task\n"
-                        + "[d] Delete Task\n"
+                        //+ "[d] Delete Task\n"
                         + "[l] List Tasks\n"
-                        + "[m] Move Task/Change Priority\n"
+                        //+ "[m] Move Task/Change Priority\n"
                         + "[o] Options Menu\n"
                         + "[q] Quit Program\n"
-                        + "[r] Rename Task\n"
+                        //+ "[r] Rename Task\n"
                         + "[?] Help\n\n"
-                        + "{0}q\n\n"
+                        + "Main Menu\n"
+                        + "{0}q\n"
+                        + "Thanks for using Priorities!\n\n"
                     , prompt.LastPrompt)
                 , print.Output
             );

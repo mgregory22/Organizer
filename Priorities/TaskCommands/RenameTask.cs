@@ -21,15 +21,17 @@ namespace Priorities.TaskCommands
             this.name = name;
         }
 
-        public override void Do()
+        public override Result Do()
         {
             savedName = tasks[position].Name;
             tasks[position].Name = name;
+            return new Ok();
         }
 
-        public override void Undo()
+        public override Result Undo()
         {
             tasks[position].Name = savedName;
+            return new Ok();
         }
     }
 }

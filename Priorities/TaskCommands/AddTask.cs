@@ -19,15 +19,17 @@ namespace Priorities.TaskCommands
             this.task = null;
         }
 
-        public override void Do()
+        public override Result Do()
         {
             this.task = new Types.Task(name);
             tasks.Add(task);
+            return new Ok();
         }
 
-        public override void Undo()
+        public override Result Undo()
         {
             tasks.Remove(task);
+            return new Ok();
         }
     }
 }
