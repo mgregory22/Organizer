@@ -2,11 +2,11 @@
 // PrioritiesTest/DialogCommands/ListTasksDialogTests.cs
 //
 
+using System.Collections.Generic;
 using MSGTest.IO;
 using NUnit.Framework;
-using System.Collections.Generic;
-using Priorities.DialogCommands;
-using Priorities.Types;
+using Priorities.Features.Tasks;
+using Priorities.Features.Tasks.DialogCommands;
 
 namespace PrioritiesTest.DialogCommands
 {

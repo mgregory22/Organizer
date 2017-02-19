@@ -3,18 +3,18 @@
 //
 
 using NUnit.Framework;
-using Priorities.Types;
+using Priorities.Features.Tasks;
 
 namespace PrioritiesTest
 {
     /// <summary>
-    ///   Tests of the Tasks class.
+    /// Tests of the Tasks class.
     /// </summary>
     [TestFixture]
     public class TasksTests
     {
         Tasks tasks;
-        string testTask = "Test Task";
+        string taskName = "Test Task";
 
         [SetUp]
         public void Initialize()
@@ -26,9 +26,10 @@ namespace PrioritiesTest
         public void TestTaskCanBeAdded()
         {
             int cnt = tasks.Count;
-            tasks.Add(new Task(testTask));
+            Task testTask = new Task(taskName);
+            tasks.Add(testTask);
             Assert.AreEqual(cnt + 1, tasks.Count);
-            Assert.AreEqual(true, tasks.TaskExists(testTask));
+            Assert.AreEqual(true, tasks.ItemExists(testTask));
         }
     }
 }

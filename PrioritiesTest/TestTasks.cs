@@ -4,34 +4,35 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Priorities.Types;
+using Priorities.Features.Tasks;
 
 namespace PrioritiesTest
 {
     /// <summary>
-    ///   Mock Tasks object for testing the task commands.
+    /// Mock Tasks object for testing the task commands.
     /// </summary>
     class TestTasks : Tasks, IEnumerable
     {
         public int addCnt;
         public Task add_task;
-        public int add_position;
+        public int insertCnt;
+        public Task insert_task;
+        public int insert_index;
 
-        public override void Add(Task task, int position = -1)
+        public override void Add(Task task)
         {
             addCnt++;
-            // Save the last parameters Add() was called with, so they can be checked
+            // Save the last parameters Insert() was called with, so they can be checked
             add_task = task;
-            add_position = position;
         }
 
-        /*
-        public int count;
-        public override int Count
+        public override void Insert(Task task, int index)
         {
-            get { return count; }
+            insertCnt++;
+            // Save the last parameters Insert() was called with, so they can be checked
+            insert_task = task;
+            insert_index = index;
         }
-         */
 
         public List<Task> enumerator_collection;
         IEnumerator IEnumerable.GetEnumerator()
@@ -41,7 +42,6 @@ namespace PrioritiesTest
 
         public int removeCnt;
         public Task remove_task;
-        public string remove_name;
 
         public override void Remove(Task task)
         {
@@ -49,23 +49,5 @@ namespace PrioritiesTest
             remove_task = task;
         }
 
-        public override void Remove(string name)
-        {
-            removeCnt++;
-            // Save the last parameters Remove() was called with, so they can be checked
-            remove_name = name;
-        }
-
-        /*
-        public int taskExistsCnt;
-         */
-        public string taskExists_name;
-        public bool taskExists_nextReturn;
-
-        public override bool TaskExists(string name)
-        {
-            taskExists_name = name;
-            return taskExists_nextReturn;
-        }
     }
 }

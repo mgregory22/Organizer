@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Types/Task.cs
+// Priorities/Features/Tasks/Task.cs
 //
 
 using System;
 
-namespace Priorities.Types
+namespace Priorities.Features.Tasks
 {
     public class Task : IEquatable<Task>
     {
@@ -18,7 +18,14 @@ namespace Priorities.Types
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set
+            {
+                if (name == null)
+                    throw new ArgumentNullException("Task name cannot be null");
+                if (name == "")
+                    throw new ArgumentException("Task name cannot be empty");
+                name = value;
+            }
         }
 
         public bool Equals(Task other)

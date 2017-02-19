@@ -1,14 +1,13 @@
 ﻿//
-// Priorities/DialogCommands/DeleteTaskDialog.cs
+// Priorities/Features/Tasks/DialogCommands/DeleteTaskDialog.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.TaskCommands;
-using Priorities.Types;
+using Priorities.Features.Tasks.Commands;
 
-namespace Priorities.DialogCommands
+namespace Priorities.Features.Tasks.DialogCommands
 {
     public class DeleteTaskDialog : DialogCommand
     {
@@ -33,9 +32,7 @@ namespace Priorities.DialogCommands
                 while (priority == null)
                 {
                     // Ask user for priority of task to delete
-                    priority = editor.RangePrompt(1, tasks.Count, "Enter priority of item to delete\n# ");
-                    // Only for testing
-                    this.lastPrompt = editor.LastPrompt;
+                    priority = editor.RangePrompt(1, tasks.Count, Prompt);
                     // If escape was pressed, abort
                     if (priority == null)
                     {
@@ -44,6 +41,10 @@ namespace Priorities.DialogCommands
                 }
             }
             return new DeleteTask(tasks, priority.Value - 1);
+        }
+
+        public string Prompt {
+            get { return "\nEnter priority of item to delete\n# "; }
         }
     }
 }

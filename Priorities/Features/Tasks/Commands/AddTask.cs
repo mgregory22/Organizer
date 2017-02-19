@@ -1,11 +1,8 @@
 ﻿//
-// Priorities/TaskCommands/AddTask.cs
+// Priorities/Features/Tasks/Commands/AddTask.cs
 //
 
-using System;
-using Priorities.Types;
-
-namespace Priorities.TaskCommands
+namespace Priorities.Features.Tasks.Commands
 {
     public class AddTask : TaskCommand
     {
@@ -21,7 +18,7 @@ namespace Priorities.TaskCommands
 
         public override Result Do()
         {
-            this.task = new Types.Task(name);
+            this.task = new Task(name);
             tasks.Add(task);
             return new Ok();
         }

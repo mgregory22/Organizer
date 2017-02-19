@@ -1,5 +1,5 @@
 ﻿//
-// PrioritiesTest/DialogCommands/AddTaskDialogTests.cs
+// PrioritiesTest/DialogCommands/InsertTaskDialogTests.cs
 //
 
 using MSG.Patterns;
@@ -10,14 +10,14 @@ using Priorities.Features.Tasks.DialogCommands;
 namespace PrioritiesTest.DialogCommands
 {
     [TestFixture]
-    public class AddTaskDialogTests
+    public class InsertTaskDialogTests
     {
-        AddTaskDialog addTaskDialog;
+        InsertTaskDialog insertTaskDialog;
         TestPrint print;
         TestRead read;
         TestTasks tasks;
         UndoManager undoManager;
-        string addedTask = "A";
+        string insertedTask = "I";
 
         [SetUp]
         public void Initialize()
@@ -26,25 +26,27 @@ namespace PrioritiesTest.DialogCommands
             read = new TestRead(print);
             undoManager = new UndoManager();
             tasks = new TestTasks();
-            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
-            // The AddTaskDialog command prompts the user for the name of the task to add
-            read.PushString(addedTask + "\r");
-            addTaskDialog.Do();
+            insertTaskDialog = new InsertTaskDialog(print, read, undoManager, tasks);
+            // The InsertTaskDialog command prompts the user for the name of the task to add
+            read.PushString(insertedTask + "\r");
+            insertTaskDialog.Do();
         }
 
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual(addTaskDialog.Prompt, print.Output.Substring(0, addTaskDialog.Prompt.Length));
+            Assert.AreEqual(insertTaskDialog.Prompt, print.Output.Substring(0, insertTaskDialog.Prompt.Length));
         }
 
         [Test]
-        public void TestDoCallsTasksAdd()
+        public void TestDoCallsTasksInsert()
         {
-            // The tasks.Add() method should be called once
-            Assert.AreEqual(1, tasks.addCnt);
+            // The tasks.Insert() method should be called once
+            Assert.AreEqual(1, tasks.insertCnt);
             // newTask should passed in the name parameter to the tasks.Add() method
-            Assert.AreEqual(addedTask, tasks.add_task.Name);
+            Assert.AreEqual(insertedTask, tasks.insert_task.Name);
+            // 0 (default) should be the index parameter
+            Assert.AreEqual(0, tasks.insert_index);
         }
 
         [Test]
@@ -56,19 +58,18 @@ namespace PrioritiesTest.DialogCommands
         }
 
         [Test]
-        public void TestRedoCallsTasksAdd()
+        public void TestRedoCallsTasksInsert()
         {
             undoManager.Undo();
             undoManager.Redo();
             // Assert the task was added twice
-            Assert.AreEqual(2, tasks.addCnt);
+            Assert.AreEqual(2, tasks.insertCnt);
         }
     }
-
     [TestFixture]
-    public class NoAddTaskDialogTests
+    public class NoInsertTaskDialogTests
     {
-        AddTaskDialog addTaskDialog;
+        InsertTaskDialog insertTaskDialog;
         TestPrint print;
         TestRead read;
         TestTasks tasks;
@@ -81,7 +82,7 @@ namespace PrioritiesTest.DialogCommands
             read = new TestRead(print);
             tasks = new TestTasks();
             undoManager = new UndoManager();
-            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
+            insertTaskDialog = new InsertTaskDialog(print, read, undoManager, tasks);
         }
 
         [Test]

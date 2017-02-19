@@ -1,15 +1,13 @@
 ﻿//
-// Priorities/DialogCommands/MoveTaskDialog.cs
+// Priorities/Features/Tasks/DialogCommands/MoveTaskDialog.cs
 //
 
-using System;
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.TaskCommands;
-using Priorities.Types;
+using Priorities.Features.Tasks.Commands;
 
-namespace Priorities.DialogCommands
+namespace Priorities.Features.Tasks.DialogCommands
 {
     public class MoveTaskDialog : DialogCommand
     {
@@ -27,17 +25,25 @@ namespace Priorities.DialogCommands
             int? srcPriority;
             int? destPriority;
 
-            srcPriority = intEditor.RangePrompt(1, tasks.Count, "Enter priority of item to change\n# ");
+            srcPriority = intEditor.RangePrompt(1, tasks.Count, PromptForSrc);
             if (srcPriority == null)
             {
                 return null;
             }
-            destPriority = intEditor.RangePrompt(1, tasks.Count, "Enter new priority # ");
+            destPriority = intEditor.RangePrompt(1, tasks.Count, PromptForDest);
             if (destPriority == null)
             {
                 return null;
             }
             return new MoveTask(tasks, srcPriority.Value - 1, destPriority.Value - 1);
+        }
+
+        public string PromptForDest {
+            get { return "Enter new priority\n# "; }
+        }
+
+        public string PromptForSrc {
+            get { return "\nEnter priority of item to change\n# "; }
         }
     }
 }

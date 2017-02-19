@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Priorities</RootNamespace>
     <AssemblyName>Priorities</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,32 +43,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Conditions\CanRedo.cs" />
-    <Compile Include="Conditions\CanUndo.cs" />
-    <Compile Include="DialogCommands\AddTaskDialog.cs" />
-    <Compile Include="DialogCommands\DeleteTaskDialog.cs" />
-    <Compile Include="DialogCommands\MoveTaskDialog.cs" />
-    <Compile Include="DialogCommands\RedoDialog.cs" />
-    <Compile Include="DialogCommands\UndoDialog.cs" />
-    <Compile Include="Conditions\IsTasksMoreThanOne.cs" />
-    <Compile Include="Conditions\IsTasksNonEmpty.cs" />
-    <Compile Include="TaskCommands\RedoTask.cs" />
-    <Compile Include="TaskCommands\UndoTask.cs" />
-    <Compile Include="TaskCommands\AddTask.cs" />
-    <Compile Include="TaskCommands\DeleteTask.cs" />
-    <Compile Include="DialogCommands\HelpDialog.cs" />
-    <Compile Include="DialogCommands\ListTasksDialog.cs" />
-    <Compile Include="TaskCommands\MoveTask.cs" />
-    <Compile Include="DialogCommands\OptionsDialog.cs" />
-    <Compile Include="DialogCommands\QuitDialog.cs" />
-    <Compile Include="DialogCommands\RenameTaskDialog.cs" />
-    <Compile Include="TaskCommands\RenameTask.cs" />
-    <Compile Include="TaskCommands\TaskCommand.cs" />
+    <Compile Include="Features\Tasks\Commands\InsertTask.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\InsertTaskDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\AddTaskDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\DeleteTaskDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\MoveTaskDialog.cs" />
+    <Compile Include="DialogCommands\UpMenuDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\RedoDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\UndoDialog.cs" />
+    <Compile Include="Features\Tasks\Conditions\IsTasksMoreThanOne.cs" />
+    <Compile Include="Features\Tasks\Conditions\IsTasksNonEmpty.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\ListTasksDialog.cs" />
+    <Compile Include="DialogCommands\AdminToolsDialog.cs" />
+    <Compile Include="DialogCommands\QuitProgramDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\RenameTaskDialog.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\Task.cs" />
-    <Compile Include="Types\Tasks.cs" />
+    <Compile Include="Features\Tasks\Commands\AddTask.cs" />
+    <Compile Include="Features\Tasks\Commands\DeleteTask.cs" />
+    <Compile Include="Features\Tasks\Commands\MoveTask.cs" />
+    <Compile Include="Features\Tasks\Commands\RedoTask.cs" />
+    <Compile Include="Features\Tasks\Commands\RenameTask.cs" />
+    <Compile Include="Features\Tasks\Commands\UndoTask.cs" />
+    <Compile Include="Features\Tasks\Task.cs" />
+    <Compile Include="Features\Tasks\TaskCommand.cs" />
+    <Compile Include="Features\Tasks\Tasks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -78,6 +79,7 @@
       <Name>MSG</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

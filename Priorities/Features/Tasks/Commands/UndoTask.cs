@@ -1,12 +1,10 @@
 ﻿//
-// Priorities/TaskCommands/UndoTask.cs
+// Priorities/Features/Tasks/Commands/UndoTask.cs
 //
 
-using System;
 using MSG.Patterns;
-using Priorities.Types;
 
-namespace Priorities.TaskCommands
+namespace Priorities.Features.Tasks.Commands
 {
     public class UndoTask : TaskCommand
     {

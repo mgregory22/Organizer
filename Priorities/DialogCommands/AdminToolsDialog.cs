@@ -1,5 +1,5 @@
 ﻿//
-// Priorities/DialogCommands/OptionsDialog.cs
+// Priorities/DialogCommands/AdminToolsDialog.cs
 //
 
 using MSG.IO;
@@ -7,9 +7,9 @@ using MSG.Patterns;
 
 namespace Priorities.DialogCommands
 {
-    public class OptionsDialog : DialogCommand
+    public class AdminToolsDialog : DialogCommand
     {
-        public OptionsDialog(Print print, Read read)
+        public AdminToolsDialog(Print print, Read read)
             :base(print, read, null)
         {
         }

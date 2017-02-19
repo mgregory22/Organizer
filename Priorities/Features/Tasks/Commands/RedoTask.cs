@@ -1,12 +1,10 @@
 ﻿//
-// Priorities/TaskCommands/RedoTask.cs
+// Priorities/Features/Tasks/Commands/RedoTask.cs
 //
 
-using System;
 using MSG.Patterns;
-using Priorities.Types;
 
-namespace Priorities.TaskCommands
+namespace Priorities.Features.Tasks.Commands
 {
     public class RedoTask : TaskCommand
     {

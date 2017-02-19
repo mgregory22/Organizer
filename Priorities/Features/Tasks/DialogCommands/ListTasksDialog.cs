@@ -1,13 +1,13 @@
 ﻿//
-// Priorities/DialogCommands/ListTasksDialog.cs
+// Priorities/Features/Tasks/DialogCommands/ListTasksDialog.cs
 //
 
 using System;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Types;
+using Priorities;
 
-namespace Priorities.DialogCommands
+namespace Priorities.Features.Tasks.DialogCommands
 {
     public class ListTasksDialog : DialogCommand
     {

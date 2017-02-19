@@ -1,12 +1,8 @@
 ﻿//
-// Priorities/TaskCommands/RenameTask.cs
+// Priorities/Features/Tasks/Commands/RenameTask.cs
 //
 
-using System;
-using MSG.IO;
-using Priorities.Types;
-
-namespace Priorities.TaskCommands
+namespace Priorities.Features.Tasks.Commands
 {
     public class RenameTask : TaskCommand
     {

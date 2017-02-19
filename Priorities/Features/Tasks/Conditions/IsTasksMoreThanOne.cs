@@ -1,7 +1,10 @@
-﻿using MSG.Patterns;
-using Priorities.Types;
+﻿//
+// Priorities/Features/Tasks/Conditions/IsTasksMoreThanOne.cs
+//
 
-namespace Priorities.Conditions
+using MSG.Patterns;
+
+namespace Priorities.Features.Tasks.Conditions
 {
     public class IsTasksMoreThanOne : Condition
     {

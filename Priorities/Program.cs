@@ -4,16 +4,17 @@
 
 using MSG.Console;
 using MSG.IO;
+using System.Linq;
 
 namespace Priorities
 {
     public sealed class Program
     {
         /// <summary>
-        ///   Program entry point.  This should be the only class that's not tested.
+        /// Program entry point.  This should be the only class that's not tested.
         /// </summary>
         /// <param name="args">
-        ///   None.
+        /// None.
         /// </param>
         public static void Main(string[] args)
         {
@@ -21,7 +22,9 @@ namespace Priorities
             Read read = new Read(print);
             CharPrompt prompt = new CharPrompt(print, read);
             Driver.Run(prompt);
-            prompt.Pause();
+            if (args.Any(a => a.Equals("-p"))) {
+                prompt.Pause();
+            }
         }
     }
 }
