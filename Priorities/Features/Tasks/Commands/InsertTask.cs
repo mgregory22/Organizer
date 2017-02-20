@@ -19,7 +19,7 @@ namespace Priorities.Features.Tasks.Commands
 
         public override Result Do()
         {
-            tasks.Insert(task, index);
+            tasks.Insert(index, task);
             return new Ok();
         }
 

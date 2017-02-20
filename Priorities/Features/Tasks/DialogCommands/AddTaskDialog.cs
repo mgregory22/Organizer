@@ -2,7 +2,6 @@
 // Priorities/Features/Tasks/DialogCommands/AddTaskDialog.cs
 //
 
-using System;
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
@@ -30,19 +29,31 @@ namespace Priorities.Features.Tasks.DialogCommands
             this.tasks = tasks;
         }
 
+        /// <summary>
+        /// Creates an add task command to be executed.
+        /// </summary>
         public override Command Create()
         {
-            Editor editor = new Editor(print, read);
-            string name = editor.StringPrompt(Prompt);
-            if (String.IsNullOrEmpty(name))
-            {
+            Editor nameEditor = new Editor(print, read);
+            string name = nameEditor.StringPrompt(NamePrompt);
+            if (string.IsNullOrEmpty(name)) {
                 print.StringNL("Add cancelled");
                 return null;
             }
-            return new AddTask(tasks, name);
+            IntEditor priorityEditor = new IntEditor(print, read);
+            int? priority = priorityEditor.IntPrompt(PriorityPrompt);
+            if (priority == null) {
+                return new AddTask(tasks, name);
+            }
+            int index = priority.Value - 1;
+            return new InsertTask(tasks, name, index);
         }
 
-        public string Prompt {
+        public string PriorityPrompt {
+            get { return "\nEnter priority (Enter blank to add to the end)\n# "; }
+        }
+
+        public string NamePrompt {
             get { return "\nEnter task name/description\n$ "; }
         }
     }

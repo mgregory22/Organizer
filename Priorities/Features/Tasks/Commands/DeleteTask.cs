@@ -30,21 +30,22 @@ namespace Priorities.Features.Tasks.Commands
         public DeleteTask(Tasks tasks, int index)
             : base(tasks)
         {
-            if (!tasks.IndexExists(index))
+            if (!tasks.ItemExistsAt(index)) {
                 throw new ArgumentOutOfRangeException("index", "index must be nonnegative and less than tasks.Count");
+            }
             this.index = index;
         }
 
         public override Result Do()
         {
             deletedTask = tasks[index];
-            tasks.Remove(index);
+            tasks.RemoveAt(index);
             return new Ok();
         }
 
         public override Result Undo()
         {
-            tasks.Insert(deletedTask, index);
+            tasks.Insert(index, deletedTask);
             return new Ok();
         }
     }

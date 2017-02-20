@@ -35,7 +35,7 @@ namespace PrioritiesTest.DialogCommands
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual(addTaskDialog.Prompt, print.Output.Substring(0, addTaskDialog.Prompt.Length));
+            Assert.AreEqual(addTaskDialog.NamePrompt, print.Output.Substring(0, addTaskDialog.NamePrompt.Length));
         }
 
         [Test]

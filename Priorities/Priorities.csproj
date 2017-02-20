@@ -44,12 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\Tasks\Commands\InsertTask.cs" />
-    <Compile Include="Features\Tasks\DialogCommands\InsertTaskDialog.cs" />
+    <Compile Include="Features\Tasks\Commands\EditSubtasks.cs" />
     <Compile Include="Features\Tasks\DialogCommands\AddTaskDialog.cs" />
     <Compile Include="Features\Tasks\DialogCommands\DeleteTaskDialog.cs" />
     <Compile Include="Features\Tasks\DialogCommands\MoveTaskDialog.cs" />
     <Compile Include="DialogCommands\UpMenuDialog.cs" />
     <Compile Include="Features\Tasks\DialogCommands\RedoDialog.cs" />
+    <Compile Include="Features\Tasks\DialogCommands\EditSubtasksDialog.cs" />
     <Compile Include="Features\Tasks\DialogCommands\UndoDialog.cs" />
     <Compile Include="Features\Tasks\Conditions\IsTasksMoreThanOne.cs" />
     <Compile Include="Features\Tasks\Conditions\IsTasksNonEmpty.cs" />

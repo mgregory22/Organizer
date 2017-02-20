@@ -26,7 +26,7 @@ namespace PrioritiesTest
             add_task = task;
         }
 
-        public override void Insert(Task task, int index)
+        public override void Insert(int index, Task task)
         {
             insertCnt++;
             // Save the last parameters Insert() was called with, so they can be checked

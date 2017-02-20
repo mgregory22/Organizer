@@ -49,6 +49,7 @@ namespace Priorities
                     new MenuItem('m', "Move Task/Change Priority", new MoveTaskDialog(print, read, undoManager, tasks), isTasksMoreThanOne),
                     new MenuItem('q', "Quit Program", new QuitProgramDialog(print, read), Condition.always),
                     new MenuItem('r', "Rename Task", new RenameTaskDialog(print, read, undoManager, tasks), isTasksNonEmpty),
+                    new MenuItem('s', "Edit Subtasks", new EditSubtasksDialog(print, read, undoManager, tasks), isTasksNonEmpty),
                     new MenuItem('u', "Up To Main", new UpMenuDialog(print, read), Condition.always),
                     new MenuItem('z', "Undo Last Action", new UndoDialog(print, read, undoManager, tasks), canUndo),
                     new MenuItem('Z', "Redo Next Action", new RedoDialog(print, read, undoManager, tasks), canRedo)
