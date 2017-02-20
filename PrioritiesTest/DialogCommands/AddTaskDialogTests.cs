@@ -5,7 +5,7 @@
 using MSG.Patterns;
 using MSGTest.IO;
 using NUnit.Framework;
-using Priorities.Features.Tasks.DialogCommands;
+using Priorities.Modules.Tasks.DialogCommands;
 
 namespace PrioritiesTest.DialogCommands
 {

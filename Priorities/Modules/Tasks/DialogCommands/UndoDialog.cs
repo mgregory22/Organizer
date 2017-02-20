@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Features/Tasks/DialogCommands/UndoDialog.cs
+// Priorities/Modules/Tasks/DialogCommands/UndoDialog.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Features.Tasks.Commands;
+using Priorities.Modules.Tasks.Commands;
 
-namespace Priorities.Features.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DialogCommands
 {
     public class UndoDialog : DialogCommand
     {

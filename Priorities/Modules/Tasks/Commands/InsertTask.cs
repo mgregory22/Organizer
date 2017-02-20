@@ -1,8 +1,8 @@
 ﻿//
-// Priorities/Features/Tasks/Commands/InsertTask.cs
+// Priorities/Modules/Tasks/Commands/InsertTask.cs
 //
 
-namespace Priorities.Features.Tasks.Commands
+namespace Priorities.Modules.Tasks.Commands
 {
     public class InsertTask : TaskCommand
     {

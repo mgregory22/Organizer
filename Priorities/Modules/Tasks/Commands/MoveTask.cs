@@ -1,8 +1,8 @@
 ﻿//
-// Priorities/Features/Tasks/Commands/MoveTask.cs
+// Priorities/Modules/Tasks/Commands/MoveTask.cs
 //
 
-namespace Priorities.Features.Tasks.Commands
+namespace Priorities.Modules.Tasks.Commands
 {
     public class MoveTask : TaskCommand
     {

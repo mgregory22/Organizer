@@ -7,9 +7,9 @@ using MSG.IO;
 using MSG.Patterns;
 using MSG.Patterns.Conditions;
 using Priorities.DialogCommands;
-using Priorities.Features.Tasks;
-using Priorities.Features.Tasks.Conditions;
-using Priorities.Features.Tasks.DialogCommands;
+using Priorities.Modules.Tasks;
+using Priorities.Modules.Tasks.Conditions;
+using Priorities.Modules.Tasks.DialogCommands;
 
 namespace Priorities
 {

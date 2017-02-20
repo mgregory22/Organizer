@@ -3,7 +3,7 @@
 //
 
 using NUnit.Framework;
-using Priorities.Features.Tasks;
+using Priorities.Modules.Tasks;
 
 namespace PrioritiesTest
 {

@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Features/Tasks/TaskCommand.cs
+// Priorities/Modules/Tasks/TaskCommand.cs
 //
 
 using MSG.Patterns;
 
-namespace Priorities.Features.Tasks
+namespace Priorities.Modules.Tasks
 {
     public abstract class TaskCommand : Command
     {

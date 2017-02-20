@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Features/Tasks/Commands/DeleteTask.cs
+// Priorities/Modules/Tasks/Commands/DeleteTask.cs
 //
 
 using System;
 
-namespace Priorities.Features.Tasks.Commands
+namespace Priorities.Modules.Tasks.Commands
 {
     public class DeleteTask : TaskCommand
     {

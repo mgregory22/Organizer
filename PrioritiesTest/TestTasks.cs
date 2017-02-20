@@ -4,7 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Priorities.Features.Tasks;
+using Priorities.Modules.Tasks;
 
 namespace PrioritiesTest
 {

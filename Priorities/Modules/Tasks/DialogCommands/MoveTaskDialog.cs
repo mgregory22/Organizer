@@ -1,13 +1,13 @@
 ﻿//
-// Priorities/Features/Tasks/DialogCommands/MoveTaskDialog.cs
+// Priorities/Modules/Tasks/DialogCommands/MoveTaskDialog.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Features.Tasks.Commands;
+using Priorities.Modules.Tasks.Commands;
 
-namespace Priorities.Features.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DialogCommands
 {
     public class MoveTaskDialog : DialogCommand
     {

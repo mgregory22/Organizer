@@ -1,11 +1,11 @@
 ﻿//
-// Priorities/Features/Tasks/Conditions/IsTasksNonEmpty.cs
+// Priorities/Modules/Tasks/Conditions/IsTasksNonEmpty.cs
 //
 
 using MSG.Patterns;
 using Priorities;
 
-namespace Priorities.Features.Tasks.Conditions
+namespace Priorities.Modules.Tasks.Conditions
 {
     public class IsTasksNonEmpty : Condition
     {

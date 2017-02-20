@@ -1,13 +1,13 @@
 ﻿//
-// Priorities/Features/Tasks/DialogCommands/AddTaskDialog.cs
+// Priorities/Modules/Tasks/DialogCommands/AddTaskDialog.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Features.Tasks.Commands;
+using Priorities.Modules.Tasks.Commands;
 
-namespace Priorities.Features.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DialogCommands
 {
     /// <summary>
     /// AddDialog executes the Add Task dialog.

@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Features/Tasks/DialogCommands/RedoDialog.cs
+// Priorities/Modules/Tasks/DialogCommands/RedoDialog.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Features.Tasks.Commands;
+using Priorities.Modules.Tasks.Commands;
 
-namespace Priorities.Features.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DialogCommands
 {
     public class RedoDialog : DialogCommand
     {

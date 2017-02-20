@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Features/Tasks/Task.cs
+// Priorities/Modules/Tasks/Task.cs
 //
 
 using System;
 
-namespace Priorities.Features.Tasks
+namespace Priorities.Modules.Tasks
 {
     public class Task : IEquatable<Task>
     {

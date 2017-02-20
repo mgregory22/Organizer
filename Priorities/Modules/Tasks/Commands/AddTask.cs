@@ -1,8 +1,8 @@
 ﻿//
-// Priorities/Features/Tasks/Commands/AddTask.cs
+// Priorities/Modules/Tasks/Commands/AddTask.cs
 //
 
-namespace Priorities.Features.Tasks.Commands
+namespace Priorities.Modules.Tasks.Commands
 {
     public class AddTask : TaskCommand
     {

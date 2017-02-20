@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Features/Tasks/Tasks.cs
+// Priorities/Modules/Tasks/Tasks.cs
 //
 
 using MSG.Types.Dir;
 
-namespace Priorities.Features.Tasks
+namespace Priorities.Modules.Tasks
 {
     public class Tasks : Dir<Task>
     {
