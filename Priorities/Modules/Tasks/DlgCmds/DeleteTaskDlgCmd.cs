@@ -1,27 +1,27 @@
 ﻿//
-// Priorities/Modules/Tasks/DialogCommands/DeleteTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/DeleteTaskDialog.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Modules.Tasks.Commands;
+using Priorities.Modules.Tasks.Cmds;
 
-namespace Priorities.Modules.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class DeleteTaskDialog : DialogCommand
+    public class DeleteTaskDlgCmd : DlgUnCmd
     {
         protected Tasks tasks;
 
-        public DeleteTaskDialog(Print print, Read read, UndoManager undoManager, Tasks tasks)
-            : base(print, read, undoManager)
+        public DeleteTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
+            : base(io, undoManager)
         {
             this.tasks = tasks;
         }
 
-        public override Command Create()
+        public override UnCmd Create()
         {
-            IntEditor editor = new IntEditor(print, read);
+            IntEditor editor = new IntEditor();
             int? priority = null;
 
             // If there's only one item, then just delete that item
@@ -32,7 +32,7 @@ namespace Priorities.Modules.Tasks.DialogCommands
                 while (priority == null)
                 {
                     // Ask user for priority of task to delete
-                    priority = editor.RangePrompt(1, tasks.Count, Prompt);
+                    priority = editor.RangePrompt(io, 1, tasks.Count, Prompt);
                     // If escape was pressed, abort
                     if (priority == null)
                     {

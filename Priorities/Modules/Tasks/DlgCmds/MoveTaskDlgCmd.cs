@@ -1,36 +1,36 @@
 ﻿//
-// Priorities/Modules/Tasks/DialogCommands/MoveTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/MoveTaskDlgCmd.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Modules.Tasks.Commands;
+using Priorities.Modules.Tasks.Cmds;
 
-namespace Priorities.Modules.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class MoveTaskDialog : DialogCommand
+    public class MoveTaskDlgCmd : DlgUnCmd
     {
         Tasks tasks;
 
-        public MoveTaskDialog(Print print, Read read, UndoManager undoManager, Tasks tasks)
-            : base(print, read, undoManager)
+        public MoveTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
+            : base(io, undoManager)
         {
             this.tasks = tasks;
         }
 
-        public override Command Create()
+        public override UnCmd Create()
         {
-            IntEditor intEditor = new IntEditor(print, read);
+            IntEditor intEditor = new IntEditor();
             int? srcPriority;
             int? destPriority;
 
-            srcPriority = intEditor.RangePrompt(1, tasks.Count, PromptForSrc);
+            srcPriority = intEditor.RangePrompt(io, 1, tasks.Count, PromptForSrc);
             if (srcPriority == null)
             {
                 return null;
             }
-            destPriority = intEditor.RangePrompt(1, tasks.Count, PromptForDest);
+            destPriority = intEditor.RangePrompt(io, 1, tasks.Count, PromptForDest);
             if (destPriority == null)
             {
                 return null;

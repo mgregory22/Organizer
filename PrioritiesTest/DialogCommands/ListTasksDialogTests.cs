@@ -1,21 +1,23 @@
 ﻿//
-// PrioritiesTest/DialogCommands/ListTasksDialogTests.cs
+// PrioritiesTest/DlgCmds/ListTasksDialogTests.cs
 //
 
 using System.Collections.Generic;
+using MSG.IO;
 using MSGTest.IO;
 using NUnit.Framework;
 using Priorities.Modules.Tasks;
-using Priorities.Modules.Tasks.DialogCommands;
+using Priorities.Modules.Tasks.DlgCmds;
 
-namespace PrioritiesTest.DialogCommands
+namespace PrioritiesTest.DlgCmds
 {
     [TestFixture]
     public class ListTasksDialogTests
     {
-        ListTasksDialog listTasksDialog;
+        ListTasksDlgCmd listTasksDlgCmd;
         TestPrint print;
         TestRead read;
+        Io io;
         TestTasks tasks;
 
         List<Task> testTasks = new List<Task> {
@@ -28,16 +30,17 @@ namespace PrioritiesTest.DialogCommands
         public void Initialize()
         {
             print = new TestPrint();
-            read = new TestRead(print);
+            read = new TestRead();
+            io = new Io(print, read);
             tasks = new TestTasks();
-            listTasksDialog = new ListTasksDialog(print, tasks);
+            listTasksDlgCmd = new ListTasksDlgCmd(io, tasks);
             tasks.enumerator_collection = testTasks;
         }
 
         [Test]
         public void TestListTasksEnumeratesAndPrintsTasks()
         {
-            listTasksDialog.Do();
+            listTasksDlgCmd.Do(io);
             Assert.AreEqual(
                 "[1] " + testTasks[0].Name + "\n"
                 + "[2] " + testTasks[1].Name + "\n"

@@ -3,6 +3,7 @@
 //
 
 using MSG.Console;
+using MSG.IO;
 using MSGTest.IO;
 using NUnit.Framework;
 using Priorities;
@@ -14,20 +15,22 @@ namespace PrioritiesTest
     {
         TestPrint print;
         TestRead read;
+        Io io;
 
         [SetUp]
         public void SetUp()
         {
             print = new TestPrint();
-            read = new TestRead(print);
+            read = new TestRead();
+            io = new Io(print, read);
         }
 
         [Test]
         public void TestHelpDisplays()
         {
             read.PushString("?q");
-            CharPrompt prompt = new CharPrompt(print, read);
-            Driver.Run(prompt);
+            CharPrompt prompt = new CharPrompt();
+            Driver.Do(io, prompt);
 
             // The menu should display its title every time, and
             // if the help key is pressed, it should display bracketed

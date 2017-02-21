@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Modules/Tasks/Commands/MoveTask.cs
+// Priorities/Modules/Tasks/Cmds/MoveTask.cs
 //
 
-namespace Priorities.Modules.Tasks.Commands
+namespace Priorities.Modules.Tasks.Cmds
 {
-    public class MoveTask : TaskCommand
+    public class MoveTask : TaskCmd
     {
         protected int srcPosition;
         protected int destPosition;

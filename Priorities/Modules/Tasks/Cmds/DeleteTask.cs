@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Modules/Tasks/Commands/DeleteTask.cs
+// Priorities/Modules/Tasks/Cmds/DeleteTask.cs
 //
 
 using System;
 
-namespace Priorities.Modules.Tasks.Commands
+namespace Priorities.Modules.Tasks.Cmds
 {
-    public class DeleteTask : TaskCommand
+    public class DeleteTask : TaskCmd
     {
         /// <summary>
         /// The index in the list where the task was deleted

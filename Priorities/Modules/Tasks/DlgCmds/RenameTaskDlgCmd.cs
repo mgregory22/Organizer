@@ -1,37 +1,37 @@
 ﻿//
-// Priorities/Modules/Tasks/DialogCommands/RenameTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/RenameTaskDialog.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Modules.Tasks.Commands;
+using Priorities.Modules.Tasks.Cmds;
 
-namespace Priorities.Modules.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class RenameTaskDialog : DialogCommand
+    public class RenameTaskDlgCmd : DlgCmd
     {
         protected Tasks tasks;
 
-        public RenameTaskDialog(Print print, Read read, UndoManager undoManager, Tasks tasks)
-            : base(print, read, undoManager)
+        public RenameTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
+            : base(io)
         {
             this.tasks = tasks;
         }
 
-        public override Command Create()
+        public override Cmd Create()
         {
-            Editor editor = new Editor(print, read);
-            IntEditor intEditor = new IntEditor(print, read);
+            Editor editor = new Editor();
+            IntEditor intEditor = new IntEditor();
             int? srcPriority;
             string name;
 
-            srcPriority = intEditor.RangePrompt(1, tasks.Count, PromptForTarget);
+            srcPriority = intEditor.RangePrompt(io, 1, tasks.Count, PromptForTarget);
             if (srcPriority == null)
             {
                 return null;
             }
-            name = editor.StringPrompt(PromptForName);
+            name = editor.StringPrompt(io, PromptForName);
             if (name == null)
             {
                 return null;

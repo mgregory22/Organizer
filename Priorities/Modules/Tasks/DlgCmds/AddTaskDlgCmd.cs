@@ -1,30 +1,29 @@
 ﻿//
-// Priorities/Modules/Tasks/DialogCommands/AddTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/AddTaskDlgCmd.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
-using Priorities.Modules.Tasks.Commands;
+using Priorities.Modules.Tasks.Cmds;
 
-namespace Priorities.Modules.Tasks.DialogCommands
+namespace Priorities.Modules.Tasks.DlgCmds
 {
     /// <summary>
     /// AddDialog executes the Add Task dialog.
     /// Then, if successful, executes the Add Task command.
     /// </summary>
-    public class AddTaskDialog : DialogCommand
+    public class AddTaskDlgCmd : DlgUnCmd
     {
         protected Tasks tasks;
 
         /// <summary>
         /// Initializes AddDialog.
         /// </summary>
-        /// <param name="print"></param>
-        /// <param name="read"></param>
+        /// <param name="io"></param>
         /// <param name="addTask"></param>
-        public AddTaskDialog(Print print, Read read, UndoManager undoManager, Tasks tasks)
-            : base(print, read, undoManager)
+        public AddTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
+            : base(io, undoManager)
         {
             this.tasks = tasks;
         }
@@ -32,16 +31,16 @@ namespace Priorities.Modules.Tasks.DialogCommands
         /// <summary>
         /// Creates an add task command to be executed.
         /// </summary>
-        public override Command Create()
+        public override UnCmd Create()
         {
-            Editor nameEditor = new Editor(print, read);
-            string name = nameEditor.StringPrompt(NamePrompt);
+            Editor nameEditor = new Editor();
+            string name = nameEditor.StringPrompt(io, NamePrompt);
             if (string.IsNullOrEmpty(name)) {
-                print.StringNL("Add cancelled");
+                io.print.StringNL("Add cancelled");
                 return null;
             }
-            IntEditor priorityEditor = new IntEditor(print, read);
-            int? priority = priorityEditor.IntPrompt(PriorityPrompt);
+            IntEditor priorityEditor = new IntEditor();
+            int? priority = priorityEditor.IntPrompt(io, PriorityPrompt);
             if (priority == null) {
                 return new AddTask(tasks, name);
             }

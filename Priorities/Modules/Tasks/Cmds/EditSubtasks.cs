@@ -1,16 +1,18 @@
 ﻿//
-// Priorities/Modules/Tasks/Commands/RenameTask.cs
+// Priorities/Modules/Tasks/Cmds/EditSubtasks.cs
 //
 
-namespace Priorities.Modules.Tasks.Commands
+using MSG.Types.Dir;
+
+namespace Priorities.Modules.Tasks.Cmds
 {
-    public class RenameTask : TaskCommand
+    public class EditSubtasks : TaskCmd
     {
         protected int index;
         protected string name;
-        protected string savedName;
+        protected Dir<Task> savedSubtasks;
 
-        public RenameTask(Tasks tasks, int index, string name)
+        public EditSubtasks(Tasks tasks, int index, string name)
             : base(tasks)
         {
             this.index = index;
@@ -19,14 +21,14 @@ namespace Priorities.Modules.Tasks.Commands
 
         public override Result Do()
         {
-            savedName = tasks[index].Name;
             tasks[index].Name = name;
             return new Ok();
         }
 
         public override Result Undo()
         {
-            tasks[index].Name = savedName;
+            savedSubtasks = tasks.GetSubdir(index);
+            tasks.SetSubdir(index, null);
             return new Ok();
         }
     }

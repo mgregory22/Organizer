@@ -18,12 +18,11 @@ namespace Priorities
         /// </param>
         public static void Main(string[] args)
         {
-            Print print = new Print();
-            Read read = new Read(print);
-            CharPrompt prompt = new CharPrompt(print, read);
-            Driver.Run(prompt);
+            Io io = new Io(new Print(), new Read());
+            CharPrompt prompt = new CharPrompt();
+            Driver.Do(io, prompt);
             if (args.Any(a => a.Equals("-p"))) {
-                prompt.Pause();
+                prompt.Pause(io);
             }
         }
     }

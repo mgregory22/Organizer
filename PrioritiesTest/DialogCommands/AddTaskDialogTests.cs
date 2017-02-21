@@ -1,20 +1,22 @@
 ﻿//
-// PrioritiesTest/DialogCommands/AddTaskDialogTests.cs
+// PrioritiesTest/DlgCmds/AddTaskDialogTests.cs
 //
 
 using MSG.Patterns;
+using MSG.IO;
 using MSGTest.IO;
 using NUnit.Framework;
-using Priorities.Modules.Tasks.DialogCommands;
+using Priorities.Modules.Tasks.DlgCmds;
 
-namespace PrioritiesTest.DialogCommands
+namespace PrioritiesTest.DlgCmds
 {
     [TestFixture]
     public class AddTaskDialogTests
     {
-        AddTaskDialog addTaskDialog;
+        AddTaskDlgCmd addTaskDlgCmd;
         TestPrint print;
         TestRead read;
+        Io io;
         TestTasks tasks;
         UndoManager undoManager;
         string addedTask = "A";
@@ -23,19 +25,20 @@ namespace PrioritiesTest.DialogCommands
         public void Initialize()
         {
             print = new TestPrint();
-            read = new TestRead(print);
+            read = new TestRead();
+            io = new Io(print, read);
             undoManager = new UndoManager();
             tasks = new TestTasks();
-            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
-            // The AddTaskDialog command prompts the user for the name of the task to add
+            addTaskDlgCmd = new AddTaskDlgCmd(io, undoManager, tasks);
+            // The AddTaskDlgCmd command prompts the user for the name of the task to add
             read.PushString(addedTask + "\r");
-            addTaskDialog.Do();
+            addTaskDlgCmd.Do(io);
         }
 
         [Test]
         public void TestPrompt()
         {
-            Assert.AreEqual(addTaskDialog.NamePrompt, print.Output.Substring(0, addTaskDialog.NamePrompt.Length));
+            Assert.AreEqual(addTaskDlgCmd.NamePrompt, print.Output.Substring(0, addTaskDlgCmd.NamePrompt.Length));
         }
 
         [Test]
@@ -68,26 +71,24 @@ namespace PrioritiesTest.DialogCommands
     [TestFixture]
     public class NoAddTaskDialogTests
     {
-        AddTaskDialog addTaskDialog;
-        TestPrint print;
-        TestRead read;
+        AddTaskDlgCmd addTaskDlgCmd;
         TestTasks tasks;
+        Io io;
         UndoManager undoManager;
 
         [SetUp]
         public void Initialize()
         {
-            print = new TestPrint();
-            read = new TestRead(print);
+            io = new Io(new TestPrint(), new TestRead());
             tasks = new TestTasks();
             undoManager = new UndoManager();
-            addTaskDialog = new AddTaskDialog(print, read, undoManager, tasks);
+            addTaskDlgCmd = new AddTaskDlgCmd(io, undoManager, tasks);
         }
 
         [Test]
         public void TestUndoSomethingNotDoneThrowsUp()
         {
-            Assert.IsInstanceOf<Command.NothingToUndo>(undoManager.Undo());
+            Assert.IsInstanceOf<Cmd.CantUndo>(undoManager.Undo());
         }
     }
 }

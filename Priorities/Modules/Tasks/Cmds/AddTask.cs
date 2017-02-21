@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Modules/Tasks/Commands/AddTask.cs
+// Priorities/Modules/Tasks/Cmds/AddTask.cs
 //
 
-namespace Priorities.Modules.Tasks.Commands
+namespace Priorities.Modules.Tasks.Cmds
 {
-    public class AddTask : TaskCommand
+    public class AddTask : TaskCmd
     {
         string name;
         Task task;

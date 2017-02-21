@@ -6,7 +6,7 @@ using MSG.Patterns;
 
 namespace Priorities.Modules.Tasks.Conditions
 {
-    public class IsTasksMoreThanOne : Condition
+    public class IsTasksMoreThanOne : Cond
     {
         protected Tasks tasks;
 

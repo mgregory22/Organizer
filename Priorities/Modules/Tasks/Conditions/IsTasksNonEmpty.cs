@@ -7,7 +7,7 @@ using Priorities;
 
 namespace Priorities.Modules.Tasks.Conditions
 {
-    public class IsTasksNonEmpty : Condition
+    public class IsTasksNonEmpty : Cond
     {
         protected Tasks tasks;
 

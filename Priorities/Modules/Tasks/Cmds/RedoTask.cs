@@ -4,9 +4,9 @@
 
 using MSG.Patterns;
 
-namespace Priorities.Modules.Tasks.Commands
+namespace Priorities.Modules.Tasks.Cmds
 {
-    public class RedoTask : TaskCommand
+    public class RedoTask : TaskCmd
     {
         protected UndoManager undoManager;
 

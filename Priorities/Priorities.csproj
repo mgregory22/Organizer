@@ -43,30 +43,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DialogCommands\UpMenuDialog.cs" />
-    <Compile Include="DialogCommands\AdminToolsDialog.cs" />
-    <Compile Include="DialogCommands\QuitProgramDialog.cs" />
+    <Compile Include="DlgCmds\NewFileDlgCmd.cs" />
+    <Compile Include="DlgCmds\OpenFileDlgCmd.cs" />
+    <Compile Include="DlgCmds\UpMenuDlgCmd.cs" />
+    <Compile Include="DlgCmds\QuitProgDlgCmd.cs" />
     <Compile Include="Driver.cs" />
-    <Compile Include="Modules\Tasks\Commands\AddTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\DeleteTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\EditSubtasks.cs" />
-    <Compile Include="Modules\Tasks\Commands\InsertTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\MoveTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\RedoTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\RenameTask.cs" />
-    <Compile Include="Modules\Tasks\Commands\UndoTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\AddTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\DeleteTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\EditSubtasks.cs" />
+    <Compile Include="Modules\Tasks\Cmds\InsertTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\MoveTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\RedoTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\RenameTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\UndoTask.cs" />
     <Compile Include="Modules\Tasks\Conditions\IsTasksMoreThanOne.cs" />
     <Compile Include="Modules\Tasks\Conditions\IsTasksNonEmpty.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\AddTaskDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\DeleteTaskDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\EditSubtasksDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\ListTasksDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\MoveTaskDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\RedoDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\RenameTaskDialog.cs" />
-    <Compile Include="Modules\Tasks\DialogCommands\UndoDialog.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\AddTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\DeleteTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\EditSubtasksDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\ListTasksDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\MoveTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\RedoDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\RenameTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\UndoDlgCmd.cs" />
     <Compile Include="Modules\Tasks\Task.cs" />
-    <Compile Include="Modules\Tasks\TaskCommand.cs" />
+    <Compile Include="Modules\Tasks\TaskCmd.cs" />
     <Compile Include="Modules\Tasks\Tasks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,7 +81,9 @@
       <Name>MSG</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Cmds\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,11 +6,11 @@ using MSG.Patterns;
 
 namespace Priorities.Modules.Tasks
 {
-    public abstract class TaskCommand : Command
+    public abstract class TaskCmd : UnCmd
     {
         protected Tasks tasks;
 
-        public TaskCommand(Tasks tasks)
+        public TaskCmd(Tasks tasks)
         {
             this.tasks = tasks;
         }
