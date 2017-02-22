@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmds\NewFile.cs" />
+    <Compile Include="Cmds\OpenFile.cs" />
     <Compile Include="DlgCmds\NewFileDlgCmd.cs" />
     <Compile Include="DlgCmds\OpenFileDlgCmd.cs" />
     <Compile Include="DlgCmds\UpMenuDlgCmd.cs" />
@@ -56,8 +58,8 @@
     <Compile Include="Modules\Tasks\Cmds\RedoTask.cs" />
     <Compile Include="Modules\Tasks\Cmds\RenameTask.cs" />
     <Compile Include="Modules\Tasks\Cmds\UndoTask.cs" />
-    <Compile Include="Modules\Tasks\Conditions\IsTasksMoreThanOne.cs" />
-    <Compile Include="Modules\Tasks\Conditions\IsTasksNonEmpty.cs" />
+    <Compile Include="Modules\Tasks\Conds\IsTasksMoreThanOne.cs" />
+    <Compile Include="Modules\Tasks\Conds\IsTasksNonEmpty.cs" />
     <Compile Include="Modules\Tasks\DlgCmds\AddTaskDlgCmd.cs" />
     <Compile Include="Modules\Tasks\DlgCmds\DeleteTaskDlgCmd.cs" />
     <Compile Include="Modules\Tasks\DlgCmds\EditSubtasksDlgCmd.cs" />
@@ -81,9 +83,7 @@
       <Name>MSG</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cmds\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

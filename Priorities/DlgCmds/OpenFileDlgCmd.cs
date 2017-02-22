@@ -15,7 +15,7 @@ namespace Priorities.DlgCmds
 
         public override Cmd Create()
         {
-            return null;
+            return new OpenFile();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿//
-// PrioritiesTest/DlgCmds/AddTaskDialogTests.cs
+// PrioritiesTest/Modules/Tasks/DlgCmds/AddTaskDlgCmdTests.cs
 //
 
 using MSG.Patterns;
@@ -8,17 +8,17 @@ using MSGTest.IO;
 using NUnit.Framework;
 using Priorities.Modules.Tasks.DlgCmds;
 
-namespace PrioritiesTest.DlgCmds
+namespace PrioritiesTest.Modules.Tasks.DlgCmds
 {
     [TestFixture]
-    public class AddTaskDialogTests
+    public class AddTaskDlgCmdTests
     {
         AddTaskDlgCmd addTaskDlgCmd;
         TestPrint print;
         TestRead read;
         Io io;
         TestTasks tasks;
-        UndoManager undoManager;
+        UndoAndRedo undoAndRedo;
         string addedTask = "A";
 
         [SetUp]
@@ -27,9 +27,9 @@ namespace PrioritiesTest.DlgCmds
             print = new TestPrint();
             read = new TestRead();
             io = new Io(print, read);
-            undoManager = new UndoManager();
+            undoAndRedo = new UndoAndRedo();
             tasks = new TestTasks();
-            addTaskDlgCmd = new AddTaskDlgCmd(io, undoManager, tasks);
+            addTaskDlgCmd = new AddTaskDlgCmd(io, undoAndRedo, tasks);
             // The AddTaskDlgCmd command prompts the user for the name of the task to add
             read.PushString(addedTask + "\r");
             addTaskDlgCmd.Do(io);
@@ -53,7 +53,7 @@ namespace PrioritiesTest.DlgCmds
         [Test]
         public void TestUndoCallsTasksRemove()
         {
-            undoManager.Undo();
+            undoAndRedo.Undo();
             // Assert the task was removed
             Assert.AreEqual(1, tasks.removeCnt);
         }
@@ -61,34 +61,34 @@ namespace PrioritiesTest.DlgCmds
         [Test]
         public void TestRedoCallsTasksAdd()
         {
-            undoManager.Undo();
-            undoManager.Redo();
+            undoAndRedo.Undo();
+            undoAndRedo.Redo();
             // Assert the task was added twice
             Assert.AreEqual(2, tasks.addCnt);
         }
     }
 
     [TestFixture]
-    public class NoAddTaskDialogTests
+    public class NoAddTaskDlgCmdTests
     {
         AddTaskDlgCmd addTaskDlgCmd;
         TestTasks tasks;
         Io io;
-        UndoManager undoManager;
+        UndoAndRedo undoAndRedo;
 
         [SetUp]
         public void Initialize()
         {
             io = new Io(new TestPrint(), new TestRead());
             tasks = new TestTasks();
-            undoManager = new UndoManager();
-            addTaskDlgCmd = new AddTaskDlgCmd(io, undoManager, tasks);
+            undoAndRedo = new UndoAndRedo();
+            addTaskDlgCmd = new AddTaskDlgCmd(io, undoAndRedo, tasks);
         }
 
         [Test]
-        public void TestUndoSomethingNotDoneThrowsUp()
+        public void TestUndoSomethingNotDoneThrows()
         {
-            Assert.IsInstanceOf<Cmd.CantUndo>(undoManager.Undo());
+            Assert.IsInstanceOf<Cmd.CantUndo>(undoAndRedo.Undo());
         }
     }
 }

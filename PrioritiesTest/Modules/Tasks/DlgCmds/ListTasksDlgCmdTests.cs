@@ -1,5 +1,5 @@
 ﻿//
-// PrioritiesTest/DlgCmds/ListTasksDialogTests.cs
+// PrioritiesTest/Modules/Tasks/DlgCmds/ListTasksDlgCmdTests.cs
 //
 
 using System.Collections.Generic;
@@ -9,10 +9,10 @@ using NUnit.Framework;
 using Priorities.Modules.Tasks;
 using Priorities.Modules.Tasks.DlgCmds;
 
-namespace PrioritiesTest.DlgCmds
+namespace PrioritiesTest.Modules.Tasks.DlgCmds
 {
     [TestFixture]
-    public class ListTasksDialogTests
+    public class ListTasksDlgCmdTests
     {
         ListTasksDlgCmd listTasksDlgCmd;
         TestPrint print;

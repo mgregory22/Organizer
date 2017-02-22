@@ -1,9 +1,10 @@
 ﻿//
-// Priorities/DlgCmds/UpMenuDialog.cs
+// Priorities/DlgCmds/UpMenuDlgCmd.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
+using MSG.Patterns.Cmds;
 
 namespace Priorities.DlgCmds
 {
@@ -15,7 +16,7 @@ namespace Priorities.DlgCmds
 
         public override Cmd Create()
         {
-            return new MSG.Patterns.UpMenu();
+            return new UpMenu();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿//
-// Priorities/Modules/Tasks/DlgCmds/DeleteTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/DeleteTaskDlgCmd.cs
 //
 
 using MSG.Console;
@@ -9,17 +9,17 @@ using Priorities.Modules.Tasks.Cmds;
 
 namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class DeleteTaskDlgCmd : DlgUnCmd
+    public class DeleteTaskDlgCmd : DlgCmd
     {
         protected Tasks tasks;
 
-        public DeleteTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io, undoManager)
+        public DeleteTaskDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
         }
 
-        public override UnCmd Create()
+        public override Cmd Create()
         {
             IntEditor editor = new IntEditor();
             int? priority = null;

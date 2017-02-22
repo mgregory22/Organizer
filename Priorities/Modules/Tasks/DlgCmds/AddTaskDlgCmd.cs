@@ -10,10 +10,9 @@ using Priorities.Modules.Tasks.Cmds;
 namespace Priorities.Modules.Tasks.DlgCmds
 {
     /// <summary>
-    /// AddDialog executes the Add Task dialog.
-    /// Then, if successful, executes the Add Task command.
+    /// Add Task Dialog Command
     /// </summary>
-    public class AddTaskDlgCmd : DlgUnCmd
+    public class AddTaskDlgCmd : DlgCmd
     {
         protected Tasks tasks;
 
@@ -22,16 +21,24 @@ namespace Priorities.Modules.Tasks.DlgCmds
         /// </summary>
         /// <param name="io"></param>
         /// <param name="addTask"></param>
-        public AddTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io, undoManager)
+        public AddTaskDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
+        }
+
+        public string PriorityPrompt {
+            get { return "\nEnter priority (Enter blank to add to the end)\n# "; }
+        }
+
+        public string NamePrompt {
+            get { return "\nEnter task name/description\n$ "; }
         }
 
         /// <summary>
         /// Creates an add task command to be executed.
         /// </summary>
-        public override UnCmd Create()
+        public override Cmd Create()
         {
             Editor nameEditor = new Editor();
             string name = nameEditor.StringPrompt(io, NamePrompt);
@@ -46,14 +53,6 @@ namespace Priorities.Modules.Tasks.DlgCmds
             }
             int index = priority.Value - 1;
             return new InsertTask(tasks, name, index);
-        }
-
-        public string PriorityPrompt {
-            get { return "\nEnter priority (Enter blank to add to the end)\n# "; }
-        }
-
-        public string NamePrompt {
-            get { return "\nEnter task name/description\n$ "; }
         }
     }
 }

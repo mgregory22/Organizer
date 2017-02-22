@@ -9,17 +9,17 @@ using Priorities.Modules.Tasks.Cmds;
 
 namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class EditSubtasksDlgCmd : DlgUnCmd
+    public class EditSubtasksDlgCmd : DlgCmd
     {
         protected Tasks tasks;
 
-        public EditSubtasksDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io, undoManager)
+        public EditSubtasksDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
         }
 
-        public override UnCmd Create()
+        public override Cmd Create()
         {
             IntEditor intEditor = new IntEditor();
             int? targetPriority = intEditor.RangePrompt(io, 1, tasks.Count, PromptForTarget);

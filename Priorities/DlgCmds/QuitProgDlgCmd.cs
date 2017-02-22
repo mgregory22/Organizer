@@ -4,6 +4,7 @@
 
 using MSG.IO;
 using MSG.Patterns;
+using MSG.Patterns.Cmds;
 
 namespace Priorities.DlgCmds
 {
@@ -15,7 +16,7 @@ namespace Priorities.DlgCmds
 
         public override Cmd Create()
         {
-            return new MSG.Patterns.QuitProg();
+            return new QuitProg();
         }
     }
 }

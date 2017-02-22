@@ -9,17 +9,17 @@ using Priorities.Modules.Tasks.Cmds;
 
 namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class MoveTaskDlgCmd : DlgUnCmd
+    public class MoveTaskDlgCmd : DlgCmd
     {
         Tasks tasks;
 
-        public MoveTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io, undoManager)
+        public MoveTaskDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
         }
 
-        public override UnCmd Create()
+        public override Cmd Create()
         {
             IntEditor intEditor = new IntEditor();
             int? srcPriority;

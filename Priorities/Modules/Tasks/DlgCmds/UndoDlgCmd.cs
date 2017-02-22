@@ -11,18 +11,16 @@ namespace Priorities.Modules.Tasks.DlgCmds
     public class UndoDlgCmd : DlgCmd
     {
         protected Tasks tasks;
-        protected UndoManager undoManager;
 
-        public UndoDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io)
+        public UndoDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
-            this.undoManager = undoManager;
         }
 
         public override Cmd Create()
         {
-            return new UndoTask(undoManager, tasks);
+            return new UndoTask(undoAndRedo, tasks);
         }
     }
 }

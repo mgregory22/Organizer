@@ -8,9 +8,9 @@ namespace Priorities.Modules.Tasks.Cmds
 {
     public class RedoTask : TaskCmd
     {
-        protected UndoManager undoManager;
+        protected UndoAndRedo undoAndRedo;
 
-        public RedoTask(UndoManager undoManager, Tasks tasks)
+        public RedoTask(UndoAndRedo undoAndRedo, Tasks tasks)
             : base(tasks)
         {
         }
@@ -18,13 +18,13 @@ namespace Priorities.Modules.Tasks.Cmds
         public override Result Do()
         {
             // Do the redo!
-            return undoManager.Redo();
+            return undoAndRedo.Redo();
         }
 
         public override Result Undo()
         {
             // Undo the redo = Undo!
-            return undoManager.Undo();
+            return undoAndRedo.Undo();
         }
     }
 }

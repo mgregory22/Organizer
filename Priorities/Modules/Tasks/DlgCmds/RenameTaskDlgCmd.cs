@@ -1,5 +1,5 @@
 ﻿//
-// Priorities/Modules/Tasks/DlgCmds/RenameTaskDialog.cs
+// Priorities/Modules/Tasks/DlgCmds/RenameTaskDlgCmd.cs
 //
 
 using MSG.Console;
@@ -13,7 +13,7 @@ namespace Priorities.Modules.Tasks.DlgCmds
     {
         protected Tasks tasks;
 
-        public RenameTaskDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
+        public RenameTaskDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
             : base(io)
         {
             this.tasks = tasks;

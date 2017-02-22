@@ -1,10 +1,10 @@
 ﻿//
-// Priorities/Modules/Tasks/Conditions/IsTasksMoreThanOne.cs
+// Priorities/Modules/Tasks/Conds/IsTasksMoreThanOne.cs
 //
 
 using MSG.Patterns;
 
-namespace Priorities.Modules.Tasks.Conditions
+namespace Priorities.Modules.Tasks.Conds
 {
     public class IsTasksMoreThanOne : Cond
     {

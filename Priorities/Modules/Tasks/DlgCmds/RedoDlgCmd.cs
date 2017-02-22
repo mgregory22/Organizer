@@ -8,19 +8,19 @@ using Priorities.Modules.Tasks.Cmds;
 
 namespace Priorities.Modules.Tasks.DlgCmds
 {
-    public class RedoDlgCmd : DlgUnCmd
+    public class RedoDlgCmd : DlgCmd
     {
         protected Tasks tasks;
 
-        public RedoDlgCmd(Io io, UndoManager undoManager, Tasks tasks)
-            : base(io, undoManager)
+        public RedoDlgCmd(Io io, UndoAndRedo undoAndRedo, Tasks tasks)
+            : base(io, undoAndRedo)
         {
             this.tasks = tasks;
         }
 
-        public override UnCmd Create()
+        public override Cmd Create()
         {
-            return new RedoTask(undoManager, tasks);
+            return new RedoTask(undoAndRedo, tasks);
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/Modules/Tasks/TaskCommand.cs
+// Priorities/Modules/Tasks/TaskCmd.cs
 //
 
 using MSG.Patterns;
 
 namespace Priorities.Modules.Tasks
 {
-    public abstract class TaskCmd : UnCmd
+    public abstract class TaskCmd : Cmd
     {
         protected Tasks tasks;
 

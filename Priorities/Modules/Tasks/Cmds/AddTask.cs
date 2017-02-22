@@ -20,13 +20,13 @@ namespace Priorities.Modules.Tasks.Cmds
         {
             this.task = new Task(name);
             tasks.Add(task);
-            return new Ok();
+            return TaskCmd.OK;
         }
 
         public override Result Undo()
         {
             tasks.Remove(task);
-            return new Ok();
+            return TaskCmd.OK;
         }
     }
 }
