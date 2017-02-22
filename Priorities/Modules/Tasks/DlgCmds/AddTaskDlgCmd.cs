@@ -46,8 +46,11 @@ namespace Priorities.Modules.Tasks.DlgCmds
                 io.print.StringNL("Add cancelled");
                 return null;
             }
-            IntEditor priorityEditor = new IntEditor();
-            int? priority = priorityEditor.IntPrompt(io, PriorityPrompt);
+            int? priority = null;
+            if (tasks.Count > 0) {
+                IntEditor priorityEditor = new IntEditor();
+                priority = priorityEditor.IntPrompt(io, PriorityPrompt);
+            }
             if (priority == null) {
                 return new AddTask(tasks, name);
             }

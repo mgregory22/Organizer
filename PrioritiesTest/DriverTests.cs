@@ -26,22 +26,26 @@ namespace PrioritiesTest
         }
 
         [Test]
-        public void TestHelpDisplays()
+        public void TestHowToGetHelpDisplays()
+        {
+            read.PushString("q");
+            CharPrompt prompt = new CharPrompt();
+            Driver.Do(io, prompt);
+
+            // The menu should display once how to get help
+            string start = string.Format("\nMain Menu (? for help)\n{0}q\n", prompt.Prompt);
+            Assert.AreEqual(start, print.Output.Substring(0, start.Length));
+        }
+
+        [Test]
+        public void TestHowToGetHelpDisplaysOnceOnly()
         {
             read.PushString("?q");
             CharPrompt prompt = new CharPrompt();
             Driver.Do(io, prompt);
 
-            // The menu should display its title every time, and
-            // if the help key is pressed, it should display bracketed
-            // descriptions of menu items which start with bracketed
-            // keystrokes.
-            string start = string.Format("\nMain Menu\n{0}?\n[", prompt.Prompt);
-            Assert.AreEqual(start, print.Output.Substring(0, start.Length));
-
-            // The help display should end with a help menu item
-            // followed by a new Main Menu prompt.
-            string end = string.Format("[?] Help\n\nMain Menu\n{0}q\n", prompt.Prompt);
+            // The second Main Menu prompt should not have a help message
+            string end = string.Format("\n\nMain Menu\n{0}q\n", prompt.Prompt);
             Assert.AreEqual(end, print.Output.Substring(print.Output.Length - end.Length));
         }
     }

@@ -14,7 +14,7 @@ using Priorities.Modules.Tasks.DlgCmds;
 namespace Priorities
 {
     /// <summary>
-    /// This is the heart of the program.  Testing starts with this class.
+    /// Displays menu and performs commands
     /// </summary>
     public class Driver : Cmd
     {
@@ -35,20 +35,33 @@ namespace Priorities
             mainMenu.Loop(io);
         }
 
+        /// <summary>
+        /// Builds main menu
+        /// </summary>
         public static Menu BuildMainMenu(Io io, CharPrompt prompt, Menu taskMenu)
         {
             Menu menu = new Menu(io, "Main Menu", prompt);
             MenuItem[] mainMenuItems = new MenuItem[] {
-                    // Set file name
-                    new MenuItem('n', "New File", Cond.ALWAYS, new NewFileDlgCmd(io)),
-                    new MenuItem('o', "Open File", Cond.ALWAYS, new OpenFileDlgCmd(io)),
-                    new MenuItem('t', "Tasks", Cond.ALWAYS, taskMenu),
-                    new MenuItem('q', "Quit Program", Cond.ALWAYS, new QuitProgDlgCmd(io)),
-                };
+                new MenuItem('n', "New File",
+                    Cond.ALWAYS,
+                    new NewFileDlgCmd(io)),
+                new MenuItem('o', "Open File",
+                    Cond.ALWAYS,
+                    new OpenFileDlgCmd(io)),
+                new MenuItem('t', "Tasks",
+                    Cond.ALWAYS,
+                    taskMenu),
+                new MenuItem('q', "Quit Program",
+                    Cond.ALWAYS,
+                    new QuitProgDlgCmd(io)),
+            };
             menu.AddMenuItems(mainMenuItems);
             return menu;
         }
 
+        /// <summary>
+        /// Builds task menu
+        /// </summary>
         public static Menu BuildTaskMenu(Io io, CharPrompt prompt, Tasks tasks, UndoAndRedo undoAndRedo)
         {
             // Conditions related to task data for enabling and disabling menu items
@@ -56,7 +69,8 @@ namespace Priorities
             IsTasksMoreThanOne isTasksMoreThanOne = new IsTasksMoreThanOne(tasks);
             IsUndoStackEmpty canUndo = new IsUndoStackEmpty(undoAndRedo);
             IsRedoStackEmpty canRedo = new IsRedoStackEmpty(undoAndRedo);
-
+            
+            // Build task menu
             Menu taskMenu = new Menu(io, "Task Menu", prompt);
             MenuItem[] taskMenuItems = new MenuItem[] {
                 new MenuItem('a', "Add Task",
