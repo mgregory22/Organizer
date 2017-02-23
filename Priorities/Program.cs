@@ -20,7 +20,9 @@ namespace Priorities
         {
             Io io = new Io(new Print(), new Read());
             CharPrompt prompt = new CharPrompt();
-            Driver.Do(io, prompt);
+
+            Driver.Run(io, prompt);
+
             if (args.Any(a => a.Equals("-p"))) {
                 prompt.Pause(io);
             }

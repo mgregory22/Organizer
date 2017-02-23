@@ -16,7 +16,7 @@ namespace Priorities
     /// <summary>
     /// Displays menu and performs commands
     /// </summary>
-    public class Driver : Cmd
+    public class Driver
     {
         /// <summary>
         /// Sets up and starts the main loop of the program.
@@ -24,7 +24,7 @@ namespace Priorities
         /// <param name="prompt">
         /// 
         /// </param>
-        public static void Do(Io io, CharPrompt prompt)
+        public static void Run(Io io, CharPrompt prompt)
         {
             // Program data
             Tasks tasks = new Tasks();

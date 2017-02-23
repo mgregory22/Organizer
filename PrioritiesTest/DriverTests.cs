@@ -30,7 +30,8 @@ namespace PrioritiesTest
         {
             read.PushString("q");
             CharPrompt prompt = new CharPrompt();
-            Driver.Do(io, prompt);
+
+            Driver.Run(io, prompt);
 
             // The menu should display once how to get help
             string start = string.Format("\nMain Menu (? for help)\n{0}q\n", prompt.Prompt);
@@ -42,7 +43,8 @@ namespace PrioritiesTest
         {
             read.PushString("?q");
             CharPrompt prompt = new CharPrompt();
-            Driver.Do(io, prompt);
+
+            Driver.Run(io, prompt);
 
             // The second Main Menu prompt should not have a help message
             string end = string.Format("\n\nMain Menu\n{0}q\n", prompt.Prompt);
