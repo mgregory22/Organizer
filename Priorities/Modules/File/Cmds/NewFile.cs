@@ -1,15 +1,18 @@
 ﻿//
-// Priorities/OpenFile.cs
+// Priorities/Modules/File/Cmds/NewFile.cs
 //
 
 using MSG.Patterns;
 
-namespace Priorities
+namespace Priorities.Modules.File.Cmds
 {
-    public class OpenFile : Cmd
+    public class NewFile : Cmd
     {
-        public OpenFile()
+        protected string fileName;
+
+        public NewFile(string fileName)
         {
+            this.fileName = fileName;
         }
 
         public override Result Do()

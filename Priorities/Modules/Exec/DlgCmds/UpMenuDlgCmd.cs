@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/DlgCmds/UpMenuDlgCmd.cs
+// Priorities/Modules/Base/DlgCmds/UpMenuDlgCmd.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
 using MSG.Patterns.Cmds;
 
-namespace Priorities.DlgCmds
+namespace Priorities.Modules.Base.DlgCmds
 {
     public class UpMenuDlgCmd : DlgCmd
     {

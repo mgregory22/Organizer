@@ -1,12 +1,12 @@
 ﻿//
-// Priorities/DlgCmds/QuitProgramDialog.cs
+// Priorities/Modules/Base/DlgCmds/QuitProgramDialog.cs
 //
 
 using MSG.IO;
 using MSG.Patterns;
 using MSG.Patterns.Cmds;
 
-namespace Priorities.DlgCmds
+namespace Priorities.Modules.Base.DlgCmds
 {
     public class QuitProgDlgCmd : DlgCmd
     {

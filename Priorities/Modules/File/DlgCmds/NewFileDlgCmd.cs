@@ -1,12 +1,13 @@
 ﻿//
-// Priorities/DlgCmds/NewFileDialog.cs
+// Priorities/Modules/File/DlgCmds/NewDlgCmd.cs
 //
 
 using MSG.Console;
 using MSG.IO;
 using MSG.Patterns;
+using Priorities.Modules.File.Cmds;
 
-namespace Priorities.DlgCmds
+namespace Priorities.Modules.File.DlgCmds
 {
     public class NewFileDlgCmd : DlgCmd
     {
