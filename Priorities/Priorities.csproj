@@ -47,8 +47,8 @@
     <Compile Include="Modules\File\Cmds\OpenFile.cs" />
     <Compile Include="Modules\File\DlgCmds\NewFileDlgCmd.cs" />
     <Compile Include="Modules\File\DlgCmds\OpenFileDlgCmd.cs" />
-    <Compile Include="Modules\Exec\UpMenuDlgCmd.cs" />
-    <Compile Include="Modules\Exec\QuitProgDlgCmd.cs" />
+    <Compile Include="Modules\Exec\DlgCmds\UpMenuDlgCmd.cs" />
+    <Compile Include="Modules\Exec\DlgCmds\QuitProgDlgCmd.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Modules\Tasks\Cmds\AddTask.cs" />
     <Compile Include="Modules\Tasks\Cmds\DeleteTask.cs" />
