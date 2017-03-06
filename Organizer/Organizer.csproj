@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{70A0A878-B0AA-4F50-A166-DB53E620AD98}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Organizer</RootNamespace>
+    <AssemblyName>Organizer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net46\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Modules\File\Cmds\NewFile.cs" />
+    <Compile Include="Modules\File\Cmds\OpenFile.cs" />
+    <Compile Include="Modules\File\DlgCmds\NewFileDlgCmd.cs" />
+    <Compile Include="Modules\File\DlgCmds\OpenFileDlgCmd.cs" />
+    <Compile Include="Modules\Exec\DlgCmds\UpMenuDlgCmd.cs" />
+    <Compile Include="Modules\Exec\DlgCmds\QuitProgDlgCmd.cs" />
+    <Compile Include="Driver.cs" />
+    <Compile Include="Modules\Tasks\Cmds\AddTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\DeleteTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\InsertTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\MoveTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\RedoTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\RenameTask.cs" />
+    <Compile Include="Modules\Tasks\Cmds\UndoTask.cs" />
+    <Compile Include="Modules\Tasks\Conds\IsCurTaskDirNotRoot.cs" />
+    <Compile Include="Modules\Tasks\Conds\IsTasksMoreThanOne.cs" />
+    <Compile Include="Modules\Tasks\Conds\IsTasksNonEmpty.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\AddTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\DeleteTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\UpToParentTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\EditSubtasksDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\ListTasksDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\MoveTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\RedoDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\RenameTaskDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\DlgCmds\UndoDlgCmd.cs" />
+    <Compile Include="Modules\Tasks\Task.cs" />
+    <Compile Include="Modules\Tasks\TaskCmd.cs" />
+    <Compile Include="Modules\Tasks\TaskMenuPrompt.cs" />
+    <Compile Include="Modules\Tasks\Tasks.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\MSG\MSG\MSG.csproj">
+      <Project>{3acd9886-1905-4f80-9495-c6970c2b93f2}</Project>
+      <Name>MSG</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

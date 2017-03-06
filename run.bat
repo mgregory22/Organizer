@@ -1,1 +1,2 @@
-Priorities\bin\Debug\Priorities.exe 
+cd Organizer\bin\Debug
+Organizer.exe 

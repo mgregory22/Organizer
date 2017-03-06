@@ -1,8 +1,9 @@
-# Priorities
+# Organizer
 
-A command-line hierarchical task list and priority organizer.
+A command-line organizer:
+    Task list
 
-Nothing serious.  Primarily an exploraton in C#, program design and TDD.
+Nothing serious.  Primarily an exploraton in C#, program design and TDD (although falling by the wayside).
 
 Requires my MSG library (https://github.com/mgregory22/MSG.git)
 
